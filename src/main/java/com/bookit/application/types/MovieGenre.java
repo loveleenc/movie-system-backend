@@ -1,5 +1,8 @@
 package com.bookit.application.types;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public enum MovieGenre {
     ACTION("Action"),
     ADVENTURE("Adventure"),
@@ -32,6 +35,19 @@ public enum MovieGenre {
 
     public String getCode() {
         return code;
+    }
+
+    public static List<String> getAllCodes(){
+        return Stream.of(MovieGenre.values()).map(MovieGenre::getCode).toList();
+    }
+
+    public static boolean isMovieGenreEnum(String possibleGenre){
+        for(MovieGenre genre: MovieGenre.values()){
+            if(genre.getCode().equals(possibleGenre)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

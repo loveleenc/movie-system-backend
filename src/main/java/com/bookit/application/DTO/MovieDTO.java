@@ -1,14 +1,9 @@
 package com.bookit.application.DTO;
 
 import com.bookit.application.entity.Movie;
-import com.bookit.application.repository.blob.MoviePosterBlob;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class MovieDTO {
@@ -16,6 +11,8 @@ public class MovieDTO {
     private Integer duration;
     private String poster;
     private List<String> genreList;
+    private List<String> languages;
+    private LocalDate releaseDate;
 
     public String getName() {
         return name;
@@ -37,8 +34,9 @@ public class MovieDTO {
         return releaseDate;
     }
 
-    private LocalDate releaseDate;
-
+    public List<String> getLanguages(){
+        return this.languages;
+    }
 
     public MovieDTO(Movie movie){
         this.name = movie.getName();
@@ -46,22 +44,11 @@ public class MovieDTO {
         this.poster = movie.getPoster();
         this.genreList = movie.getGenreList();
         this.releaseDate = movie.getReleaseDate();
+        this.languages = movie.getLanguages();
     }
 
     public void setPoster(String updatedPosterLink){
         this.poster = updatedPosterLink;
     }
-
-    public static JSONObject transformm(Movie movie){
-        JSONObject jo = new JSONObject();
-        jo.put("name", movie.getName());
-        jo.put("duration", movie.getDuration());
-        jo.put("poster", movie.getPoster());
-        jo.put("duration", movie.getDuration());
-        jo.put("releaseDate", movie.getReleaseDate().toString());
-        return jo;
-    }
-
-
 
 }

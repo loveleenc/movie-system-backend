@@ -1,9 +1,5 @@
 package com.bookit.application.entity;
 
-
-import com.bookit.application.types.MovieGenre;
-
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,13 +9,16 @@ public class Movie {
     private String poster;
     private List<String> genreList;
     private LocalDate releaseDate;
+    private List<String> languages;
 
-    public Movie(String name, Integer duration, String poster, List<String> genre, String releaseDate) {
+
+    public Movie(String name, Integer duration, String poster, List<String> genre, String releaseDate, List<String> languages) {
         this.poster = poster;
         this.duration = duration;
         this.name = name;
         this.genreList = genre;
         this.releaseDate = LocalDate.parse(releaseDate);
+        this.languages = languages;
     }
 
     public String getName() {
@@ -42,5 +41,7 @@ public class Movie {
         return poster;
     }
 
-
+    public List<String> getLanguages(){
+        return this.languages;
+    }
 }
