@@ -9,6 +9,7 @@ import com.bookit.application.entity.Movie;
 import com.bookit.application.repository.database.MovieDAO;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -39,7 +40,8 @@ public class MovieService {
         return this.movieMapper.transformAllMovies(this.movieDao.findUpcomingMovies());
     }
 
-    public List<MovieDTO> filterMovies(List<String> genre, List< String > languages){
-        return this.movieMapper.transformAllMovies(this.movieDao.filterMovies(genre, languages));
+    public List<MovieDTO> filterMovies(List<String> genre, List<String> languages, String releasedOnOrAfter){
+        LocalDate date = LocalDate.parse(releasedOnOrAfter);
+        return this.movieMapper.transformAllMovies(this.movieDao.filterMovies(genre, languages, date));
     }
 }

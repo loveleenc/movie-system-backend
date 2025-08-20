@@ -38,13 +38,17 @@ public class MovieController {
 
     @GetMapping("/movies/filter")
     List<MovieDTO> filterMovies(@RequestParam(required = false) List<String> genre,
-                                @RequestParam(required = false) List<String> language){
+                                @RequestParam(required = false) List<String> language,
+                                @RequestParam(required = false) String releasedOnOrAfter){
         if(genre == null){
             genre = new ArrayList<>();
         }
         if(language == null){
             language = new ArrayList<>();
         }
-        return this.movieService.filterMovies(genre, language);
+        if(releasedOnOrAfter == null){
+            releasedOnOrAfter = "1970-01-01";
+        }
+        return this.movieService.filterMovies(genre, language, releasedOnOrAfter);
     }
 }
