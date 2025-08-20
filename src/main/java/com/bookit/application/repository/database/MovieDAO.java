@@ -89,14 +89,16 @@ public class MovieDAO implements Crud {
     }
 //LocalDate releasedOnOrAfterDate
 
-//    private RowMapper
     public List<Movie> filterMovies(List<String> genre, List<String> languages) throws DataAccessException{
         List<Movie> movies = new ArrayList<>();
-        String[] g1 = genre.toArray(new String[0]);
-        String[] l1 = languages.toArray(new String[0]);
+        String[] genreArray = genre.toArray(new String[0]);
+        String[] languagesArray = languages.toArray(new String[0]);
 
-        String b = "SELECT * FROM movies WHERE movies.genre && ?::moviegenre[] AND movies.language && ?::movielanguage[]";
-        this.jdbcTemplate.query(b, (rs, rowNum) -> new Movie(rs.getString("name"),
+        String sql = "SELECT * FROM movies WHERE " +
+                "(CARDINALITY(?::moviegenre[]) = 0 OR movies.genre && ?::moviegenre[]) " +
+                "AND " +
+                "(CARDINALITY(?::movielanguage[]) = 0 OR movies.language && ?::movielanguage[])";
+        this.jdbcTemplate.query(sql, (rs, rowNum) -> new Movie(rs.getString("name"),
                 rs.getInt("duration"),
                 rs.getString("image"),
                 Stream.of((String[])rs.getArray("genre").getArray())
@@ -106,7 +108,7 @@ public class MovieDAO implements Crud {
                 Stream.of((String[])rs.getArray("language").getArray())
                         .map(arrayElement -> MovieLanguage.valueOf(arrayElement.toUpperCase()).getCode())
                         .collect(Collectors.toList())
-        ), g1, l1).forEach(movie -> movies.add(movie));
+        ), genreArray, genreArray, languagesArray, languagesArray).forEach(movie -> movies.add(movie));
 
         return movies;
     }
