@@ -2,7 +2,7 @@ package com.bookit.application.wrappers;
 
 import com.bookit.application.DTO.MovieDTO;
 import com.bookit.application.entity.Movie;
-import com.bookit.application.repository.blob.MoviePosterBlob;
+import com.bookit.application.storage.MoviePosterBlob;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

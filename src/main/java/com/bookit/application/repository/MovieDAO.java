@@ -1,4 +1,4 @@
-package com.bookit.application.repository.database;
+package com.bookit.application.repository;
 
 import com.bookit.application.entity.Movie;
 import com.bookit.application.types.MovieGenre;
@@ -112,6 +112,19 @@ public class MovieDAO implements Crud {
                 releasedOnOrAfter).forEach(movie -> movies.add(movie));
 
         return movies;
+    }
+
+    public Integer createNewMovie(Movie movie) throws DataAccessException{
+        String sql = "INSERT INTO movies(name, duration, image, genre, releaseDate, language) " +
+                "VALUES(?, ?, ?, ?::moviegenre[], ?, ?::movielanguage[])";
+
+        return this.jdbcTemplate.update(sql,
+                movie.getName(),
+                movie.getDuration(),
+                movie.getPoster(),
+                movie.getGenreList().toArray(new String[0]),
+                movie.getReleaseDate(),
+                movie.getLanguages().toArray(new String[0]));
     }
 }
 

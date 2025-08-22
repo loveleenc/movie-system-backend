@@ -2,19 +2,23 @@ package com.bookit.application.services;
 
 
 import com.bookit.application.DTO.MovieDTO;
-import com.bookit.application.types.MovieGenre;
-import com.bookit.application.types.MovieLanguage;
+import com.bookit.application.storage.BlobCrud;
 import com.bookit.application.wrappers.MovieMapper;
 import com.bookit.application.entity.Movie;
-import com.bookit.application.repository.database.MovieDAO;
+import com.bookit.application.repository.MovieDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
 @Component
 public class MovieService {
 
+    @Autowired
+    private BlobCrud blobCrud;
     private MovieDAO movieDao;
     private MovieMapper movieMapper;
 
@@ -43,5 +47,27 @@ public class MovieService {
     public List<MovieDTO> filterMovies(List<String> genre, List<String> languages, String releasedOnOrAfter){
         LocalDate date = LocalDate.parse(releasedOnOrAfter);
         return this.movieMapper.transformAllMovies(this.movieDao.filterMovies(genre, languages, date));
+    }
+
+    public MovieDTO addMovie(Movie movie, MultipartFile file){
+        Integer rows = this.movieDao.createNewMovie(movie);
+        if(rows == 1){
+            try{
+                this.blobCrud.createBlob(movie.getPoster(), file.getInputStream());
+            }
+            catch(IOException e){
+                System.out.println(e.getMessage());
+            }
+        }
+        return this.movieMapper.toDTO(movie);
+    }
+
+    public void uploadFile(MultipartFile file){
+        try{
+            this.blobCrud.createBlob(file.getOriginalFilename(), file.getInputStream());
+        }
+        catch(IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 }

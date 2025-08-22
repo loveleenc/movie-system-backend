@@ -2,13 +2,14 @@ package com.bookit.application.controller;
 
 
 import com.bookit.application.DTO.MovieDTO;
+import com.bookit.application.entity.Movie;
 import com.bookit.application.services.MovieService;
 import com.bookit.application.types.MovieGenre;
 import com.bookit.application.types.MovieLanguage;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,11 @@ public class MovieController {
     MovieController(MovieService movieService){
         this.movieService = movieService;
     }
+
+//    @GetMapping("/")
+//    public String listUploadedFiles(Model model) throws IOException {
+//        return "uploadForm";
+//    }
 
     @GetMapping("/movies")
     List<MovieDTO> getAllMovies(){
@@ -51,4 +57,10 @@ public class MovieController {
         }
         return this.movieService.filterMovies(genre, language, releasedOnOrAfter);
     }
+
+    @PostMapping("/movie")
+    MovieDTO addMovie(@RequestPart Movie movie, @RequestPart MultipartFile file){
+        return this.movieService.addMovie(movie, file);
+    }
+
 }

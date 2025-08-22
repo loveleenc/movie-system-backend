@@ -1,4 +1,4 @@
-package com.bookit.application.repository.database;
+package com.bookit.application.repository;
 
 import org.springframework.dao.DataAccessException;
 
