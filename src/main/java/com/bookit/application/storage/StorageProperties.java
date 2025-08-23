@@ -1,9 +1,6 @@
 package com.bookit.application.storage;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.core.env.Environment;
-
-import java.util.Objects;
 
 @ConfigurationProperties("storage")
 public class StorageProperties {
@@ -23,11 +20,19 @@ public class StorageProperties {
         return connectionString;
     }
 
-    public StorageProperties(Environment env){
-        this.url = Objects.requireNonNull(env.getProperty("spring.azureblobsource.url"));
-        this.containerName = Objects.requireNonNull(env.getProperty("spring.azureblobsource.containerName"));
-        this.connectionString = Objects.requireNonNull(env.getProperty("spring.azureblobsource.connectionString"));
+    public void setUrl(String url) {
+        this.url = url;
     }
+
+    public void setContainerName(String containerName) {
+        this.containerName = containerName;
+    }
+
+    public void setConnectionString(String connectionString) {
+        this.connectionString = connectionString;
+    }
+
+    public StorageProperties(){}
 
 
 }

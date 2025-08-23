@@ -4,18 +4,15 @@ package com.bookit.application.controller;
 import com.bookit.application.DTO.MovieDTO;
 import com.bookit.application.entity.Movie;
 import com.bookit.application.services.MovieService;
-import com.bookit.application.types.MovieGenre;
-import com.bookit.application.types.MovieLanguage;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class MovieController {
-
+    private final static String START_DATE = "1970-01-01";
     private final MovieService movieService;
 
     MovieController(MovieService movieService){
@@ -53,7 +50,7 @@ public class MovieController {
             language = new ArrayList<>();
         }
         if(releasedOnOrAfter == null){
-            releasedOnOrAfter = "1970-01-01";
+            releasedOnOrAfter = START_DATE;
         }
         return this.movieService.filterMovies(genre, language, releasedOnOrAfter);
     }

@@ -82,7 +82,6 @@ public class MovieDAO implements Crud {
                 ), OffsetDateTime.now()).forEach(movie -> movies.add(movie));
         return movies;
     }
-//LocalDate releasedOnOrAfterDate
 
     public List<Movie> filterMovies(List<String> genre, List<String> languages, LocalDate releasedOnOrAfter) throws DataAccessException {
         List<Movie> movies = new ArrayList<>();
@@ -125,6 +124,14 @@ public class MovieDAO implements Crud {
                 movie.getGenreList().toArray(new String[0]),
                 movie.getReleaseDate(),
                 movie.getLanguages().toArray(new String[0]));
+    }
+
+    public Integer deleteMovie(Movie movie){
+        String sql = "DELETE FROM movies WHERE name = ? AND duration = ? AND releasedate = ?";
+        return this.jdbcTemplate.update(sql,
+                movie.getName(),
+                movie.getDuration(),
+                movie.getReleaseDate());
     }
 }
 

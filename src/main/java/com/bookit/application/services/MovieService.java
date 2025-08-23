@@ -2,23 +2,22 @@ package com.bookit.application.services;
 
 
 import com.bookit.application.DTO.MovieDTO;
-import com.bookit.application.storage.BlobCrud;
+import com.bookit.application.storage.StorageService;
+import com.bookit.application.storage.UploadException;
 import com.bookit.application.wrappers.MovieMapper;
 import com.bookit.application.entity.Movie;
 import com.bookit.application.repository.MovieDAO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
 @Component
 public class MovieService {
 
-    @Autowired
-    private BlobCrud blobCrud;
+    private StorageService storageService;
     private MovieDAO movieDao;
     private MovieMapper movieMapper;
 
@@ -49,25 +48,25 @@ public class MovieService {
         return this.movieMapper.transformAllMovies(this.movieDao.filterMovies(genre, languages, date));
     }
 
-    public MovieDTO addMovie(Movie movie, MultipartFile file){
-        Integer rows = this.movieDao.createNewMovie(movie);
-        if(rows == 1){
-            try{
-                this.blobCrud.createBlob(movie.getPoster(), file.getInputStream());
-            }
-            catch(IOException e){
-                System.out.println(e.getMessage());
-            }
-        }
-        return this.movieMapper.toDTO(movie);
-    }
-
-    public void uploadFile(MultipartFile file){
+    public MovieDTO addMovie(Movie movie, MultipartFile file) throws MovieException {
+        movie.setPoster(file.getOriginalFilename());
         try{
-            this.blobCrud.createBlob(file.getOriginalFilename(), file.getInputStream());
+            Integer rows = this.movieDao.createNewMovie(movie);
+            if(rows == 1){
+                this.storageService.store(file, false);
+                return this.movieMapper.toDTO(movie);
+            }
+            else{
+                throw new MovieException("Unable to create the movie");
+            }
         }
-        catch(IOException e){
+        catch(DataAccessException e){
+            throw new MovieException("Unable to create the movie", e);
+        }
+        catch(UploadException e){
             System.out.println(e.getMessage());
+            this.movieDao.deleteMovie(movie);
+            throw new MovieException("Unable to create the movie", e);
         }
     }
 }

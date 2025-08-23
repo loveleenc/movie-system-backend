@@ -18,10 +18,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.nio.file.Path;
 import java.time.OffsetDateTime;
 
 @Service
@@ -78,16 +80,16 @@ public class PosterStorageService implements StorageService {
     }
 
     @Override
-    public Resource getResource(String filename) {
+    public Resource getResource(String filename) throws StorageException{
         BlobClient blobClient = this.blobContainerClient.getBlobClient(filename);
         BlobSasPermission blobSasPermission = new BlobSasPermission().setReadPermission(true);
         OffsetDateTime expiryTime = OffsetDateTime.now().plusDays(2);
         BlobServiceSasSignatureValues values = new BlobServiceSasSignatureValues(expiryTime,
                 blobSasPermission).setStartTime(OffsetDateTime.now());
-
         try{
             String blobSasToken = blobClient.generateSas(values);
-            return new UrlResource(blobSasToken);
+            return new UrlResource(UriComponentsBuilder.fromUriString(blobClient.getBlobUrl())
+                                                            .query(blobSasToken).build().toUriString());
         }
         catch(MalformedURLException e){
             throw new StorageException("Unable to fetch resource", e);

@@ -8,14 +8,12 @@ import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.azure.storage.blob.sas.BlobSasPermission;
 import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.InputStream;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
-@Component
 public class MoviePosterBlob implements BlobCrud {
     private final BlobContainerClient blobContainerClient;
 

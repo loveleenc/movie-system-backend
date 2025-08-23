@@ -1,13 +1,8 @@
 package com.bookit.application.entity;
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Movie {
@@ -17,7 +12,6 @@ public class Movie {
     private List<String> genreList;
     private LocalDate releaseDate;
     private List<String> languages;
-    private Map<String, Object> extraProps;
 
     public Movie(String name, Integer duration, String poster, List<String> genre, String releaseDate, List<String> languages) {
         this.poster = poster;
@@ -28,14 +22,8 @@ public class Movie {
         this.languages = languages;
     }
 
-    @JsonAnySetter
-    public void addExtra(String key, Object value){
-        this.extraProps.put(key, value);
-    }
-
-    @JsonGetter
-    public InputStream getPosterData(){
-        return (InputStream) this.extraProps.get("posterData");
+    public void setPoster(String filename){
+        this.poster = filename;
     }
 
     public String getName() {
