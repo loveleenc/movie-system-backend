@@ -52,16 +52,12 @@ public class MovieService {
     public MovieDTO addMovie(Movie movie, MultipartFile file) throws MovieException {
         movie.setPoster(file.getOriginalFilename());
         try{
-            Integer rows = this.movieDao.create(movie);
-            if(rows == 1){
-                this.storageService.store(file, false);
-                return this.movieDTOMapper.toDTO(movie);
-            }
-            else{
-                throw new MovieException("Unable to create the movie");
-            }
+            Long movieId = this.movieDao.create(movie);
+            Movie createdMovie = this.movieDao.findById(movieId);
+            this.storageService.store(file, false);
+            return this.movieDTOMapper.toDTO(createdMovie);
         }
-        catch(DataAccessException e){
+        catch(DataAccessException | NullPointerException e){
             throw new MovieException("Unable to create the movie", e);
         }
         catch(UploadException e){

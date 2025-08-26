@@ -23,6 +23,4 @@ public class ShowService {
         List<Show> shows = this.showDAO.findShowsByMovie(movieName, movieReleaseDate);
         return this.showDTOMapper.toDTO(shows);
     }
-
-
 }

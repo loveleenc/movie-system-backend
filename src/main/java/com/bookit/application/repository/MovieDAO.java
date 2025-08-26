@@ -1,26 +1,27 @@
 package com.bookit.application.repository;
 
 import com.bookit.application.entity.Movie;
-import com.bookit.application.types.MovieGenre;
-import com.bookit.application.types.MovieLanguage;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bookit.application.repository.mappers.MovieMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Objects;
 
 @Component
 public class MovieDAO implements Crud<Movie> {
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+    private MovieMapper movieMapper;
 
-    public MovieDAO() {
+    public MovieDAO(JdbcTemplate jdbcTemplate, MovieMapper movieMapper) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.movieMapper = movieMapper;
     }
 
     @Override
@@ -29,61 +30,21 @@ public class MovieDAO implements Crud<Movie> {
     }
 
     public List<Movie> findAll() throws DataAccessException {
-        List<Movie> movies = new ArrayList<>();
-        this.jdbcTemplate.query("SELECT * FROM movies",
-                        (rs, rowNum) -> new Movie(rs.getString("name"),
-                                rs.getInt("duration"),
-                                rs.getString("image"),
-                                Stream.of((String[]) rs.getArray("genre").getArray())
-                                        .map(arrayElement -> MovieGenre.valueOf(arrayElement.toUpperCase().replace("-", "_")).getCode())
-                                        .collect(Collectors.toList()),
-                                rs.getString("releaseDate"),
-                                Stream.of((String[]) rs.getArray("language").getArray())
-                                        .map(arrayElement -> MovieLanguage.valueOf(arrayElement.toUpperCase()).getCode())
-                                        .collect(Collectors.toList())
-                        ))
-                .forEach(movie -> movies.add(movie));
-        return movies;
+        String sql = "SELECT * FROM movies";
+        return this.jdbcTemplate.query(sql, this.movieMapper);
     }
 
     public List<Movie> findMoviesWithActiveTickets() throws DataAccessException {
-        List<Movie> movies = new ArrayList<>();
-
-        this.jdbcTemplate.query("SELECT * FROM movies WHERE id = ANY (SELECT movie FROM tickets WHERE tickets.movie = movies.id AND ? >= movies.releasedate AND tickets.status = 'available')",
-                (rs, rowNum) -> new Movie(rs.getString("name"),
-                        rs.getInt("duration"),
-                        rs.getString("image"),
-                        Stream.of((String[]) rs.getArray("genre").getArray())
-                                .map(arrayElement -> MovieGenre.valueOf(arrayElement.toUpperCase()).getCode())
-                                .collect(Collectors.toList()),
-                        rs.getString("releaseDate"),
-                        Stream.of((String[]) rs.getArray("language").getArray())
-                                .map(arrayElement -> MovieLanguage.valueOf(arrayElement.toUpperCase()).getCode())
-                                .collect(Collectors.toList())
-                ), OffsetDateTime.now()).forEach(movie -> movies.add(movie));
-        return movies;
+        String sql = "SELECT * FROM movies WHERE id = ANY (SELECT movie FROM tickets WHERE tickets.movie = movies.id AND ? >= movies.releasedate AND tickets.status = 'available')";
+        return this.jdbcTemplate.query(sql, this.movieMapper, OffsetDateTime.now());
     }
 
     public List<Movie> findUpcomingMovies() throws DataAccessException {
-        List<Movie> movies = new ArrayList<>();
-
-        this.jdbcTemplate.query("SELECT * FROM movies WHERE id = ANY (SELECT movie FROM tickets WHERE tickets.movie = movies.id AND ? <= movies.releasedate)",
-                (rs, rowNum) -> new Movie(rs.getString("name"),
-                        rs.getInt("duration"),
-                        rs.getString("image"),
-                        Stream.of((String[]) rs.getArray("genre").getArray())
-                                .map(arrayElement -> MovieGenre.valueOf(arrayElement.toUpperCase()).getCode())
-                                .collect(Collectors.toList()),
-                        rs.getString("releaseDate"),
-                        Stream.of((String[]) rs.getArray("language").getArray())
-                                .map(arrayElement -> MovieLanguage.valueOf(arrayElement.toUpperCase()).getCode())
-                                .collect(Collectors.toList())
-                ), OffsetDateTime.now()).forEach(movie -> movies.add(movie));
-        return movies;
+        String sql = "SELECT * FROM movies WHERE id = ANY (SELECT movie FROM tickets WHERE tickets.movie = movies.id AND ? <= movies.releasedate)";
+        return this.jdbcTemplate.query(sql, this.movieMapper, OffsetDateTime.now());
     }
 
     public List<Movie> filterMovies(List<String> genre, List<String> languages, LocalDate releasedOnOrAfter) throws DataAccessException {
-        List<Movie> movies = new ArrayList<>();
         String[] genreArray = genre.toArray(new String[0]);
         String[] languagesArray = languages.toArray(new String[0]);
 
@@ -93,39 +54,35 @@ public class MovieDAO implements Crud<Movie> {
                 "(CARDINALITY(?::movielanguage[]) = 0 OR movies.language && ?::movielanguage[])" +
                 "AND " +
                 "releasedate >= ?";
-        this.jdbcTemplate.query(sql, (rs, rowNum) -> new Movie(rs.getString("name"),
-                        rs.getInt("duration"),
-                        rs.getString("image"),
-                        Stream.of((String[]) rs.getArray("genre").getArray())
-                                .map(arrayElement -> MovieGenre.valueOf(arrayElement.toUpperCase()).getCode())
-                                .collect(Collectors.toList()),
-                        rs.getString("releaseDate"),
-                        Stream.of((String[]) rs.getArray("language").getArray())
-                                .map(arrayElement -> MovieLanguage.valueOf(arrayElement.toUpperCase()).getCode())
-                                .collect(Collectors.toList())
-                ), genreArray,
+        return this.jdbcTemplate.query(sql, this.movieMapper,
+                genreArray,
                 genreArray,
                 languagesArray,
                 languagesArray,
-                releasedOnOrAfter).forEach(movie -> movies.add(movie));
-
-        return movies;
+                releasedOnOrAfter);
     }
 
-    public Integer create(Movie movie) throws DataAccessException{
+    public Long create(Movie movie) throws DataAccessException, NullPointerException {
         String sql = "INSERT INTO movies(name, duration, image, genre, releaseDate, language) " +
-                "VALUES(?, ?, ?, ?::moviegenre[], ?, ?::movielanguage[])";
+                "VALUES(?, ?, ?, ?::moviegenre[], ?, ?::movielanguage[]) RETURNING id";
 
-        return this.jdbcTemplate.update(sql,
-                movie.getName(),
-                movie.getDuration(),
-                movie.getPoster(),
-                movie.getGenreList().toArray(new String[0]),
-                movie.getReleaseDate(),
-                movie.getLanguages().toArray(new String[0]));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        this.jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, movie.getName());
+            ps.setInt(2, movie.getDuration());
+            ps.setString(3, movie.getPoster());
+            Array genreArray = connection.createArrayOf("moviegenre", movie.getGenreList().toArray());
+            ps.setArray(4, genreArray);
+            ps.setDate(5, Date.valueOf(movie.getReleaseDate()));
+            Array languageArray = connection.createArrayOf("movielanguage", movie.getLanguages().toArray());
+            ps.setArray(6, languageArray);
+            return ps;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void deleteMovie(Movie movie) throws DataAccessException{
+    public void deleteMovie(Movie movie) throws DataAccessException {
         String sql = "DELETE FROM movies WHERE name = ? AND duration = ? AND releasedate = ?";
         this.jdbcTemplate.update(sql,
                 movie.getName(),

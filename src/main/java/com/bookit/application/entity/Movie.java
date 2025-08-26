@@ -1,6 +1,8 @@
 package com.bookit.application.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class Movie {
     public Integer getDuration() {
         return duration;
     }
+
 
     public List<String> getGenreList() {
         return genreList;

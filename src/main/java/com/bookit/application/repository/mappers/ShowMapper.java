@@ -2,10 +2,12 @@ package com.bookit.application.repository.mappers;
 
 import com.bookit.application.entity.Show;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class ShowMapper implements RowMapper<Show> {
     @Override
     public Show mapRow(ResultSet rs, int rowNum) throws SQLException {

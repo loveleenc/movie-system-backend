@@ -22,7 +22,7 @@ public class ShowDAO implements Crud<Show> {
     }
 
     @Override
-    public Object findById(Long id) throws DataAccessException {
+    public Show findById(Long id) throws DataAccessException {
         return null;
     }
 
@@ -41,7 +41,7 @@ public class ShowDAO implements Crud<Show> {
 //    }
 
     @Override
-    public Integer create(Show show) throws DataAccessException {
+    public Long create(Show show) throws DataAccessException {
         String sql = "INSERT INTO shows(theatre, starttime, endtime, movie, showlanguage) " +
                 "SELECT T.id, ?, ?, M.id, ? FROM " +
                 "(SELECT id FROM theatre WHERE theatre.theatrename = ?) T, " +
@@ -52,7 +52,7 @@ public class ShowDAO implements Crud<Show> {
                 "NOT EXISTS(SELECT 1 FROM shows WHERE shows.theatre = T.id AND " +
                 "(shows.starttime BETWEEN ? AND ?) AND " +
                 "(shows.endtime BETWEEN ? AND ?));";
-        return this.jdbcTemplate.update(sql,
+        return (long) this.jdbcTemplate.update(sql,
                 show.getStarttime(),
                 show.getEndTime(),
                 show.getLanguage(),

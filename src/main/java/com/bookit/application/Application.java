@@ -17,10 +17,6 @@ public class Application {
 
     @Bean
 	CommandLineRunner init(StorageService storageService){
-
-        for(int blah = 5; blah <= 30; blah ++){
-            System.out.println(String.format("(%d, 'available', (SELECT price FROM seatprices WHERE theatre = 1 AND seattype = 'Bronze'), 1), ", blah));
-        }
 		return (args) -> {
         };
 	}
