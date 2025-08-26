@@ -1,4 +1,4 @@
-package com.bookit.application.storage;
+package com.bookit.application.services.storage;
 
 public class StorageException extends RuntimeException {
   public StorageException(String message) {

@@ -1,4 +1,4 @@
-package com.bookit.application.storage;
+package com.bookit.application.services.storage;
 
 public class StorageFileNotFoundException extends StorageException{
     public StorageFileNotFoundException(String message){

@@ -1,4 +1,4 @@
-package com.bookit.application.storage;
+package com.bookit.application.services.storage;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
