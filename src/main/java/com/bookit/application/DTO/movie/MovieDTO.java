@@ -1,4 +1,4 @@
-package com.bookit.application.DTO;
+package com.bookit.application.DTO.movie;
 
 import com.bookit.application.entity.Movie;
 

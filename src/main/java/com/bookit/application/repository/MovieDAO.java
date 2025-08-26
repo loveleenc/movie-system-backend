@@ -16,13 +16,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class MovieDAO implements Crud {
+public class MovieDAO implements Crud<Movie> {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public MovieDAO() {
     }
-
 
     @Override
     public Movie findById(Long id) throws DataAccessException {
@@ -36,7 +35,7 @@ public class MovieDAO implements Crud {
                                 rs.getInt("duration"),
                                 rs.getString("image"),
                                 Stream.of((String[]) rs.getArray("genre").getArray())
-                                        .map(arrayElement -> MovieGenre.valueOf(arrayElement.toUpperCase()).getCode())
+                                        .map(arrayElement -> MovieGenre.valueOf(arrayElement.toUpperCase().replace("-", "_")).getCode())
                                         .collect(Collectors.toList()),
                                 rs.getString("releaseDate"),
                                 Stream.of((String[]) rs.getArray("language").getArray())
@@ -113,7 +112,7 @@ public class MovieDAO implements Crud {
         return movies;
     }
 
-    public Integer createNewMovie(Movie movie) throws DataAccessException{
+    public Integer create(Movie movie) throws DataAccessException{
         String sql = "INSERT INTO movies(name, duration, image, genre, releaseDate, language) " +
                 "VALUES(?, ?, ?, ?::moviegenre[], ?, ?::movielanguage[])";
 
@@ -126,9 +125,9 @@ public class MovieDAO implements Crud {
                 movie.getLanguages().toArray(new String[0]));
     }
 
-    public Integer deleteMovie(Movie movie){
+    public void deleteMovie(Movie movie) throws DataAccessException{
         String sql = "DELETE FROM movies WHERE name = ? AND duration = ? AND releasedate = ?";
-        return this.jdbcTemplate.update(sql,
+        this.jdbcTemplate.update(sql,
                 movie.getName(),
                 movie.getDuration(),
                 movie.getReleaseDate());

@@ -1,10 +1,9 @@
-package com.bookit.application.wrappers;
+package com.bookit.application.DTO.movie;
 
-import com.bookit.application.DTO.MovieDTO;
 import com.bookit.application.entity.Movie;
 import com.bookit.application.services.MovieException;
-import com.bookit.application.storage.StorageException;
-import com.bookit.application.storage.StorageService;
+import com.bookit.application.services.storage.StorageException;
+import com.bookit.application.services.storage.StorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +12,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class MovieMapper {
+public class MovieDTOMapper {
     private StorageService storageService;
 
-    public MovieMapper(StorageService storageService){
+    public MovieDTOMapper(StorageService storageService){
         this.storageService = storageService;
     }
 
@@ -32,7 +31,7 @@ public class MovieMapper {
         }
     }
 
-    public List<MovieDTO> transformAllMovies(List<Movie> movies){
+    public List<MovieDTO> toDTO(List<Movie> movies) throws MovieException{
         return movies.stream().map(this::toDTO).collect(Collectors.toList());
     }
 }

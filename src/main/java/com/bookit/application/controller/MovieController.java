@@ -1,7 +1,7 @@
 package com.bookit.application.controller;
 
 
-import com.bookit.application.DTO.MovieDTO;
+import com.bookit.application.DTO.movie.MovieDTO;
 import com.bookit.application.entity.Movie;
 import com.bookit.application.services.MovieService;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +18,8 @@ public class MovieController {
     MovieController(MovieService movieService){
         this.movieService = movieService;
     }
-
 //    @GetMapping("/")
-//    public String listUploadedFiles(Model model) throws IOException {
+//    public String listUploadedFiles(Model model) {
 //        return "uploadForm";
 //    }
 
@@ -60,4 +59,5 @@ public class MovieController {
         return this.movieService.addMovie(movie, file);
     }
 
+    //TODO: Delete movie
 }

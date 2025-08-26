@@ -11,9 +11,9 @@ import com.azure.storage.blob.models.BlockBlobItem;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import com.azure.storage.blob.sas.BlobSasPermission;
 import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
-import com.bookit.application.storage.StorageException;
-import com.bookit.application.storage.StorageProperties;
-import com.bookit.application.storage.StorageService;
+import com.bookit.application.services.storage.StorageException;
+import com.bookit.application.services.storage.StorageProperties;
+import com.bookit.application.services.storage.StorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.nio.file.Path;
 import java.time.OffsetDateTime;
 
 @Service
