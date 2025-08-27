@@ -1,5 +1,6 @@
 package com.bookit.application.entity;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,6 +12,15 @@ public class Show {
     private LocalDateTime endTime;
     private LocalDate movieReleaseDate;
     private String movieName;
+    private String showId;
+
+    public void setShowId(String showId) {
+        this.showId = showId;
+    }
+
+    public String getShowId() {
+        return showId;
+    }
 
     public void setMovieReleaseDate(LocalDate movieReleaseDate) {
         this.movieReleaseDate = movieReleaseDate;
@@ -62,13 +72,11 @@ public class Show {
         this.language = language;
     }
 
-    public void setStarttime(Time starttime) {
-        String date = starttime.toString().split(" ")[0];
-        this.starttime = starttime.toLocalTime().atDate(LocalDate.parse(date));
+    public void setStarttime(Date startdate, Time starttime) {
+        this.starttime = starttime.toLocalTime().atDate(startdate.toLocalDate());
     }
 
-    public void setEndTime(Time endTime) {
-        String date = endTime.toString().split(" ")[0];
-        this.endTime = endTime.toLocalTime().atDate(LocalDate.parse(date));
+    public void setEndTime(Date endDate, Time endTime) {
+        this.endTime = endTime.toLocalTime().atDate(endDate.toLocalDate());
     }
 }

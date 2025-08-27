@@ -26,7 +26,7 @@ public class MovieDAO implements Crud<Movie> {
 
     @Override
     public Movie findById(Long id) throws DataAccessException {
-        return this.jdbcTemplate.queryForObject("SELECT * FROM movies WHERE id = ?", Movie.class, id);
+        return this.jdbcTemplate.queryForObject("SELECT * FROM movies WHERE id = ?", this.movieMapper, id);
     }
 
     public List<Movie> findAll() throws DataAccessException {

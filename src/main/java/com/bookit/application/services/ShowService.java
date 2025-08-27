@@ -23,4 +23,10 @@ public class ShowService {
         List<Show> shows = this.showDAO.findShowsByMovie(movieName, movieReleaseDate);
         return this.showDTOMapper.toDTO(shows);
     }
+
+    public ShowDTO createShow(Show show){
+        Long id = this.showDAO.create(show);
+        Show createdShow = this.showDAO.findById(id);
+        return this.showDTOMapper.toDTO(createdShow);
+    }
 }

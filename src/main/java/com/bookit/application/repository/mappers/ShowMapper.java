@@ -14,10 +14,11 @@ public class ShowMapper implements RowMapper<Show> {
         Show show = new Show();
         show.setTheatreName(rs.getString("theatrename"));
         show.setLanguage(rs.getString("showLanguage"));
-        show.setStarttime(rs.getTime("starttime"));
-        show.setEndTime(rs.getTime("endtime"));
+        show.setStarttime(rs.getDate("starttime"), rs.getTime("starttime"));
+        show.setEndTime(rs.getDate("endtime"), rs.getTime("endtime"));
         show.setMovieName(rs.getString("name"));
         show.setMovieReleaseDate(rs.getDate("releasedate").toLocalDate());
+        show.setShowId(rs.getString("showid"));
         return show;
     }
 }

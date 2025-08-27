@@ -11,6 +11,7 @@ public class ShowDTO {
     private String language;
     private LocalDateTime starttime;
     private LocalDateTime endTime;
+    private String showId;
 
     public ShowDTO(String theatreName, String language, Time starttime, Time endTime) {
         this.theatreName = theatreName;
@@ -24,6 +25,11 @@ public class ShowDTO {
         this.language = show.getLanguage();
         this.starttime = show.getStarttime();
         this.endTime = show.getEndTime();
+        this.showId = show.getShowId();
+    }
+
+    public String getShowId() {
+        return showId;
     }
 
     public String getTheatreName() {
