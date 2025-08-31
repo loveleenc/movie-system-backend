@@ -35,13 +35,11 @@ public class MovieController {
         return this.movieService.getMovies().stream().map(this.movieDTOMapper::toDTO).toList();
     }
 
-    //TODO: need to fix API
     @GetMapping("/movies/ongoing")
     List<MovieDTO> getOngoingMovies(){
         return this.movieService.getOngoingMovies().stream().map(this.movieDTOMapper::toDTO).toList();
     }
 
-    //TODO: need to fix API
     @GetMapping("/movies/upcoming")
     List<MovieDTO> getUpcomingMovies(){
         return this.movieService.getUpcomingMovies().stream().map(this.movieDTOMapper::toDTO).toList();

@@ -32,7 +32,7 @@ public class MovieService {
     }
 
     public List<Movie> getOngoingMovies(){
-        return this.movieDao.findMoviesWithActiveTickets();
+        return this.movieDao.findOngoingMovies();
     }
 
     public List<Movie> getUpcomingMovies(){

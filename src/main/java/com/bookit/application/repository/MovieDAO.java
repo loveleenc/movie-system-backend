@@ -34,14 +34,14 @@ public class MovieDAO implements Crud<Movie> {
         return this.jdbcTemplate.query(sql, this.movieMapper);
     }
 
-    public List<Movie> findMoviesWithActiveTickets() throws DataAccessException {
-        String sql = "SELECT * FROM movies WHERE id = ANY (SELECT movie FROM tickets WHERE tickets.movie = movies.id AND ? >= movies.releasedate AND tickets.status = 'available')";
-        return this.jdbcTemplate.query(sql, this.movieMapper, OffsetDateTime.now());
+    public List<Movie> findOngoingMovies() throws DataAccessException {
+        String sql = "SELECT DISTINCT name, duration, image, genre, releasedate, language from movies M JOIN shows S ON M.id = S.movie WHERE M.releasedate >= ?";
+        return this.jdbcTemplate.query(sql, this.movieMapper, OffsetDateTime.now().toLocalDate());
     }
 
     public List<Movie> findUpcomingMovies() throws DataAccessException {
-        String sql = "SELECT * FROM movies WHERE id = ANY (SELECT movie FROM tickets WHERE tickets.movie = movies.id AND ? <= movies.releasedate)";
-        return this.jdbcTemplate.query(sql, this.movieMapper, OffsetDateTime.now());
+        String sql = "SELECT name, duration, image, genre, releasedate, language FROM movies M WHERE M.id NOT IN (SELECT movie FROM shows) AND M.releasedate >= ?";
+        return this.jdbcTemplate.query(sql, this.movieMapper, OffsetDateTime.now().toLocalDate());
     }
 
     public List<Movie> filterMovies(List<String> genre, List<String> languages, LocalDate releasedOnOrAfter) throws DataAccessException {
