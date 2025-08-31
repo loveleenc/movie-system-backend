@@ -1,9 +1,14 @@
 package com.bookit.application.DTO.movie;
 
+import com.bookit.application.DTO.InvalidDataException;
 import com.bookit.application.entity.Movie;
+import com.bookit.application.services.MovieException;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class MovieDTO {
@@ -38,17 +43,19 @@ public class MovieDTO {
         return this.languages;
     }
 
-    public MovieDTO(Movie movie){
-        this.name = movie.getName();
-        this.duration = movie.getDuration();
-        this.poster = movie.getPoster();
-        this.genreList = movie.getGenreList();
-        this.releaseDate = movie.getReleaseDate();
-        this.languages = movie.getLanguages();
-    }
+    public MovieDTO() {}
 
-    public void setPoster(String updatedPosterLink){
-        this.poster = updatedPosterLink;
+    public MovieDTO(String name, Integer duration, String poster, List<String> genreList, List<String> languages, String releaseDate) {
+        this.name = name;
+        this.duration = duration;
+        this.poster = poster;
+        this.genreList = genreList;
+        this.languages = languages;
+        try{
+            this.releaseDate = LocalDate.parse(releaseDate);
+        }
+        catch(DateTimeParseException e){
+            throw new MovieException("Unable to parse provided date", e);
+        }
     }
-
 }

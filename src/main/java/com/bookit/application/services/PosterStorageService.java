@@ -7,6 +7,7 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.azure.storage.blob.models.BlobRequestConditions;
+import com.azure.storage.blob.models.BlobStorageException;
 import com.azure.storage.blob.models.BlockBlobItem;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import com.azure.storage.blob.sas.BlobSasPermission;
@@ -67,7 +68,7 @@ public class PosterStorageService implements StorageService {
                 }
             }
         }
-        catch(IOException e){
+        catch(IOException | BlobStorageException e){
             throw new StorageException("Failed to store file.", e);
         }
     }

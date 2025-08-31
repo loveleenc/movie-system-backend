@@ -15,12 +15,12 @@ public class Movie {
     private LocalDate releaseDate;
     private List<String> languages;
 
-    public Movie(String name, Integer duration, String poster, List<String> genre, String releaseDate, List<String> languages) {
+    public Movie(String name, Integer duration, String poster, List<String> genre, LocalDate releaseDate, List<String> languages) {
         this.poster = poster;
         this.duration = duration;
         this.name = name;
         this.genreList = genre;
-        this.releaseDate = LocalDate.parse(releaseDate);
+        this.releaseDate = releaseDate;
         this.languages = languages;
     }
 
