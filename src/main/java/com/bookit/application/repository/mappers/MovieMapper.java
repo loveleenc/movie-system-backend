@@ -24,7 +24,8 @@ public class MovieMapper implements RowMapper<Movie> {
                 rs.getDate("releaseDate").toLocalDate(),
                 Stream.of((String[]) rs.getArray("language").getArray())
                         .map(arrayElement -> MovieLanguage.valueOf(arrayElement.toUpperCase()).getCode())
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                rs.getString("movieid")
         );
     }
 }

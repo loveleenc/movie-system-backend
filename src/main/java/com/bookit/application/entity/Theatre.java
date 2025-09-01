@@ -13,6 +13,11 @@ public class Theatre {
         this.id = id;
     }
 
+    public Theatre(String name, String location) {
+        this.name = name;
+        this.location = location;
+    }
+
     public String getName() {
         return name;
     }

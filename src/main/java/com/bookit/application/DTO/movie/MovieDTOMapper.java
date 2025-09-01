@@ -29,7 +29,8 @@ public class MovieDTOMapper {
                     resource.getURL().toString(),
                     movie.getGenreList(),
                     movie.getLanguages(),
-                    movie.getReleaseDate().toString());
+                    movie.getReleaseDate(),
+                    movie.getExternalId());
         } catch (StorageException | IOException e) {
             throw new MovieException("Unable to fetch the movie", e);
         }

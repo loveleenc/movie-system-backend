@@ -14,6 +14,7 @@ public class Movie {
     private List<String> genreList;
     private LocalDate releaseDate;
     private List<String> languages;
+    private String externalId;
 
     public Movie(String name, Integer duration, String poster, List<String> genre, LocalDate releaseDate, List<String> languages) {
         this.poster = poster;
@@ -22,6 +23,20 @@ public class Movie {
         this.genreList = genre;
         this.releaseDate = releaseDate;
         this.languages = languages;
+    }
+
+    public Movie(String name, Integer duration, String poster, List<String> genre, LocalDate releaseDate, List<String> languages, String externalId) {
+        this.poster = poster;
+        this.duration = duration;
+        this.name = name;
+        this.genreList = genre;
+        this.releaseDate = releaseDate;
+        this.languages = languages;
+        this.externalId = externalId;
+    }
+
+    public String getExternalId() {
+        return externalId;
     }
 
     public void setPoster(String filename){

@@ -3,15 +3,13 @@ package com.bookit.application.repository;
 import com.bookit.application.entity.Show;
 import com.bookit.application.entity.TheatreTimeSlots;
 import com.bookit.application.repository.mappers.ShowMapper;
+import com.bookit.application.repository.mappers.ShowTheatreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class ShowDAO implements Crud<Show> {
@@ -19,20 +17,22 @@ public class ShowDAO implements Crud<Show> {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private ShowMapper showMapper;
-
-    public ShowDAO(ShowMapper showMapper) {
+    private ShowTheatreMapper showTheatreMapper;
+    public ShowDAO(ShowMapper showMapper, ShowTheatreMapper showTheatreMapper) {
         this.showMapper = showMapper;
+        this.showTheatreMapper = showTheatreMapper;
     }
 
     @Override
     public Show findById(Long id) throws DataAccessException {
-
-        return null;
+        String sql = "SELECT * FROM shows WHERE id = ?";
+        return this.jdbcTemplate.queryForObject(sql, this.showMapper, id);
     }
 
     @Override
     public List<Show> findAll() throws DataAccessException {
-        return List.of();
+        String sql = "SELECT * FROM shows";
+        return this.jdbcTemplate.query(sql, this.showMapper);
     }
 
     public List<TheatreTimeSlots> getBookedSlotsByTheatreId(Long theatreId) {
@@ -98,12 +98,12 @@ public class ShowDAO implements Crud<Show> {
 //        return (long) this.jdbcTemplate.update(sql3);
     }
 
-    public List<Show> findShowsByMovie(String movieName, LocalDate movieReleaseDate) throws DataAccessException {
-        String sql = "select * from shows S " +
-                "INNER JOIN movies M ON S.movie = M.id " +
-                "JOIN theatre T ON T.id = S.theatre " +
-                "WHERE M.name = ? AND M.releasedate = ?";
-        return this.jdbcTemplate.query(sql, this.showMapper, movieName, movieReleaseDate);
+    public List<Show> findShowsByMovie(Long movieId) throws DataAccessException {
+        String sql = "select T.theatrename, T.location, S.starttime, S.endtime, S.showlanguage from shows S  " +
+                "INNER JOIN movies M ON S.movie = M.id  " +
+                "JOIN theatre T ON T.id = S.theatre  " +
+                "WHERE M.id = ? ORDER BY S.theatre, S.starttime";
+        return this.jdbcTemplate.query(sql, this.showTheatreMapper, movieId);
     }
 
     //    public Map<String, Long> getShowIdAndTheatre(String showId) throws DataAccessException {

@@ -1,6 +1,7 @@
 package com.bookit.application.repository.mappers;
 
 import com.bookit.application.entity.Show;
+import com.bookit.application.entity.TheatreTimeSlots;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -11,16 +12,11 @@ import java.sql.SQLException;
 public class ShowMapper implements RowMapper<Show> {
     @Override
     public Show mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Show(
-            rs.getLong("")
+        TheatreTimeSlots timeSlot = new TheatreTimeSlots(rs.getTimestamp("starttime").toLocalDateTime(), rs.getTimestamp("endtime").toLocalDateTime());
+        return new Show(rs.getLong("movie"),
+            rs.getLong("theatre"),
+            rs.getString("showlanguage"),
+            timeSlot
         );
-        show.setTheatreName(rs.getString("theatrename"));
-        show.setLanguage(rs.getString("showLanguage"));
-        show.setStarttime(rs.getDate("starttime"), rs.getTime("starttime"));
-        show.setEndTime(rs.getDate("endtime"), rs.getTime("endtime"));
-        show.setMovieName(rs.getString("name"));
-        show.setMovieReleaseDate(rs.getDate("releasedate").toLocalDate());
-        show.setShowId(rs.getString("showid"));
-        return show;
     }
 }

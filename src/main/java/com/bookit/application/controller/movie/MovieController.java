@@ -58,8 +58,8 @@ public class MovieController {
         if(releasedOnOrAfter == null){
             releasedOnOrAfter = START_DATE;
         }
-        return new ResponseEntity<>(this.movieService.filterMovies(genre, language, releasedOnOrAfter).stream().map(this.movieDTOMapper::toDTO).toList(),
-                HttpStatus.OK);
+        List<MovieDTO> movies = this.movieService.filterMovies(genre, language, releasedOnOrAfter).stream().map(this.movieDTOMapper::toDTO).toList();
+        return new ResponseEntity<>(movies, HttpStatus.OK);
     }
 
     @PostMapping("/movie")

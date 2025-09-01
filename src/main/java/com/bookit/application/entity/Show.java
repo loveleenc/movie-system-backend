@@ -7,20 +7,31 @@ public class Show {
     private Long movieId;
     private Long theatreId;
     private String language;
-    private TheatreTimeSlots timeSlots;
+    private TheatreTimeSlots timeSlot;
+    private Theatre theatre;
 
-    public Show(String movieExternalId, String theatreExternalId, String language, LocalDateTime startTime, LocalDateTime endTime) {
+    public Show(String movieExternalId, String theatreExternalId, String language, TheatreTimeSlots timeSlot) {
         this.movieExternalId = movieExternalId;
         this.theatreExternalId = theatreExternalId;
         this.language = language;
-        this.timeSlots = new TheatreTimeSlots(startTime, endTime);
+        this.timeSlot = timeSlot;
     }
 
-    public Show(Long movieId, Long theatreId, String language, LocalDateTime startTime, LocalDateTime endTime) {
+    public Show(Long movieId, Long theatreId, String language, TheatreTimeSlots timeSlot) {
         this.movieId = movieId;
         this.theatreId = theatreId;
         this.language = language;
-        this.timeSlots = new TheatreTimeSlots(startTime, endTime);
+        this.timeSlot = timeSlot;
+    }
+
+    public Show(Theatre theatre, TheatreTimeSlots timeSlot, String language){
+        this.theatre = theatre;
+        this.timeSlot = timeSlot;
+        this.language = language;
+    }
+
+    public Theatre getTheatre() {
+        return theatre;
     }
 
     public Long getMovieId() {
@@ -44,19 +55,19 @@ public class Show {
     }
 
     public LocalDateTime getStartTime() {
-        return this.timeSlots.startTime();
+        return this.timeSlot.startTime();
     }
 
     public LocalDateTime getEndTime() {
-        return this.timeSlots.endTime();
+        return this.timeSlot.endTime();
     }
 
     public Long getDuration(){
-        return this.timeSlots.getSlotDuration();
+        return this.timeSlot.getSlotDuration();
     }
 
     public TheatreTimeSlots getTimeSlot(){
-        return this.timeSlots;
+        return this.timeSlot;
     }
 
     public void setMovieId(Long movieId) {
@@ -65,5 +76,13 @@ public class Show {
 
     public void setTheatreId(Long theatreId) {
         this.theatreId = theatreId;
+    }
+
+    public void setMovieExternalId(String movieExternalId) {
+        this.movieExternalId = movieExternalId;
+    }
+
+    public void setTheatreExternalId(String theatreExternalId) {
+        this.theatreExternalId = theatreExternalId;
     }
 }

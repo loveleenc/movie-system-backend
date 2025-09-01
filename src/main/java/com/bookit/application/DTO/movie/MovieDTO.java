@@ -18,6 +18,11 @@ public class MovieDTO {
     private List<String> genreList;
     private List<String> languages;
     private LocalDate releaseDate;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -39,11 +44,12 @@ public class MovieDTO {
         return releaseDate;
     }
 
-    public List<String> getLanguages(){
+    public List<String> getLanguages() {
         return this.languages;
     }
 
-    public MovieDTO() {}
+    public MovieDTO() {
+    }
 
     public MovieDTO(String name, Integer duration, String poster, List<String> genreList, List<String> languages, String releaseDate) {
         this.name = name;
@@ -51,11 +57,20 @@ public class MovieDTO {
         this.poster = poster;
         this.genreList = genreList;
         this.languages = languages;
-        try{
+        try {
             this.releaseDate = LocalDate.parse(releaseDate);
-        }
-        catch(DateTimeParseException e){
+        } catch (DateTimeParseException e) {
             throw new MovieException("Unable to parse provided date", e);
         }
+    }
+
+    public MovieDTO(String name, Integer duration, String poster, List<String> genreList, List<String> languages, LocalDate releaseDate, String id) {
+        this.name = name;
+        this.duration = duration;
+        this.poster = poster;
+        this.genreList = genreList;
+        this.languages = languages;
+        this.releaseDate = releaseDate;
+        this.id = id;
     }
 }
