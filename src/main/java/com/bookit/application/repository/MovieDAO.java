@@ -24,6 +24,11 @@ public class MovieDAO implements Crud<Movie> {
         this.movieMapper = movieMapper;
     }
 
+    public Long findIdByExternalId(String externalId) {
+        String sql = "SELECT id FROM movies WHERE movieid = ?";
+        return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), externalId);
+    }
+
     @Override
     public Movie findById(Long id) throws DataAccessException {
         return this.jdbcTemplate.queryForObject("SELECT * FROM movies WHERE id = ?", this.movieMapper, id);

@@ -1,82 +1,69 @@
 package com.bookit.application.entity;
-
-import java.sql.Date;
-import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Show {
-    private String theatreName;
+    private String movieExternalId;
+    private String theatreExternalId;
+    private Long movieId;
+    private Long theatreId;
     private String language;
-    private LocalDateTime starttime;
-    private LocalDateTime endTime;
-    private LocalDate movieReleaseDate;
-    private String movieName;
-    private String showId;
+    private TheatreTimeSlots timeSlots;
 
-    public void setShowId(String showId) {
-        this.showId = showId;
-    }
-
-    public String getShowId() {
-        return showId;
-    }
-
-    public void setMovieReleaseDate(LocalDate movieReleaseDate) {
-        this.movieReleaseDate = movieReleaseDate;
-    }
-
-    public void setMovieName(String movieName) {
-        this.movieName = movieName;
-    }
-
-    public Show(String theatreName, LocalDateTime starttime, LocalDateTime endTime, String movieName, LocalDate movieReleaseDate, String language) {
-        this.theatreName = theatreName;
+    public Show(String movieExternalId, String theatreExternalId, String language, LocalDateTime startTime, LocalDateTime endTime) {
+        this.movieExternalId = movieExternalId;
+        this.theatreExternalId = theatreExternalId;
         this.language = language;
-        this.starttime = starttime;
-        this.endTime = endTime;
-        this.movieName = movieName;
-        this.movieReleaseDate = movieReleaseDate;
+        this.timeSlots = new TheatreTimeSlots(startTime, endTime);
     }
 
-    public Show(){}
-
-    public String getTheatreName() {
-        return theatreName;
+    public Show(Long movieId, Long theatreId, String language, LocalDateTime startTime, LocalDateTime endTime) {
+        this.movieId = movieId;
+        this.theatreId = theatreId;
+        this.language = language;
+        this.timeSlots = new TheatreTimeSlots(startTime, endTime);
     }
 
-    public String getMovieName() {
-        return movieName;
+    public Long getMovieId() {
+        return movieId;
     }
 
-    public LocalDate getMovieReleaseDate() {
-        return movieReleaseDate;
+    public Long getTheatreId() {
+        return theatreId;
     }
+
+    public String getMovieExternalId() {
+        return movieExternalId;
+    }
+
+    public String getTheatreExternalId() {
+        return theatreExternalId;
+    }
+
     public String getLanguage() {
         return language;
     }
 
-    public LocalDateTime getStarttime() {
-        return starttime;
+    public LocalDateTime getStartTime() {
+        return this.timeSlots.startTime();
     }
 
     public LocalDateTime getEndTime() {
-        return endTime;
+        return this.timeSlots.endTime();
     }
 
-    public void setTheatreName(String theatreName) {
-        this.theatreName = theatreName;
+    public Long getDuration(){
+        return this.timeSlots.getSlotDuration();
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public TheatreTimeSlots getTimeSlot(){
+        return this.timeSlots;
     }
 
-    public void setStarttime(Date startdate, Time starttime) {
-        this.starttime = starttime.toLocalTime().atDate(startdate.toLocalDate());
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
     }
 
-    public void setEndTime(Date endDate, Time endTime) {
-        this.endTime = endTime.toLocalTime().atDate(endDate.toLocalDate());
+    public void setTheatreId(Long theatreId) {
+        this.theatreId = theatreId;
     }
 }

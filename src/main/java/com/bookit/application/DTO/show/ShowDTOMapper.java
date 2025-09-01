@@ -9,10 +9,17 @@ import java.util.stream.Collectors;
 @Component
 public class ShowDTOMapper {
 
-    public ShowDTOMapper(){}
+    public Show toShow(ShowDTO show){
+        return new Show(show.getMovieId(),
+                show.getTheatreId(),
+                show.getLanguage(),
+                show.getStartTime(),
+                show.getEndTime());
+    }
 
     public ShowDTO toDTO(Show show){
-        return new ShowDTO(show);
+        return new ShowDTO(show.getTheatreExternalId(),
+                show.getMovieExternalId(), show.getLanguage(), show.getStartTime(), show.getEndTime());
     }
 
     public List<ShowDTO> toDTO(List<Show> shows){

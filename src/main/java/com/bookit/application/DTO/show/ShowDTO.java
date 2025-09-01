@@ -1,60 +1,57 @@
 package com.bookit.application.DTO.show;
 
-import com.bookit.application.entity.Show;
+import com.bookit.application.services.MovieException;
 
-import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 
 public class ShowDTO {
-    private String theatreName;
+    private String theatreId;
+    private String movieId;
     private String language;
-    private LocalDateTime starttime;
+    private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String showId;
 
-    public ShowDTO(String theatreName, String language, Time starttime, Time endTime) {
-        this.theatreName = theatreName;
+    public ShowDTO(String theatreId, String movieId, String language, String startTime, String endTime) {
+        this.theatreId = theatreId;
+        this.movieId = movieId;
         this.language = language;
-        this.setStarttime(starttime);
-        this.setEndTime(endTime);
+        try{
+            this.startTime = LocalDateTime.parse(startTime);
+            this.endTime = LocalDateTime.parse(endTime);
+        }
+        catch(DateTimeParseException e){
+            //TODO: handle an exception specifically for shows
+            throw new MovieException("");
+        }
     }
 
-    public ShowDTO(Show show){
-        this.theatreName = show.getTheatreName();
-        this.language = show.getLanguage();
-        this.starttime = show.getStarttime();
-        this.endTime = show.getEndTime();
-        this.showId = show.getShowId();
+    public ShowDTO(String theatreId, String movieId, String language, LocalDateTime startTime, LocalDateTime endTime) {
+        this.theatreId = theatreId;
+        this.movieId = movieId;
+        this.language = language;
+        this.startTime = startTime;
+        this.endTime = endTime;
+
     }
 
-    public String getShowId() {
-        return showId;
+    public String getTheatreId() {
+        return theatreId;
     }
 
-    public String getTheatreName() {
-        return theatreName;
+    public String getMovieId() {
+        return movieId;
     }
 
     public String getLanguage() {
         return language;
     }
 
-    public LocalDateTime getStarttime() {
-        return starttime;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
     public LocalDateTime getEndTime() {
         return endTime;
-    }
-
-    public void setStarttime(Time starttime) {
-        String date = starttime.toString().split(" ")[0];
-        this.starttime = starttime.toLocalTime().atDate(LocalDate.parse(date));
-    }
-
-    public void setEndTime(Time endTime) {
-        String date = endTime.toString().split(" ")[0];
-        this.endTime = endTime.toLocalTime().atDate(LocalDate.parse(date));
     }
 }

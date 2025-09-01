@@ -39,7 +39,7 @@ public class MovieDTOMapper {
         return movies.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public Movie toMovie(MovieDTO movieDTO) {
+    public Movie toMovie(MovieDTO movieDTO) throws InvalidDataException{
         List<String> unsetValues = this.anyUnsetValues(movieDTO.getName(), movieDTO.getDuration(), movieDTO.getPoster(), movieDTO.getGenreList(), movieDTO.getLanguages(), movieDTO.getReleaseDate().toString());
         if(!unsetValues.isEmpty()){
             throw new InvalidDataException("The following data appears to be missing: " + unsetValues);

@@ -11,7 +11,9 @@ import java.sql.SQLException;
 public class ShowMapper implements RowMapper<Show> {
     @Override
     public Show mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Show show = new Show();
+        return new Show(
+            rs.getLong("")
+        );
         show.setTheatreName(rs.getString("theatrename"));
         show.setLanguage(rs.getString("showLanguage"));
         show.setStarttime(rs.getDate("starttime"), rs.getTime("starttime"));
