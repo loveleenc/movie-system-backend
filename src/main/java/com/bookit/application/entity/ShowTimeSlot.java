@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
-public record TheatreTimeSlots(LocalDateTime startTime, LocalDateTime endTime) {
-    public TheatreTimeSlots {
+public record ShowTimeSlot(LocalDateTime startTime, LocalDateTime endTime) {
+    public ShowTimeSlot {
         if (startTime.isAfter(endTime) || startTime.equals(endTime)) {
             //TODO: throw error
         }
@@ -19,9 +19,9 @@ public record TheatreTimeSlots(LocalDateTime startTime, LocalDateTime endTime) {
         return timestamp.isAfter(this.startTime) && timestamp.isBefore(this.endTime);
     }
 
-    public static Boolean noOverlapBetweenTimeSlotsExists(List<TheatreTimeSlots> slots, TheatreTimeSlots expectedTimeSlot) {
+    public static Boolean noOverlapBetweenTimeSlotsExists(List<ShowTimeSlot> slots, ShowTimeSlot expectedTimeSlot) {
         boolean noOverlapExists = true;
-        for (TheatreTimeSlots slot : slots) {
+        for (ShowTimeSlot slot : slots) {
             if (slot.inRange(expectedTimeSlot.startTime()) || slot.inRange(expectedTimeSlot.endTime())) {
                 noOverlapExists = false;
                 break;

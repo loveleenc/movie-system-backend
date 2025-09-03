@@ -1,33 +1,25 @@
 package com.bookit.application.entity;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Show {
-    private String movieExternalId;
-    private String theatreExternalId;
-    private Long movieId;
-    private Long theatreId;
-    private String language;
-    private TheatreTimeSlots timeSlot;
+    private ShowTimeSlot timeSlot;
     private Theatre theatre;
+    private Movie movie;
+    private String language;
+    private UUID id;
 
-    public Show(String movieExternalId, String theatreExternalId, String language, TheatreTimeSlots timeSlot) {
-        this.movieExternalId = movieExternalId;
-        this.theatreExternalId = theatreExternalId;
-        this.language = language;
+
+    public Show(ShowTimeSlot timeSlot, Theatre theatre, Movie movie, String language, UUID id) {
         this.timeSlot = timeSlot;
-    }
-
-    public Show(Long movieId, Long theatreId, String language, TheatreTimeSlots timeSlot) {
-        this.movieId = movieId;
-        this.theatreId = theatreId;
-        this.language = language;
-        this.timeSlot = timeSlot;
-    }
-
-    public Show(Theatre theatre, TheatreTimeSlots timeSlot, String language){
         this.theatre = theatre;
-        this.timeSlot = timeSlot;
+        this.movie = movie;
         this.language = language;
+        this.id = id;
+    }
+
+    public Movie getMovie() {
+        return movie;
     }
 
     public Theatre getTheatre() {
@@ -35,19 +27,11 @@ public class Show {
     }
 
     public Long getMovieId() {
-        return movieId;
+        return this.movie.getId();
     }
 
     public Long getTheatreId() {
-        return theatreId;
-    }
-
-    public String getMovieExternalId() {
-        return movieExternalId;
-    }
-
-    public String getTheatreExternalId() {
-        return theatreExternalId;
+        return this.theatre.getId();
     }
 
     public String getLanguage() {
@@ -66,23 +50,11 @@ public class Show {
         return this.timeSlot.getSlotDuration();
     }
 
-    public TheatreTimeSlots getTimeSlot(){
+    public ShowTimeSlot getTimeSlot(){
         return this.timeSlot;
     }
 
-    public void setMovieId(Long movieId) {
-        this.movieId = movieId;
-    }
-
-    public void setTheatreId(Long theatreId) {
-        this.theatreId = theatreId;
-    }
-
-    public void setMovieExternalId(String movieExternalId) {
-        this.movieExternalId = movieExternalId;
-    }
-
-    public void setTheatreExternalId(String theatreExternalId) {
-        this.theatreExternalId = theatreExternalId;
+    public UUID getId() {
+        return id;
     }
 }

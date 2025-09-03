@@ -15,15 +15,12 @@ public class TheatreDAO implements Crud<Theatre> {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public Long findIdByExternalId(String externalId) {
-        String sql = "SELECT id FROM theatre WHERE theatreid = ?::uuid";
-        return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), externalId);
-    }
-
     @Override
     public Theatre findById(Long id) throws DataAccessException {
         return this.jdbcTemplate.queryForObject("SELECT * FROM theatre WHERE id = ?",
-                (rs, rowNum) -> new Theatre(rs.getString("theatreName"), rs.getString("location"), rs.getLong("id")),
+                (rs, rowNum) -> {
+                    return new Theatre(rs.getString("theatreName"), rs.getString("location"), rs.getLong("id"));
+                },
                 id);
     }
 

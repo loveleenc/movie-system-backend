@@ -1,22 +1,21 @@
 package com.bookit.application.entity;
 
+import java.util.List;
+
 public class Theatre {
     private String name;
     private String location;
+    private List<Seat> seats;
     private long id;
-    private String theatreId;
 
 
-    public Theatre(String name, String location, long id) {
+    public Theatre(String name, String location, Long id) {
         this.name = name;
         this.location = location;
         this.id = id;
     }
 
-    public Theatre(String name, String location) {
-        this.name = name;
-        this.location = location;
-    }
+    public Theatre(){}
 
     public String getName() {
         return name;
@@ -29,4 +28,9 @@ public class Theatre {
     public long getId() {
         return id;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
 }

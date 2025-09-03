@@ -24,11 +24,6 @@ public class MovieDAO implements Crud<Movie> {
         this.movieMapper = movieMapper;
     }
 
-    public Long findIdByExternalId(String externalId) {
-        String sql = "SELECT id FROM movies WHERE movieid = ?::uuid";
-        return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), externalId);
-    }
-
     @Override
     public Movie findById(Long id) throws DataAccessException {
         return this.jdbcTemplate.queryForObject("SELECT * FROM movies WHERE id = ?", this.movieMapper, id);
@@ -40,12 +35,12 @@ public class MovieDAO implements Crud<Movie> {
     }
 
     public List<Movie> findOngoingMovies() throws DataAccessException {
-        String sql = "SELECT DISTINCT movieid, name, duration, image, genre, releasedate, language from movies M JOIN shows S ON M.id = S.movie WHERE M.releasedate >= ?";
+        String sql = "SELECT DISTINCT id, name, duration, image, genre, releasedate, language from movies M JOIN shows S ON M.id = S.movie WHERE M.releasedate >= ?";
         return this.jdbcTemplate.query(sql, this.movieMapper, OffsetDateTime.now().toLocalDate());
     }
 
     public List<Movie> findUpcomingMovies() throws DataAccessException {
-        String sql = "SELECT movieid, name, duration, image, genre, releasedate, language FROM movies M WHERE M.id NOT IN (SELECT movie FROM shows) AND M.releasedate >= ?";
+        String sql = "SELECT id, name, duration, image, genre, releasedate, language FROM movies M WHERE M.id NOT IN (SELECT movie FROM shows) AND M.releasedate >= ?";
         return this.jdbcTemplate.query(sql, this.movieMapper, OffsetDateTime.now().toLocalDate());
     }
 

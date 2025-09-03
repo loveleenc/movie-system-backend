@@ -1,16 +1,13 @@
 package com.bookit.application.services;
 
-import com.bookit.application.entity.Movie;
-import com.bookit.application.entity.Show;
-import com.bookit.application.entity.Theatre;
-import com.bookit.application.entity.TheatreTimeSlots;
+import com.bookit.application.entity.*;
 import com.bookit.application.repository.MovieDAO;
 import com.bookit.application.repository.ShowDAO;
 import com.bookit.application.repository.TheatreDAO;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ShowService {
@@ -24,15 +21,24 @@ public class ShowService {
         this.theatreDAO = theatreDAO;
     }
 
-    public List<Show> getShowsByMovie(String movieExternalId){
-        Long movieId = this.movieDAO.findIdByExternalId(movieExternalId);
+    public List<Show> getShowsByMovie(Long movieId){
         return this.showDAO.findShowsByMovie(movieId);
     }
 
-    public Show createShow(Show show){
-        Long movieId = this.movieDAO.findIdByExternalId(show.getMovieExternalId());
+    public Show createShowAndTickets(Show show, Ticket ticket){
+        Show createdShow = this.createShow(show);
+        if(ticket != null){
+            //TODO: create tickets here bruh
+            ticket.getTheatre().setId(createdShow.getTheatreId());
+
+        }
+        return createdShow;
+    }
+
+    private Show createShow(Show show){
+        Long movieId = show.getMovieId();
         Movie movie = this.movieDAO.findById(movieId);
-        Long theatreId = this.theatreDAO.findIdByExternalId(show.getTheatreExternalId());
+        Long theatreId = show.getTheatreId();
 
         if(!movie.getLanguages().contains(show.getLanguage())){
             //TODO: throw error
@@ -46,17 +52,13 @@ public class ShowService {
             //TODO: throw error
         }
 
-        List<TheatreTimeSlots> unavailableTimeSlots = this.showDAO.getBookedSlotsByTheatreId(theatreId);
-        if(!TheatreTimeSlots.noOverlapBetweenTimeSlotsExists(unavailableTimeSlots, show.getTimeSlot())){
+        List<ShowTimeSlot> unavailableTimeSlots = this.showDAO.getBookedSlotsByTheatreId(theatreId);
+        if(!ShowTimeSlot.noOverlapBetweenTimeSlotsExists(unavailableTimeSlots, show.getTimeSlot())){
             //TODO: throw error
         }
 
-        show.setMovieId(movieId);
-        show.setTheatreId(theatreId);
-        Long id = this.showDAO.create(show);
-        Show createdShow = this.showDAO.findById(id);
-        createdShow.setMovieExternalId(show.getMovieExternalId());
-        createdShow.setTheatreExternalId(show.getTheatreExternalId());
-        return createdShow;
+        //TODO: throw error if value is not 1
+        String id = this.showDAO.createShow(show);
+        return this.showDAO.findByShowId(id);
     }
 }

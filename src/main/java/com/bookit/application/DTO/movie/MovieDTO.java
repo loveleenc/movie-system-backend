@@ -3,6 +3,8 @@ package com.bookit.application.DTO.movie;
 import com.bookit.application.DTO.InvalidDataException;
 import com.bookit.application.entity.Movie;
 import com.bookit.application.services.MovieException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -10,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MovieDTO {
     private String name;
     private Integer duration;
@@ -18,9 +20,9 @@ public class MovieDTO {
     private List<String> genreList;
     private List<String> languages;
     private LocalDate releaseDate;
-    private String id;
+    private Long id;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -48,23 +50,8 @@ public class MovieDTO {
         return this.languages;
     }
 
-    public MovieDTO() {
-    }
-
-    public MovieDTO(String name, Integer duration, String poster, List<String> genreList, List<String> languages, String releaseDate) {
-        this.name = name;
-        this.duration = duration;
-        this.poster = poster;
-        this.genreList = genreList;
-        this.languages = languages;
-        try {
-            this.releaseDate = LocalDate.parse(releaseDate);
-        } catch (DateTimeParseException e) {
-            throw new MovieException("Unable to parse provided date", e);
-        }
-    }
-
-    public MovieDTO(String name, Integer duration, String poster, List<String> genreList, List<String> languages, LocalDate releaseDate, String id) {
+    @JsonCreator
+    public MovieDTO(String name, Integer duration, String poster, List<String> genreList, List<String> languages, LocalDate releaseDate, Long id) {
         this.name = name;
         this.duration = duration;
         this.poster = poster;

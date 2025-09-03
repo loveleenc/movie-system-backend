@@ -22,17 +22,17 @@ public enum MovieLanguage {
         this.code = code;
     }
 
-    public String getCode() {
+    public String code() {
         return code;
     }
 
     public static List<String> getAllCodes(){
-        return Stream.of(MovieLanguage.values()).map(MovieLanguage::getCode).toList();
+        return Stream.of(MovieLanguage.values()).map(MovieLanguage::code).toList();
     }
 
     public static boolean isMovieLanguageEnum(String possibleEnum){
         for(MovieLanguage language: MovieLanguage.values()){
-            if(language.getCode().equals(possibleEnum)){
+            if(language.code().equals(possibleEnum)){
                 return true;
             }
         }

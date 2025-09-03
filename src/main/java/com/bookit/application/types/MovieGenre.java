@@ -33,22 +33,23 @@ public enum MovieGenre {
         this.code = code;
     }
 
-    public String getCode() {
+    public String code() {
         return code;
     }
 
     public static List<String> getAllCodes(){
-        return Stream.of(MovieGenre.values()).map(MovieGenre::getCode).toList();
+        return Stream.of(MovieGenre.values()).map(MovieGenre::code).toList();
     }
 
     public static boolean isMovieGenreEnum(String possibleGenre){
         for(MovieGenre genre: MovieGenre.values()){
-            if(genre.getCode().equals(possibleGenre)){
+            if(genre.code().equals(possibleGenre)){
                 return true;
             }
         }
         return false;
     }
+
 
 }
 

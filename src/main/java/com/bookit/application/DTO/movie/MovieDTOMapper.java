@@ -24,13 +24,15 @@ public class MovieDTOMapper {
     public MovieDTO toDTO(Movie movie) throws MovieException {
         try {
             Resource resource = this.storageService.getResource(movie.getPoster());
-            return new MovieDTO(movie.getName(),
-                    movie.getDuration(),
-                    resource.getURL().toString(),
-                    movie.getGenreList(),
-                    movie.getLanguages(),
-                    movie.getReleaseDate(),
-                    movie.getExternalId());
+            return new MovieDTOBuilder()
+                    .setName(movie.getName())
+                    .setDuration(movie.getDuration())
+                    .setPoster(resource.getURL().toString())
+                    .setGenreList(movie.getGenreList())
+                    .setLanguages(movie.getLanguages())
+                    .setReleaseDate(movie.getReleaseDate())
+                    .setId(movie.getId())
+                    .build();
         } catch (StorageException | IOException e) {
             throw new MovieException("Unable to fetch the movie", e);
         }
@@ -50,7 +52,8 @@ public class MovieDTOMapper {
                 movieDTO.getPoster(),
                 movieDTO.getGenreList(),
                 movieDTO.getReleaseDate(),
-                movieDTO.getLanguages());
+                movieDTO.getLanguages(),
+                null);
     }
 
     public List<String> anyUnsetValues(String name, Integer duration, String poster, List<String> genreList, List<String> languages, String releaseDate){
