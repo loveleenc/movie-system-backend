@@ -7,30 +7,28 @@ import com.bookit.application.repository.TheatreDAO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class ShowService {
     private ShowDAO showDAO;
     private MovieDAO movieDAO;
-    private TheatreDAO theatreDAO;
+    private TicketService ticketService;
 
-    public ShowService(ShowDAO showDAO, MovieDAO movieDAO, TheatreDAO theatreDAO){
+    public ShowService(ShowDAO showDAO, MovieDAO movieDAO, TicketService ticketService){
         this.showDAO = showDAO;
         this.movieDAO = movieDAO;
-        this.theatreDAO = theatreDAO;
+        this.ticketService = ticketService;
     }
 
     public List<Show> getShowsByMovie(Long movieId){
         return this.showDAO.findShowsByMovie(movieId);
     }
 
-    public Show createShowAndTickets(Show show, Ticket ticket){
+    public Show createShowAndTickets(Show show, Long moviePrice, String ticketStatus){
         Show createdShow = this.createShow(show);
-        if(ticket != null){
+        if(moviePrice != null && ticketStatus != null){
             //TODO: create tickets here bruh
-            ticket.getTheatre().setId(createdShow.getTheatreId());
-
+            this.ticketService.createTicketsForShow(moviePrice, createdShow, ticketStatus);
         }
         return createdShow;
     }
@@ -57,7 +55,6 @@ public class ShowService {
             //TODO: throw error
         }
 
-        //TODO: throw error if value is not 1
         String id = this.showDAO.createShow(show);
         return this.showDAO.findByShowId(id);
     }

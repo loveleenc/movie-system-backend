@@ -1,0 +1,65 @@
+package com.bookit.application.services;
+
+import com.bookit.application.entities.Sea;
+import com.bookit.application.entities.Tick;
+import com.bookit.application.entity.Seat;
+import com.bookit.application.entity.Show;
+import com.bookit.application.entity.Ticket;
+import com.bookit.application.repository.SeatDAO;
+import com.bookit.application.repository.TicketDAO;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Component
+public class TicketService {
+    private SeatDAO seatDAO;
+    private PricingService pricingService;
+    private TicketDAO ticketDAO;
+
+    public TicketService(SeatDAO seatDAO, PricingService pricingService, TicketDAO ticketDAO) {
+        this.seatDAO = seatDAO;
+        this.pricingService = pricingService;
+        this.ticketDAO = ticketDAO;
+    }
+
+    public void getAvailableTickets(String movieName,
+                                    String seatType,
+                                    LocalDateTime time,
+                                    String theatreName){
+
+    }
+
+    public List<Seat> getSeatsFromTheatre(Long theatreId){
+        return this.seatDAO.getSeatPricesByTheatre(theatreId);
+    }
+
+    public void createTicketsForShow(Long moviePrice, Show show, String status){
+        List<Seat> seats = this.getSeatsFromTheatre(show.getTheatreId());
+        this.createTickets(moviePrice, show, status, seats);
+    }
+
+    private void createTickets(Long moviePrice, Show show, String status, List<Seat> seats){
+        //TODO: validate status type and movieprice
+        Map<String, Long> ticketPricePerSeatType = new HashMap<>();
+        List<Ticket> tickets = new ArrayList<>();
+
+        for(Seat seat: seats){
+            Long ticketPrice;
+            if(!ticketPricePerSeatType.containsKey(seat.getSeatType())){
+                ticketPrice = this.pricingService.calculateTicketPrice(seat.getSeatPrice(), moviePrice, show.getTimeSlot());
+                ticketPricePerSeatType.put(seat.getSeatType(), ticketPrice);
+            }
+            else{
+                ticketPrice = ticketPricePerSeatType.get(seat.getSeatType());
+            }
+            Ticket ticket = new Ticket(show, seat, status, ticketPrice);
+            tickets.add(ticket);
+        }
+        this.ticketDAO.createTickets(tickets);
+    }
+}
