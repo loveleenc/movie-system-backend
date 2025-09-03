@@ -1,8 +1,8 @@
 package com.bookit.application.controller;
 
-import com.bookit.application.DTO.showAndTickets.ShowAndTicketDTO;
-import com.bookit.application.DTO.showAndTickets.show.ShowDTO;
-import com.bookit.application.DTO.showAndTickets.show.ShowDTOMapper;
+import com.bookit.application.DTO.show.ShowAndTicketCreationDTO;
+import com.bookit.application.DTO.show.ShowDTO;
+import com.bookit.application.DTO.show.ShowDTOMapper;
 import com.bookit.application.entity.Show;
 import com.bookit.application.services.ShowService;
 import org.springframework.http.HttpStatus;
@@ -30,10 +30,10 @@ public class ShowsController {
     //TODO: add methods to update and delete shows
 
     @PostMapping("/show")
-    ResponseEntity<ShowDTO> createShow(@RequestBody ShowAndTicketDTO showAndTicketDTO) {
-        ShowDTO showDTO = showAndTicketDTO.getShow();
+    ResponseEntity<ShowDTO> createShow(@RequestBody ShowAndTicketCreationDTO showAndTicketCreationDTO) {
+        ShowDTO showDTO = showAndTicketCreationDTO.getShow();
         Show show = this.showDTOMapper.toShow(showDTO);
-        Show createdShow = this.showService.createShowAndTickets(show, showAndTicketDTO.getMoviePrice(), showAndTicketDTO.getStatus());
+        Show createdShow = this.showService.createShowAndTickets(show, showAndTicketCreationDTO.getMoviePrice(), showAndTicketCreationDTO.getStatus());
         return new ResponseEntity<>(this.showDTOMapper.toDTO(createdShow), HttpStatus.CREATED);
     }
 }

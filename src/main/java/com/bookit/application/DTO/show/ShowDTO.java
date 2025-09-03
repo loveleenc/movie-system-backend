@@ -1,4 +1,4 @@
-package com.bookit.application.DTO.showAndTickets.show;
+package com.bookit.application.DTO.show;
 
 import com.bookit.application.DTO.movie.MovieDTO;
 import com.bookit.application.DTO.theatre.TheatreDTO;
@@ -25,6 +25,9 @@ public class ShowDTO {
         this.endTime = endTime;
         this.language = language;
         this.id = id;
+    }
+
+    public ShowDTO() {
     }
 
     public String getId() {

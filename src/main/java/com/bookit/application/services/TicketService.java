@@ -27,34 +27,30 @@ public class TicketService {
         this.ticketDAO = ticketDAO;
     }
 
-    public void getAvailableTickets(String movieName,
-                                    String seatType,
-                                    LocalDateTime time,
-                                    String theatreName){
-
+    public List<Ticket> getTicketsByShow(String showId) {
+        return this.ticketDAO.findTicketsByShow(showId);
     }
 
-    public List<Seat> getSeatsFromTheatre(Long theatreId){
+    public List<Seat> getSeatsFromTheatre(Long theatreId) {
         return this.seatDAO.getSeatPricesByTheatre(theatreId);
     }
 
-    public void createTicketsForShow(Long moviePrice, Show show, String status){
+    public void createTicketsForShow(Long moviePrice, Show show, String status) {
         List<Seat> seats = this.getSeatsFromTheatre(show.getTheatreId());
         this.createTickets(moviePrice, show, status, seats);
     }
 
-    private void createTickets(Long moviePrice, Show show, String status, List<Seat> seats){
+    private void createTickets(Long moviePrice, Show show, String status, List<Seat> seats) {
         //TODO: validate status type and movieprice
         Map<String, Long> ticketPricePerSeatType = new HashMap<>();
         List<Ticket> tickets = new ArrayList<>();
 
-        for(Seat seat: seats){
+        for (Seat seat : seats) {
             Long ticketPrice;
-            if(!ticketPricePerSeatType.containsKey(seat.getSeatType())){
+            if (!ticketPricePerSeatType.containsKey(seat.getSeatType())) {
                 ticketPrice = this.pricingService.calculateTicketPrice(seat.getSeatPrice(), moviePrice, show.getTimeSlot());
                 ticketPricePerSeatType.put(seat.getSeatType(), ticketPrice);
-            }
-            else{
+            } else {
                 ticketPrice = ticketPricePerSeatType.get(seat.getSeatType());
             }
             Ticket ticket = new Ticket(show, seat, status, ticketPrice);

@@ -1,6 +1,7 @@
 package com.bookit.application.repository;
 
 import com.bookit.application.entity.Ticket;
+import com.bookit.application.repository.mappers.TicketMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +14,11 @@ import java.util.List;
 public class TicketDAO implements Crud<Ticket> {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    private TicketMapper ticketMapper;
 
+    public TicketDAO(TicketMapper ticketMapper) {
+        this.ticketMapper = ticketMapper;
+    }
 
     @Override
     public Ticket findById(Long id) throws DataAccessException {
@@ -25,7 +30,15 @@ public class TicketDAO implements Crud<Ticket> {
         return List.of();
     }
 
-    public void createTickets(List<Ticket> tickets){
+    public List<Ticket> findTicketsByShow(String showId) throws DataAccessException{
+        String sql = "SELECT T.id as ticketid, T.price, S.seatnumber, S.seattype, S.id as seatid, T.status FROM tickets T " +
+                "JOIN seats S on T.seat = S.id " +
+                "WHERE show = ?::uuid";
+        return this.jdbcTemplate.query(sql, this.ticketMapper, showId);
+    }
+
+    public void createTickets(List<Ticket> tickets) throws DataAccessException{
+        //TODO: batch update in multiples of 50-100
         String sql = "INSERT INTO tickets(seat, status, price, show) " +
                 "VALUES(?, ?::ticketstatus, ?, ?::uuid)";
         List<Object[]> parameters = tickets.stream().map(ticket -> {

@@ -1,4 +1,4 @@
-package com.bookit.application.DTO.showAndTickets.show;
+package com.bookit.application.DTO.show;
 
 import com.bookit.application.DTO.movie.MovieDTO;
 import com.bookit.application.DTO.movie.MovieDTOBuilder;

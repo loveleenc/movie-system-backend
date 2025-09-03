@@ -18,6 +18,8 @@ public class Show {
         this.id = id;
     }
 
+    public Show(){}
+
     public Movie getMovie() {
         return movie;
     }

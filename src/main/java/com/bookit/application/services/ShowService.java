@@ -27,7 +27,6 @@ public class ShowService {
     public Show createShowAndTickets(Show show, Long moviePrice, String ticketStatus){
         Show createdShow = this.createShow(show);
         if(moviePrice != null && ticketStatus != null){
-            //TODO: create tickets here bruh
             this.ticketService.createTicketsForShow(moviePrice, createdShow, ticketStatus);
         }
         return createdShow;
