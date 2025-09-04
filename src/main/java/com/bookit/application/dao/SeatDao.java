@@ -1,4 +1,4 @@
-package com.bookit.application.repository;
+package com.bookit.application.dao;
 
 import com.bookit.application.entity.Seat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class SeatDAO implements Crud<Seat> {
+public class SeatDao implements Crud<Seat> {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

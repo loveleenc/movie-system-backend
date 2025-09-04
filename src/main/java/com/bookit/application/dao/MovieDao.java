@@ -1,7 +1,7 @@
-package com.bookit.application.repository;
+package com.bookit.application.dao;
 
 import com.bookit.application.entity.Movie;
-import com.bookit.application.repository.mappers.MovieMapper;
+import com.bookit.application.dao.mappers.MovieMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class MovieDAO implements Crud<Movie> {
+public class MovieDao implements Crud<Movie> {
     private JdbcTemplate jdbcTemplate;
     private MovieMapper movieMapper;
 
-    public MovieDAO(JdbcTemplate jdbcTemplate, MovieMapper movieMapper) {
+    public MovieDao(JdbcTemplate jdbcTemplate, MovieMapper movieMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.movieMapper = movieMapper;
     }

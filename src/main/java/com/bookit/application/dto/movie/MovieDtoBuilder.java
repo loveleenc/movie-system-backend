@@ -1,9 +1,9 @@
-package com.bookit.application.DTO.movie;
+package com.bookit.application.dto.movie;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class MovieDTOBuilder {
+public class MovieDtoBuilder {
     private String name;
     private Integer duration;
     private String poster;
@@ -13,43 +13,43 @@ public class MovieDTOBuilder {
     private Long id;
 
 
-    public MovieDTOBuilder setName(String name) {
+    public MovieDtoBuilder setName(String name) {
         this.name = name;
         return this;
     }
 
-    public MovieDTOBuilder setDuration(Integer duration) {
+    public MovieDtoBuilder setDuration(Integer duration) {
         this.duration = duration;
         return this;
     }
 
-    public MovieDTOBuilder setPoster(String poster) {
+    public MovieDtoBuilder setPoster(String poster) {
         this.poster = poster;
         return this;
     }
 
-    public MovieDTOBuilder setGenreList(List<String> genreList) {
+    public MovieDtoBuilder setGenreList(List<String> genreList) {
         this.genreList = genreList;
         return this;
     }
 
-    public MovieDTOBuilder setLanguages(List<String> languages) {
+    public MovieDtoBuilder setLanguages(List<String> languages) {
         this.languages = languages;
         return this;
     }
 
-    public MovieDTOBuilder setReleaseDate(LocalDate releaseDate) {
+    public MovieDtoBuilder setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
         return this;
     }
 
-    public MovieDTOBuilder setId(Long id) {
+    public MovieDtoBuilder setId(Long id) {
         this.id = id;
         return this;
     }
 
-    public MovieDTO build() {
-        return new MovieDTO(
+    public MovieDto build() {
+        return new MovieDto(
                 name, duration, poster, genreList, languages, releaseDate, id
         );
     }

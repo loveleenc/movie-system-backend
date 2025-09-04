@@ -1,8 +1,8 @@
 package com.bookit.application.controller.movie;
 
 
-import com.bookit.application.DTO.movie.MovieDTO;
-import com.bookit.application.DTO.movie.MovieDTOMapper;
+import com.bookit.application.dto.movie.MovieDto;
+import com.bookit.application.dto.movie.MovieDtoMapper;
 import com.bookit.application.entity.Movie;
 import com.bookit.application.services.MovieException;
 import com.bookit.application.services.MovieService;
@@ -14,14 +14,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RestController
 public class MovieController {
     private final static String START_DATE = "1970-01-01";
     private final MovieService movieService;
-    private final MovieDTOMapper movieDTOMapper;
-    MovieController(MovieService movieService, MovieDTOMapper movieDTOMapper){
+    private final MovieDtoMapper movieDTOMapper;
+    MovieController(MovieService movieService, MovieDtoMapper movieDTOMapper){
         this.movieService = movieService;
         this.movieDTOMapper = movieDTOMapper;
     }
@@ -31,24 +30,24 @@ public class MovieController {
 //    }
 
     @GetMapping("/movies")
-    List<MovieDTO> getAllMovies(){
+    List<MovieDto> getAllMovies(){
         return this.movieService.getMovies().stream().map(this.movieDTOMapper::toDTO).toList();
     }
 
     @GetMapping("/movies/ongoing")
-    List<MovieDTO> getOngoingMovies(){
+    List<MovieDto> getOngoingMovies(){
         return this.movieService.getOngoingMovies().stream().map(this.movieDTOMapper::toDTO).toList();
     }
 
     @GetMapping("/movies/upcoming")
-    List<MovieDTO> getUpcomingMovies(){
+    List<MovieDto> getUpcomingMovies(){
         return this.movieService.getUpcomingMovies().stream().map(this.movieDTOMapper::toDTO).toList();
     }
 
     @GetMapping("/movies/filter")
-    ResponseEntity<List<MovieDTO>> filterMovies(@RequestParam(required = false) List<String> genre,
-                                @RequestParam(required = false) List<String> language,
-                                @RequestParam(required = false) String releasedOnOrAfter){
+    ResponseEntity<List<MovieDto>> filterMovies(@RequestParam(required = false) List<String> genre,
+                                                @RequestParam(required = false) List<String> language,
+                                                @RequestParam(required = false) String releasedOnOrAfter){
         if(genre == null){
             genre = new ArrayList<>();
         }
@@ -58,12 +57,12 @@ public class MovieController {
         if(releasedOnOrAfter == null){
             releasedOnOrAfter = START_DATE;
         }
-        List<MovieDTO> movies = this.movieService.filterMovies(genre, language, releasedOnOrAfter).stream().map(this.movieDTOMapper::toDTO).toList();
+        List<MovieDto> movies = this.movieService.filterMovies(genre, language, releasedOnOrAfter).stream().map(this.movieDTOMapper::toDTO).toList();
         return new ResponseEntity<>(movies, HttpStatus.OK);
     }
 
     @PostMapping("/movie")
-    ResponseEntity<MovieDTO> addMovie(@RequestPart MovieDTO movieData, @RequestPart MultipartFile file){
+    ResponseEntity<MovieDto> addMovie(@RequestPart MovieDto movieData, @RequestPart MultipartFile file){
         if(Objects.isNull(file)){
             throw new MovieException("Poster has not been provided");
         }

@@ -1,24 +1,24 @@
-package com.bookit.application.DTO.show;
+package com.bookit.application.dto.show;
 
-import com.bookit.application.DTO.movie.MovieDTO;
-import com.bookit.application.DTO.theatre.TheatreDTO;
+import com.bookit.application.dto.movie.MovieDto;
+import com.bookit.application.dto.theatre.TheatreDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ShowDTO {
+public class ShowDto {
     private String language;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String id;
     @JsonProperty
-    private TheatreDTO theatre;
+    private TheatreDto theatre;
     @JsonProperty
-    private MovieDTO movie;
+    private MovieDto movie;
 
-    public ShowDTO(TheatreDTO theatre, MovieDTO movie, LocalDateTime startTime, LocalDateTime endTime, String language, String id){
+    public ShowDto(TheatreDto theatre, MovieDto movie, LocalDateTime startTime, LocalDateTime endTime, String language, String id){
         this.theatre = theatre;
         this.movie = movie;
         this.startTime = startTime;
@@ -27,18 +27,18 @@ public class ShowDTO {
         this.id = id;
     }
 
-    public ShowDTO() {
+    public ShowDto() {
     }
 
     public String getId() {
         return id;
     }
 
-    public TheatreDTO getTheatre(){
+    public TheatreDto getTheatre(){
         return this.theatre;
     }
 
-    public MovieDTO getMovie() {
+    public MovieDto getMovie() {
         return movie;
     }
 

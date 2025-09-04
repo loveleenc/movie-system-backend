@@ -1,9 +1,9 @@
-package com.bookit.application.repository;
+package com.bookit.application.dao;
 
 import com.bookit.application.entity.Show;
 import com.bookit.application.entity.ShowTimeSlot;
-import com.bookit.application.repository.mappers.ShowMapper;
-import com.bookit.application.repository.mappers.ShowTheatreMapper;
+import com.bookit.application.dao.mappers.ShowMapper;
+import com.bookit.application.dao.mappers.ShowTheatreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,20 +13,17 @@ import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Component
-public class ShowDAO implements Crud<Show> {
+public class ShowDao implements Crud<Show> {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private ShowMapper showMapper;
     private ShowTheatreMapper showTheatreMapper;
-    public ShowDAO(ShowMapper showMapper, ShowTheatreMapper showTheatreMapper) {
+    public ShowDao(ShowMapper showMapper, ShowTheatreMapper showTheatreMapper) {
         this.showMapper = showMapper;
         this.showTheatreMapper = showTheatreMapper;
     }

@@ -1,4 +1,4 @@
-package com.bookit.application.DTO;
+package com.bookit.application.dto;
 
 public class InvalidDataException extends RuntimeException {
     public InvalidDataException(String message) {

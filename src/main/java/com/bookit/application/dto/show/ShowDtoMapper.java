@@ -1,8 +1,8 @@
-package com.bookit.application.DTO.show;
+package com.bookit.application.dto.show;
 
-import com.bookit.application.DTO.movie.MovieDTO;
-import com.bookit.application.DTO.movie.MovieDTOBuilder;
-import com.bookit.application.DTO.theatre.TheatreDTO;
+import com.bookit.application.dto.movie.MovieDto;
+import com.bookit.application.dto.movie.MovieDtoBuilder;
+import com.bookit.application.dto.theatre.TheatreDto;
 import com.bookit.application.entity.*;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ShowDTOMapper {
+public class ShowDtoMapper {
 
-    public Show toShow(ShowDTO showDto) {
+    public Show toShow(ShowDto showDto) {
         ShowTimeSlot timeSlot = new ShowTimeSlot(showDto.getStartTime(), showDto.getEndTime());
         Movie movie = new MovieBuilder().setId(showDto.getMovie().getId()).build();
         Theatre theatre = new Theatre();
@@ -25,13 +25,13 @@ public class ShowDTOMapper {
                 null);
     }
 
-    public ShowDTO toDTO(Show show) {
-        TheatreDTO theatreDTO = new TheatreDTO(show.getTheatre().getName(),
+    public ShowDto toDTO(Show show) {
+        TheatreDto theatreDTO = new TheatreDto(show.getTheatre().getName(),
                 show.getTheatre().getLocation(),
                 show.getTheatreId());
 
         Movie movie = show.getMovie();
-        MovieDTO movieDTO = new MovieDTOBuilder()
+        MovieDto movieDTO = new MovieDtoBuilder()
                 .setName(movie.getName())
                 .setDuration(movie.getDuration())
                 .setPoster(movie.getPoster())
@@ -41,21 +41,21 @@ public class ShowDTOMapper {
                 .setId(movie.getId())
                 .build();
 
-        return new ShowDTO(theatreDTO, movieDTO, show.getStartTime(), show.getEndTime(), show.getLanguage(), show.getId().toString());
+        return new ShowDto(theatreDTO, movieDTO, show.getStartTime(), show.getEndTime(), show.getLanguage(), show.getId().toString());
     }
 
-    public List<ShowDTO> toDTO(List<Show> shows) {
+    public List<ShowDto> toDTO(List<Show> shows) {
         return shows.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public ShowDTO toShowTheatreDTO(Show show) {
+    public ShowDto toShowTheatreDTO(Show show) {
         Theatre theatre = show.getTheatre();
-        TheatreDTO theatreDTO = new TheatreDTO(theatre.getName(), theatre.getLocation(), theatre.getId());
-        MovieDTO movieDTO = new MovieDTOBuilder().build();
-        return new ShowDTO(theatreDTO, movieDTO, show.getStartTime(), show.getEndTime(), show.getLanguage(), show.getId().toString());
+        TheatreDto theatreDTO = new TheatreDto(theatre.getName(), theatre.getLocation(), theatre.getId());
+        MovieDto movieDTO = new MovieDtoBuilder().build();
+        return new ShowDto(theatreDTO, movieDTO, show.getStartTime(), show.getEndTime(), show.getLanguage(), show.getId().toString());
     }
 
-    public List<ShowDTO> showTheatreDTO(List<Show> shows) {
+    public List<ShowDto> showTheatreDTO(List<Show> shows) {
         return shows.stream().map(this::toShowTheatreDTO).collect(Collectors.toList());
     }
 

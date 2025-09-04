@@ -1,6 +1,5 @@
-package com.bookit.application.repository;
+package com.bookit.application.dao;
 
-import com.bookit.application.entity.Movie;
 import org.springframework.dao.DataAccessException;
 
 import java.util.List;

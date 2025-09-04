@@ -1,28 +1,28 @@
-package com.bookit.application.DTO.show;
+package com.bookit.application.dto.show;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ShowAndTicketCreationDTO {
+public class ShowAndTicketCreationDto {
     @JsonProperty
-    private ShowDTO show;
+    private ShowDto show;
     private Long moviePrice;
     private String status;
 
-    public ShowAndTicketCreationDTO(ShowDTO show) {
+    public ShowAndTicketCreationDto(ShowDto show) {
         this.show = show;
     }
 
-    public ShowAndTicketCreationDTO(ShowDTO show, Long moviePrice, String status) {
+    public ShowAndTicketCreationDto(ShowDto show, Long moviePrice, String status) {
         this.show = show;
         this.moviePrice = moviePrice;
         this.status = status;
     }
 
-    public ShowAndTicketCreationDTO(){}
+    public ShowAndTicketCreationDto(){}
 
-    public ShowDTO getShow() {
+    public ShowDto getShow() {
         return show;
     }
 

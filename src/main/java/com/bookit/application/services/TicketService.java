@@ -5,11 +5,10 @@ import com.bookit.application.entities.Tick;
 import com.bookit.application.entity.Seat;
 import com.bookit.application.entity.Show;
 import com.bookit.application.entity.Ticket;
-import com.bookit.application.repository.SeatDAO;
-import com.bookit.application.repository.TicketDAO;
+import com.bookit.application.dao.SeatDao;
+import com.bookit.application.dao.TicketDao;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,11 +16,11 @@ import java.util.Map;
 
 @Component
 public class TicketService {
-    private SeatDAO seatDAO;
+    private SeatDao seatDAO;
     private PricingService pricingService;
-    private TicketDAO ticketDAO;
+    private TicketDao ticketDAO;
 
-    public TicketService(SeatDAO seatDAO, PricingService pricingService, TicketDAO ticketDAO) {
+    public TicketService(SeatDao seatDAO, PricingService pricingService, TicketDao ticketDAO) {
         this.seatDAO = seatDAO;
         this.pricingService = pricingService;
         this.ticketDAO = ticketDAO;

@@ -1,11 +1,11 @@
-package com.bookit.application.DTO.ticket;
+package com.bookit.application.dto.ticket;
 
-public class TicketCreationDTO {
+public class TicketCreationDto {
     private String showId;
     private Long moviePrice;
     private String status;
 
-    public TicketCreationDTO(String showId, Long moviePrice, String status) {
+    public TicketCreationDto(String showId, Long moviePrice, String status) {
         this.showId = showId;
         this.moviePrice = moviePrice;
         this.status = status;

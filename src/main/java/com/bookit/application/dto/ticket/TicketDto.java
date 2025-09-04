@@ -1,31 +1,31 @@
-package com.bookit.application.DTO.ticket;
+package com.bookit.application.dto.ticket;
 
-import com.bookit.application.DTO.seat.SeatDTO;
-import com.bookit.application.DTO.show.ShowDTO;
+import com.bookit.application.dto.seat.SeatDto;
+import com.bookit.application.dto.show.ShowDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TicketDTO {
+public class TicketDto {
     @JsonProperty
-    private ShowDTO show;
+    private ShowDto show;
     @JsonProperty
-    private SeatDTO seat;
+    private SeatDto seat;
     private String status;
     private Long price;
 
-    public TicketDTO(ShowDTO show, SeatDTO seat, String status, Long price) {
+    public TicketDto(ShowDto show, SeatDto seat, String status, Long price) {
         this.show = show;
         this.seat = seat;
         this.status = status;
         this.price = price;
     }
 
-    public ShowDTO getShow() {
+    public ShowDto getShow() {
         return show;
     }
 
-    public SeatDTO getSeat() {
+    public SeatDto getSeat() {
         return seat;
     }
 

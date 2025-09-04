@@ -1,6 +1,6 @@
-package com.bookit.application.DTO.movie;
+package com.bookit.application.dto.movie;
 
-import com.bookit.application.DTO.InvalidDataException;
+import com.bookit.application.dto.InvalidDataException;
 import com.bookit.application.entity.Movie;
 import com.bookit.application.services.MovieException;
 import com.bookit.application.services.storage.StorageException;
@@ -14,17 +14,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class MovieDTOMapper {
+public class MovieDtoMapper {
     private final StorageService storageService;
 
-    public MovieDTOMapper(StorageService storageService) {
+    public MovieDtoMapper(StorageService storageService) {
         this.storageService = storageService;
     }
 
-    public MovieDTO toDTO(Movie movie) throws MovieException {
+    public MovieDto toDTO(Movie movie) throws MovieException {
         try {
             Resource resource = this.storageService.getResource(movie.getPoster());
-            return new MovieDTOBuilder()
+            return new MovieDtoBuilder()
                     .setName(movie.getName())
                     .setDuration(movie.getDuration())
                     .setPoster(resource.getURL().toString())
@@ -38,11 +38,11 @@ public class MovieDTOMapper {
         }
     }
 
-    public List<MovieDTO> toDTO(List<Movie> movies) throws MovieException {
+    public List<MovieDto> toDTO(List<Movie> movies) throws MovieException {
         return movies.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public Movie toMovie(MovieDTO movieDTO) throws InvalidDataException{
+    public Movie toMovie(MovieDto movieDTO) throws InvalidDataException{
         List<String> unsetValues = this.anyUnsetValues(movieDTO.getName(), movieDTO.getDuration(), movieDTO.getPoster(), movieDTO.getGenreList(), movieDTO.getLanguages(), movieDTO.getReleaseDate().toString());
         if(!unsetValues.isEmpty()){
             throw new InvalidDataException("The following data appears to be missing: " + unsetValues);

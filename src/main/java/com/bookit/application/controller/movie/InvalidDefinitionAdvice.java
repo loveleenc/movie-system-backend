@@ -1,7 +1,7 @@
 package com.bookit.application.controller.movie;
 
 
-import com.bookit.application.DTO.InvalidDataException;
+import com.bookit.application.dto.InvalidDataException;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

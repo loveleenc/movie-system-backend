@@ -1,7 +1,7 @@
-package com.bookit.application.repository;
+package com.bookit.application.dao;
 
 import com.bookit.application.entity.Ticket;
-import com.bookit.application.repository.mappers.TicketMapper;
+import com.bookit.application.dao.mappers.TicketMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,12 +11,12 @@ import java.sql.Types;
 import java.util.List;
 
 @Component
-public class TicketDAO implements Crud<Ticket> {
+public class TicketDao implements Crud<Ticket> {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private TicketMapper ticketMapper;
 
-    public TicketDAO(TicketMapper ticketMapper) {
+    public TicketDao(TicketMapper ticketMapper) {
         this.ticketMapper = ticketMapper;
     }
 

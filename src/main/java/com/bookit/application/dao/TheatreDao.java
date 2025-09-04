@@ -1,4 +1,4 @@
-package com.bookit.application.repository;
+package com.bookit.application.dao;
 
 
 import com.bookit.application.entity.Theatre;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class TheatreDAO implements Crud<Theatre> {
+public class TheatreDao implements Crud<Theatre> {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

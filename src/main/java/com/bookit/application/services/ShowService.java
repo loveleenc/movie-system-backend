@@ -1,20 +1,19 @@
 package com.bookit.application.services;
 
 import com.bookit.application.entity.*;
-import com.bookit.application.repository.MovieDAO;
-import com.bookit.application.repository.ShowDAO;
-import com.bookit.application.repository.TheatreDAO;
+import com.bookit.application.dao.MovieDao;
+import com.bookit.application.dao.ShowDao;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class ShowService {
-    private ShowDAO showDAO;
-    private MovieDAO movieDAO;
+    private ShowDao showDAO;
+    private MovieDao movieDAO;
     private TicketService ticketService;
 
-    public ShowService(ShowDAO showDAO, MovieDAO movieDAO, TicketService ticketService){
+    public ShowService(ShowDao showDAO, MovieDao movieDAO, TicketService ticketService){
         this.showDAO = showDAO;
         this.movieDAO = movieDAO;
         this.ticketService = ticketService;
