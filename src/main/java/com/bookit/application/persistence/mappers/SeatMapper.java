@@ -1,4 +1,4 @@
-package com.bookit.application.dao.mappers;
+package com.bookit.application.persistence.mappers;
 
 import com.bookit.application.entity.Seat;
 import org.springframework.jdbc.core.RowMapper;

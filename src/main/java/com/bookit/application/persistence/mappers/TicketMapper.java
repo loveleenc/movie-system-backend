@@ -1,4 +1,4 @@
-package com.bookit.application.dao.mappers;
+package com.bookit.application.persistence.mappers;
 
 import com.bookit.application.entity.Seat;
 import com.bookit.application.entity.Show;

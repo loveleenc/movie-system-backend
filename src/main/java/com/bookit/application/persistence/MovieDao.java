@@ -1,7 +1,7 @@
-package com.bookit.application.dao;
+package com.bookit.application.persistence;
 
 import com.bookit.application.entity.Movie;
-import com.bookit.application.dao.mappers.MovieMapper;
+import com.bookit.application.persistence.mappers.MovieMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -35,7 +35,7 @@ public class MovieDao implements Crud<Movie> {
     }
 
     public List<Movie> findOngoingMovies() throws DataAccessException {
-        String sql = "SELECT DISTINCT id, name, duration, image, genre, releasedate, language from movies M JOIN shows S ON M.id = S.movie WHERE M.releasedate >= ?";
+        String sql = "SELECT DISTINCT M.id, name, duration, image, genre, releasedate, language from movies M JOIN shows S ON M.id = S.movie WHERE M.releasedate >= ?";
         return this.jdbcTemplate.query(sql, this.movieMapper, OffsetDateTime.now().toLocalDate());
     }
 

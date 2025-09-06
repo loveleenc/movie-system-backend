@@ -1,7 +1,7 @@
-package com.bookit.application.dao;
+package com.bookit.application.persistence;
 
 import com.bookit.application.entity.Ticket;
-import com.bookit.application.dao.mappers.TicketMapper;
+import com.bookit.application.persistence.mappers.TicketMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

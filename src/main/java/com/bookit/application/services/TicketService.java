@@ -1,12 +1,10 @@
 package com.bookit.application.services;
 
-import com.bookit.application.entities.Sea;
-import com.bookit.application.entities.Tick;
 import com.bookit.application.entity.Seat;
 import com.bookit.application.entity.Show;
 import com.bookit.application.entity.Ticket;
-import com.bookit.application.dao.SeatDao;
-import com.bookit.application.dao.TicketDao;
+import com.bookit.application.persistence.SeatDao;
+import com.bookit.application.persistence.TicketDao;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

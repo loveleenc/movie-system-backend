@@ -1,8 +1,8 @@
 package com.bookit.application.services;
 
 import com.bookit.application.entity.*;
-import com.bookit.application.dao.MovieDao;
-import com.bookit.application.dao.ShowDao;
+import com.bookit.application.persistence.MovieDao;
+import com.bookit.application.persistence.ShowDao;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

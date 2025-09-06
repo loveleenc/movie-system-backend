@@ -1,4 +1,4 @@
-package com.bookit.application.dao;
+package com.bookit.application.persistence;
 
 import com.bookit.application.entity.Seat;
 import org.springframework.beans.factory.annotation.Autowired;

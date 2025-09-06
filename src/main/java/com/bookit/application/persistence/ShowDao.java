@@ -1,9 +1,9 @@
-package com.bookit.application.dao;
+package com.bookit.application.persistence;
 
 import com.bookit.application.entity.Show;
 import com.bookit.application.entity.ShowTimeSlot;
-import com.bookit.application.dao.mappers.ShowMapper;
-import com.bookit.application.dao.mappers.ShowTheatreMapper;
+import com.bookit.application.persistence.mappers.ShowMapper;
+import com.bookit.application.persistence.mappers.ShowTheatreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
