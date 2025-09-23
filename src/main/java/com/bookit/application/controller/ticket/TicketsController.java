@@ -1,12 +1,11 @@
-package com.bookit.application.controller;
+package com.bookit.application.controller.ticket;
 
 
 import com.bookit.application.dto.ticket.TicketDto;
 import com.bookit.application.dto.ticket.TicketDtoMapper;
+import com.bookit.application.dto.ticket.TicketStatusUpdateDto;
 import com.bookit.application.services.TicketService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +23,11 @@ public class TicketsController {
     List<TicketDto> getTicketsForShow(@RequestParam String showId){
         return this.ticketService.getTicketsByShow(showId)
                 .stream().map(this.ticketDTOMapper::toTicketForShowDTO).toList();
+    }
+
+    @PatchMapping("/tickets")
+    String updateTicketStatusForShow(@RequestBody TicketStatusUpdateDto ticketStatusUpdateDto){
+        this.ticketService.updateTicketStatusForShow(ticketStatusUpdateDto.getShowId(), ticketStatusUpdateDto.getStatus(), false);
+        return "Update successful";
     }
 }

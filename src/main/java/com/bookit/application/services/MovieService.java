@@ -39,6 +39,7 @@ public class MovieService {
         return this.movieDao.findUpcomingMovies();
     }
 
+
     public List<Movie> filterMovies(List<String> genre, List<String> languages, String releasedOnOrAfter){
         LocalDate date = LocalDate.parse(releasedOnOrAfter);
         return this.movieDao.filterMovies(genre, languages, date);

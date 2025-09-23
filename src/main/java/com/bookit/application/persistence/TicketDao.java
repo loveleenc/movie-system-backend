@@ -59,6 +59,11 @@ public class TicketDao implements Crud<Ticket> {
         //TODO: raise exception
         return (long)0;
     }
+
+    public void updateTicketStatus(String showId, String status){
+        String sql = "UPDATE tickets SET status = ?::ticketstatus WHERE show = ?::uuid";
+        this.jdbcTemplate.update(sql, status, showId);
+    }
 }
 
 

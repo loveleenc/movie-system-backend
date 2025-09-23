@@ -3,6 +3,7 @@ package com.bookit.application.services;
 import com.bookit.application.entity.*;
 import com.bookit.application.persistence.MovieDao;
 import com.bookit.application.persistence.ShowDao;
+import com.bookit.application.types.TicketStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -56,4 +57,9 @@ public class ShowService {
         String id = this.showDAO.createShow(show);
         return this.showDAO.findByShowId(id);
     }
+
+    public void cancelShow(String showId){
+        this.ticketService.updateTicketStatusForShow(showId, TicketStatus.CANCELLED.code(), true);
+    }
+
 }

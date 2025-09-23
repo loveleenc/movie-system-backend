@@ -5,6 +5,8 @@ import com.bookit.application.dto.show.ShowDto;
 import com.bookit.application.dto.show.ShowDtoMapper;
 import com.bookit.application.entity.Show;
 import com.bookit.application.services.ShowService;
+import com.bookit.application.services.TicketService;
+import com.bookit.application.types.TicketStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +29,7 @@ public class ShowsController {
         return new ResponseEntity<>(shows, HttpStatus.OK);
     }
 
-    //TODO: add methods to update and delete shows
+    //TODO: add methods to update shows
 
     @PostMapping("/show")
     ResponseEntity<ShowDto> createShow(@RequestBody ShowAndTicketCreationDto showAndTicketCreationDTO) {
@@ -35,5 +37,12 @@ public class ShowsController {
         Show show = this.showDTOMapper.toShow(showDTO);
         Show createdShow = this.showService.createShowAndTickets(show, showAndTicketCreationDTO.getMoviePrice(), showAndTicketCreationDTO.getStatus());
         return new ResponseEntity<>(this.showDTOMapper.toDTO(createdShow), HttpStatus.CREATED);
+    }
+
+
+    @PatchMapping("/cancelShow")
+    String cancelShow(@RequestParam String showId){
+        this.showService.cancelShow(showId);
+        return "Show cancelled successfully";
     }
 }
