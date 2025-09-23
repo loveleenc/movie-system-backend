@@ -1,4 +1,4 @@
-package com.bookit.application.persistence.mappers;
+package com.bookit.application.persistence.jdbcDao.mappers;
 
 import com.bookit.application.entity.Show;
 import com.bookit.application.entity.Theatre;

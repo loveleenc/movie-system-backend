@@ -1,8 +1,8 @@
 package com.bookit.application.services;
 
 import com.bookit.application.entity.*;
-import com.bookit.application.persistence.MovieDao;
-import com.bookit.application.persistence.ShowDao;
+import com.bookit.application.persistence.IMovieDao;
+import com.bookit.application.persistence.IShowDao;
 import com.bookit.application.types.TicketStatus;
 import org.springframework.stereotype.Component;
 
@@ -10,11 +10,11 @@ import java.util.List;
 
 @Component
 public class ShowService {
-    private ShowDao showDAO;
-    private MovieDao movieDAO;
+    private IShowDao showDAO;
+    private IMovieDao movieDAO;
     private TicketService ticketService;
 
-    public ShowService(ShowDao showDAO, MovieDao movieDAO, TicketService ticketService){
+    public ShowService(IShowDao showDAO, IMovieDao movieDAO, TicketService ticketService){
         this.showDAO = showDAO;
         this.movieDAO = movieDAO;
         this.ticketService = ticketService;
@@ -54,8 +54,8 @@ public class ShowService {
             //TODO: throw error
         }
 
-        String id = this.showDAO.createShow(show);
-        return this.showDAO.findByShowId(id);
+        String id = this.showDAO.create(show);
+        return this.showDAO.findById(id);
     }
 
     public void cancelShow(String showId){

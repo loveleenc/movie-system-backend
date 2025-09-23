@@ -1,7 +1,8 @@
-package com.bookit.application.persistence;
+package com.bookit.application.persistence.jdbcDao;
 
 import com.bookit.application.entity.Movie;
-import com.bookit.application.persistence.mappers.MovieMapper;
+import com.bookit.application.persistence.IMovieDao;
+import com.bookit.application.persistence.jdbcDao.mappers.MovieMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class MovieDao implements Crud<Movie> {
+public class MovieDao implements IMovieDao {
     private JdbcTemplate jdbcTemplate;
     private MovieMapper movieMapper;
 
@@ -29,9 +30,31 @@ public class MovieDao implements Crud<Movie> {
         return this.jdbcTemplate.queryForObject("SELECT * FROM movies WHERE id = ?", this.movieMapper, id);
     }
 
+    @Override
     public List<Movie> findAll() throws DataAccessException {
         String sql = "SELECT * FROM movies";
         return this.jdbcTemplate.query(sql, this.movieMapper);
+    }
+
+    @Override
+    public Long create(Movie movie) throws DataAccessException, NullPointerException {
+        String sql = "INSERT INTO movies(name, duration, image, genre, releaseDate, language) " +
+                "VALUES(?, ?, ?, ?::moviegenre[], ?, ?::movielanguage[]) RETURNING id";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        this.jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, movie.getName());
+            ps.setInt(2, movie.getDuration());
+            ps.setString(3, movie.getPoster());
+            Array genreArray = connection.createArrayOf("moviegenre", movie.getGenreList().toArray());
+            ps.setArray(4, genreArray);
+            ps.setDate(5, Date.valueOf(movie.getReleaseDate()));
+            Array languageArray = connection.createArrayOf("movielanguage", movie.getLanguages().toArray());
+            ps.setArray(6, languageArray);
+            return ps;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public List<Movie> findOngoingMovies() throws DataAccessException {
@@ -60,26 +83,6 @@ public class MovieDao implements Crud<Movie> {
                 languagesArray,
                 languagesArray,
                 releasedOnOrAfter);
-    }
-
-    public Long create(Movie movie) throws DataAccessException, NullPointerException {
-        String sql = "INSERT INTO movies(name, duration, image, genre, releaseDate, language) " +
-                "VALUES(?, ?, ?, ?::moviegenre[], ?, ?::movielanguage[]) RETURNING id";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        this.jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, movie.getName());
-            ps.setInt(2, movie.getDuration());
-            ps.setString(3, movie.getPoster());
-            Array genreArray = connection.createArrayOf("moviegenre", movie.getGenreList().toArray());
-            ps.setArray(4, genreArray);
-            ps.setDate(5, Date.valueOf(movie.getReleaseDate()));
-            Array languageArray = connection.createArrayOf("movielanguage", movie.getLanguages().toArray());
-            ps.setArray(6, languageArray);
-            return ps;
-        }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public void deleteMovie(Movie movie) throws DataAccessException {

@@ -1,7 +1,8 @@
-package com.bookit.application.persistence;
+package com.bookit.application.persistence.jdbcDao;
 
 
 import com.bookit.application.entity.Theatre;
+import com.bookit.application.persistence.Crud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class TheatreDao implements Crud<Theatre> {
+public class TheatreDao implements Crud<Theatre, Long> {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -33,7 +34,5 @@ public class TheatreDao implements Crud<Theatre> {
     public Long create(Theatre object) {
         return 0L;
     }
-
-
 
 }

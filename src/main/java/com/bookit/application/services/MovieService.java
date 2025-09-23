@@ -4,7 +4,7 @@ package com.bookit.application.services;
 import com.bookit.application.services.storage.StorageService;
 import com.bookit.application.services.storage.UploadException;
 import com.bookit.application.entity.Movie;
-import com.bookit.application.persistence.MovieDao;
+import com.bookit.application.persistence.IMovieDao;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,9 +16,9 @@ import java.util.List;
 public class MovieService {
 
     private StorageService storageService;
-    private MovieDao movieDao;
+    private IMovieDao movieDao;
 
-    public MovieService(MovieDao movieDao, StorageService storageService){
+    public MovieService(IMovieDao movieDao, StorageService storageService){
         this.movieDao = movieDao;
         this.storageService = storageService;
     }

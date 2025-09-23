@@ -1,4 +1,4 @@
-package com.bookit.application.persistence.mappers;
+package com.bookit.application.persistence.jdbcDao.mappers;
 
 import com.bookit.application.entity.Movie;
 import com.bookit.application.types.MovieGenre;

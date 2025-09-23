@@ -41,7 +41,7 @@ public class PosterStorageService implements StorageService {
 
     @Override
     public void init() {
-        //TODO: later
+
     }
 
     @Override

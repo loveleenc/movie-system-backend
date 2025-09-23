@@ -1,0 +1,76 @@
+package com.bookit.application.persistence.jdbcDao;
+
+import com.bookit.application.persistence.IUserDao;
+import com.bookit.application.persistence.jdbcDao.mappers.UserMapper;
+import com.bookit.application.security.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+
+import java.sql.Array;
+import java.sql.PreparedStatement;
+import java.util.Objects;
+
+public class UserDao implements IUserDao {
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    private UserMapper userMapper;
+
+    public UserDao(UserMapper userMapper){
+        this.userMapper = userMapper;
+    }
+
+    @Override
+    public User findUserByUsername(String username) throws DataAccessException {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try {
+            return this.jdbcTemplate.queryForObject(sql, this.userMapper, username);
+        }
+        catch (IncorrectResultSizeDataAccessException e){
+            throw new UsernameNotFoundException(String.format("User with username '%s' is not found", username));
+        }
+    }
+
+    public Integer findUserCountByUsernameOrEmail(String username, String email){
+        String sql = "SELECT COUNT(*) FROM users WHERE username = ? OR email = ?";
+        return this.jdbcTemplate.queryForObject(sql, Integer.class, username, email);
+    }
+
+    @Override
+    public Long createUser(User newUser) {
+        String sql = "INSERT INTO users(firstname, lastname, email, password, username, roles) " +
+                "VALUES(?, ?, ?, ?, ?, ?::role[]) RETURNING id";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        this.jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, newUser.getFirstName());
+            ps.setString(2, newUser.getLastName());
+            ps.setString(3, newUser.getEmail());
+            ps.setString(4, newUser.getPassword());
+            ps.setString(5, newUser.getUsername());
+            Array rolesArray = connection.createArrayOf("roles", newUser.getRoles().toArray());
+            ps.setArray(6, rolesArray);
+            return ps;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    @Override
+    public void deleteUser(String username) {
+        throw new UnsupportedOperationException("Unable to delete user. This functionality is not yet supported");
+//        String sql = "DELETE FROM users WHERE username = ?";
+//        this.jdbcTemplate.update(sql, username);
+    }
+
+    @Override
+    public void updatePassword(String username, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE username = ?";
+        this.jdbcTemplate.update(sql, newPassword, username);
+    }
+
+
+}

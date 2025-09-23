@@ -1,9 +1,10 @@
-package com.bookit.application.persistence;
+package com.bookit.application.persistence.jdbcDao;
 
 import com.bookit.application.entity.Show;
 import com.bookit.application.entity.ShowTimeSlot;
-import com.bookit.application.persistence.mappers.ShowMapper;
-import com.bookit.application.persistence.mappers.ShowTheatreMapper;
+import com.bookit.application.persistence.IShowDao;
+import com.bookit.application.persistence.jdbcDao.mappers.ShowMapper;
+import com.bookit.application.persistence.jdbcDao.mappers.ShowTheatreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class ShowDao implements Crud<Show> {
+public class ShowDao implements IShowDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -28,7 +29,8 @@ public class ShowDao implements Crud<Show> {
         this.showTheatreMapper = showTheatreMapper;
     }
 
-    public Show findByShowId(String id) throws DataAccessException{
+    @Override
+    public Show findById(String id) throws DataAccessException {
         String sql = "SELECT T.id AS theatreid, M.id as movieid, * FROM shows S " +
                 "JOIN movies M ON S.movie = M.id " +
                 "JOIN theatre T ON S.theatre = T.id WHERE S.id = ?::uuid";
@@ -36,34 +38,7 @@ public class ShowDao implements Crud<Show> {
     }
 
     @Override
-    public Show findById(Long id) throws DataAccessException {
-        return null;
-    }
-
-    @Override
-    public List<Show> findAll() throws DataAccessException {
-        return List.of();
-    }
-
-    public List<ShowTimeSlot> getBookedSlotsByTheatreId(Long theatreId) {
-        String sql = "SELECT starttime, endtime FROM shows WHERE shows.theatre = ?";
-        return this.jdbcTemplate.query(sql, (rs, rowNum) -> new ShowTimeSlot(rs.getTimestamp("starttime").toLocalDateTime(),
-                rs.getTimestamp("endtime").toLocalDateTime()), theatreId);
-    }
-
-    public List<Show> findShowsByMovie(Long movieId) throws DataAccessException {
-        String sql = "select T.id AS theatreid, * from shows S  " +
-                "JOIN theatre T ON T.id = S.theatre  " +
-                "WHERE S.movie = ? ORDER BY S.theatre, S.starttime";
-        return this.jdbcTemplate.query(sql, this.showTheatreMapper, movieId);
-    }
-
-    @Override
-    public Long create(Show show){
-        return 0L;
-    }
-
-    public String createShow(Show show) throws DataAccessException {
+    public String create(Show show){
         String sql = "INSERT INTO shows(theatre, starttime, endtime, movie, showlanguage) " +
                 "VALUES(?, ?, ?, ?, ?::movielanguage)";
 
@@ -79,6 +54,28 @@ public class ShowDao implements Crud<Show> {
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKeyList().get(0).get("id")).toString();
     }
+
+    @Override
+    public List<Show> findAll() throws DataAccessException {
+        return List.of();
+    }
+
+    @Override
+    public List<ShowTimeSlot> getBookedSlotsByTheatreId(Long theatreId) {
+        String sql = "SELECT starttime, endtime FROM shows WHERE shows.theatre = ?";
+        return this.jdbcTemplate.query(sql, (rs, rowNum) -> new ShowTimeSlot(rs.getTimestamp("starttime").toLocalDateTime(),
+                rs.getTimestamp("endtime").toLocalDateTime()), theatreId);
+    }
+
+    @Override
+    public List<Show> findShowsByMovie(Long movieId) throws DataAccessException {
+        String sql = "select T.id AS theatreid, * from shows S  " +
+                "JOIN theatre T ON T.id = S.theatre  " +
+                "WHERE S.movie = ? ORDER BY S.theatre, S.starttime";
+        return this.jdbcTemplate.query(sql, this.showTheatreMapper, movieId);
+    }
+
+
 //        return (long) this.jdbcTemplate.update(sql,
 //                show.getTheatreId(),
 //                show.getStartTime(),

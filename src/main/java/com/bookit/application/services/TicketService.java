@@ -3,8 +3,8 @@ package com.bookit.application.services;
 import com.bookit.application.entity.Seat;
 import com.bookit.application.entity.Show;
 import com.bookit.application.entity.Ticket;
-import com.bookit.application.persistence.SeatDao;
-import com.bookit.application.persistence.TicketDao;
+import com.bookit.application.persistence.ISeatDao;
+import com.bookit.application.persistence.ITicketDao;
 import com.bookit.application.types.TicketStatus;
 import org.springframework.stereotype.Component;
 
@@ -15,11 +15,11 @@ import java.util.Map;
 
 @Component
 public class TicketService {
-    private SeatDao seatDAO;
+    private ISeatDao seatDAO;
     private PricingService pricingService;
-    private TicketDao ticketDAO;
+    private ITicketDao ticketDAO;
 
-    public TicketService(SeatDao seatDAO, PricingService pricingService, TicketDao ticketDAO) {
+    public TicketService(ISeatDao seatDAO, PricingService pricingService, ITicketDao ticketDAO) {
         this.seatDAO = seatDAO;
         this.pricingService = pricingService;
         this.ticketDAO = ticketDAO;

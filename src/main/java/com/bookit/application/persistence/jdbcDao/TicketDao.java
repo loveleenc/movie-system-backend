@@ -1,7 +1,8 @@
-package com.bookit.application.persistence;
+package com.bookit.application.persistence.jdbcDao;
 
 import com.bookit.application.entity.Ticket;
-import com.bookit.application.persistence.mappers.TicketMapper;
+import com.bookit.application.persistence.ITicketDao;
+import com.bookit.application.persistence.jdbcDao.mappers.TicketMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,7 +12,7 @@ import java.sql.Types;
 import java.util.List;
 
 @Component
-public class TicketDao implements Crud<Ticket> {
+public class TicketDao implements ITicketDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private TicketMapper ticketMapper;
@@ -20,24 +21,14 @@ public class TicketDao implements Crud<Ticket> {
         this.ticketMapper = ticketMapper;
     }
 
-    @Override
-    public Ticket findById(Long id) throws DataAccessException {
-        return null;
-    }
-
-    @Override
-    public List<Ticket> findAll() throws DataAccessException {
-        return List.of();
-    }
-
-    public List<Ticket> findTicketsByShow(String showId) throws DataAccessException{
+    public List<Ticket> findTicketsByShow(String showId) throws DataAccessException {
         String sql = "SELECT T.id as ticketid, T.price, S.seatnumber, S.seattype, S.id as seatid, T.status FROM tickets T " +
                 "JOIN seats S on T.seat = S.id " +
                 "WHERE show = ?::uuid";
         return this.jdbcTemplate.query(sql, this.ticketMapper, showId);
     }
 
-    public void createTickets(List<Ticket> tickets) throws DataAccessException{
+    public void createTickets(List<Ticket> tickets) throws DataAccessException {
         //TODO: batch update in multiples of 50-100
         String sql = "INSERT INTO tickets(seat, status, price, show) " +
                 "VALUES(?, ?::ticketstatus, ?, ?::uuid)";
@@ -54,13 +45,7 @@ public class TicketDao implements Crud<Ticket> {
 
     }
 
-    @Override
-    public Long create(Ticket ticket) {
-        //TODO: raise exception
-        return (long)0;
-    }
-
-    public void updateTicketStatus(String showId, String status){
+    public void updateTicketStatus(String showId, String status) {
         String sql = "UPDATE tickets SET status = ?::ticketstatus WHERE show = ?::uuid";
         this.jdbcTemplate.update(sql, status, showId);
     }
