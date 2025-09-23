@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Component
@@ -40,14 +41,14 @@ public class MovieService {
     }
 
 
-    public List<Movie> filterMovies(List<String> genre, List<String> languages, String releasedOnOrAfter){
+    public List<Movie> filterMovies(List<String> genre, List<String> languages, String releasedOnOrAfter) throws DateTimeParseException {
         LocalDate date = LocalDate.parse(releasedOnOrAfter);
         return this.movieDao.filterMovies(genre, languages, date);
     }
 
     public Movie addMovie(Movie movie, MultipartFile file) throws MovieException {
-        movie.setPoster(file.getOriginalFilename());
         try{
+            movie.setPoster(file.getOriginalFilename());
             Long movieId = this.movieDao.create(movie);
             Movie createdMovie = this.movieDao.findById(movieId);
             this.storageService.store(file, false);

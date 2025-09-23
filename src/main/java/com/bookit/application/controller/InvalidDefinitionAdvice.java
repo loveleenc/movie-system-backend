@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.format.DateTimeParseException;
+
 
 @RestControllerAdvice(assignableTypes = {MovieController.class, TicketsController.class})
 public class InvalidDefinitionAdvice {
@@ -30,5 +32,11 @@ public class InvalidDefinitionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     String resourceNotFoundHandler(ResourceNotFoundException e){
         return "The requested resource is not found";
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String invalidDateHandler(DateTimeParseException e){
+        return "Provided date is not in the acceptable format.";
     }
 }

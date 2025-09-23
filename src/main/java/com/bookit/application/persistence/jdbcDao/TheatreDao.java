@@ -26,7 +26,7 @@ public class TheatreDao implements Crud<Theatre, Long> {
     }
 
     @Override
-    public List<?> findAll() throws DataAccessException {
+    public List<Theatre> findAll() throws DataAccessException {
         return List.of();
     }
 
