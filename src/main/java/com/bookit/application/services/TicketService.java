@@ -6,6 +6,7 @@ import com.bookit.application.entity.Ticket;
 import com.bookit.application.persistence.ISeatDao;
 import com.bookit.application.persistence.ITicketDao;
 import com.bookit.application.types.TicketStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class TicketService {
         this.ticketDAO = ticketDAO;
     }
 
-    public List<Ticket> getTicketsByShow(String showId) {
+    public List<Ticket> getTicketsByShow(@NonNull String showId) throws NullPointerException {
         return this.ticketDAO.findTicketsByShow(showId);
     }
 
@@ -33,54 +34,80 @@ public class TicketService {
         return this.seatDAO.getSeatPricesByTheatre(theatreId);
     }
 
-    public void createTicketsForShow(Long moviePrice, Show show, String status) {
-        List<Seat> seats = this.getSeatsFromTheatre(show.getTheatreId());
-        this.createTickets(moviePrice, show, status, seats);
-    }
+    private Boolean statusChangeIsValid(List<String> currentStatuses, String newStatus, Boolean override) {
+        if (!TicketStatus.isTicketStatusEnum(newStatus)) {
+            return false;
+        }
 
-    private Boolean statusChangeIsValid(String currentStatus, String newStatus, Boolean override){
-        if(override){
+        if (override) {
             return true;
         }
-        if(!TicketStatus.isTicketStatusEnum(newStatus)){
-            return false;
-        }
-        TicketStatus currentStatusEnum = TicketStatus.valueOf(currentStatus.toUpperCase());
+        List<TicketStatus> currentStatusEnums = currentStatuses.stream().map(currentStatus -> TicketStatus.valueOf(currentStatus.toUpperCase())).toList();
         TicketStatus newStatusEnum = TicketStatus.valueOf(newStatus.toUpperCase());
 
-        if(currentStatusEnum.equals(TicketStatus.USED)){
-            return false;
-        }
 
-        if(currentStatusEnum.equals(TicketStatus.BOOKED) &&
-                (newStatusEnum.equals(TicketStatus.AVAILABLE) || newStatusEnum.equals(TicketStatus.USED))){
-            return false;
+        for (TicketStatus currentStatus : currentStatusEnums) {
+            if (
+                    !((currentStatus.equals(TicketStatus.BLOCKED) && newStatusEnum.equals(TicketStatus.AVAILABLE))
+                            || (currentStatus.equals(TicketStatus.AVAILABLE) && newStatusEnum.equals(TicketStatus.BLOCKED)))
+            ) {
+                return false;
+            }
         }
-
+//        if(currentStatusEnums.contains(TicketStatus.USED) || (currentStatusEnums.contains(TicketStatus.BOOKED) &&
+//                (newStatusEnum.equals(TicketStatus.AVAILABLE) || newStatusEnum.equals(TicketStatus.USED))) ||
+//                (currentStatusEnums.contains(TicketStatus.BLOCKED) && newStatusEnum.equals(TicketStatus.USED))
+//        ){
+//            return false;
+//        }
         return true;
     }
 
-    public void updateTicketStatusForShow(String showId, String newStatus, Boolean overrideStatusChangeValidation){
+    public void updateTicketStatusForShow(String showId, String newStatus, Boolean overrideStatusChangeValidation) throws ResourceNotFoundException, UnsupportedOperationException {
         List<Ticket> tickets = this.getTicketsByShow(showId);
-        if(tickets.isEmpty()){
+        if (tickets.isEmpty()) {
             throw new ResourceNotFoundException(String.format("Tickets for the show %s are not found", showId));
         }
-        String currentStatus = tickets.get(0).getStatus();
-        if (!this.statusChangeIsValid(currentStatus, newStatus, overrideStatusChangeValidation)){
+        List<String> currentStatus = tickets.stream().map(Ticket::getStatus).distinct().toList();
+        if (!this.statusChangeIsValid(currentStatus, newStatus, overrideStatusChangeValidation)) {
             throw new UnsupportedOperationException(String.format("Cannot change ticket status from %s to %s", currentStatus, newStatus));
         }
-        this.ticketDAO.updateTicketStatus(showId, newStatus);
+        this.ticketDAO.updateAllTicketsStatusForShow(showId, newStatus);
     }
 
-    private void createTickets(Long moviePrice, Show show, String status, List<Seat> seats) {
-        //TODO: validate tickets do not already exist for this show
-        //TODO: validate status type and movieprice
+    public void createTickets(Long moviePrice, Show show, String status) throws ResourceCreationException {
+        try {
+            TicketStatus statusEnum = TicketStatus.valueOf(status.toUpperCase());
+            if (statusEnum.equals(TicketStatus.USED) || statusEnum.equals(TicketStatus.BOOKED) || statusEnum.equals(TicketStatus.CANCELLED)) {
+                throw new ResourceCreationException(String.format("Cannot create tickets with the status %s", status));
+            }
+        } catch (IllegalArgumentException e) {
+            throw new ResourceCreationException(String.format("Cannot create tickets with the status %s", status), e);
+        }
+
+        if (moviePrice <= 0) {
+            throw new ResourceCreationException("Movie price for creating tickets cannot be less than or equal to 0");
+        }
+
+        List<Seat> seats = this.getSeatsFromTheatre(show.getTheatreId());
+        if (seats.isEmpty()) {
+            throw new ResourceCreationException("Seats missing when trying to create tickets for a show");
+        }
+
+        List<Ticket> existingTickets = this.getTicketsByShow(show.getId().toString());
+        if (!existingTickets.isEmpty()) {
+            throw new ResourceCreationException("Unable to create tickets as they already exist for this show");
+        }
+
         Map<String, Long> ticketPricePerSeatType = new HashMap<>();
         List<Ticket> tickets = new ArrayList<>();
 
         for (Seat seat : seats) {
             Long ticketPrice;
             if (!ticketPricePerSeatType.containsKey(seat.getSeatType())) {
+                if (seat.getSeatPrice() <= 0) {
+                    throw new ResourceCreationException("Seat price should be greater than 0");
+                }
                 ticketPrice = this.pricingService.calculateTicketPrice(seat.getSeatPrice(), moviePrice, show.getTimeSlot());
                 ticketPricePerSeatType.put(seat.getSeatType(), ticketPrice);
             } else {

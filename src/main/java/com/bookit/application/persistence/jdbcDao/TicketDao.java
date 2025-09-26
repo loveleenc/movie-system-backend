@@ -45,7 +45,7 @@ public class TicketDao implements ITicketDao {
 
     }
 
-    public void updateTicketStatus(String showId, String status) {
+    public void updateAllTicketsStatusForShow(String showId, String status) {
         String sql = "UPDATE tickets SET status = ?::ticketstatus WHERE show = ?::uuid";
         this.jdbcTemplate.update(sql, status, showId);
     }

@@ -28,4 +28,27 @@ public class Ticket {
         this.status = status;
         this.price = price;
     }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if(this == object){
+            return true;
+        }
+
+        if(!(object instanceof Ticket)){
+            return false;
+        }
+
+        Ticket comparedTicket = (Ticket)object;
+        if(this.show == comparedTicket.getShow() &&
+                this.getPrice().equals(comparedTicket.getPrice()) &&
+            this.seat.getSeatType().equals(comparedTicket.getSeat().getSeatType())){
+            return true;
+        }
+        return false;
+    }
 }

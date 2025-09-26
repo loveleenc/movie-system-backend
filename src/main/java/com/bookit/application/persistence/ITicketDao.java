@@ -7,5 +7,5 @@ import java.util.List;
 public interface ITicketDao {
     List<Ticket> findTicketsByShow(String showId);
     void createTickets(List<Ticket> tickets);
-    void updateTicketStatus(String showId, String status);
+    void updateAllTicketsStatusForShow(String showId, String status);
 }

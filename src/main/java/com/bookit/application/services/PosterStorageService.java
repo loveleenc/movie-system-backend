@@ -15,6 +15,7 @@ import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
 import com.bookit.application.services.storage.StorageException;
 import com.bookit.application.services.storage.StorageProperties;
 import com.bookit.application.services.storage.StorageService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import java.net.MalformedURLException;
 import java.time.OffsetDateTime;
 
 @Service
+@Profile("production")
 public class PosterStorageService implements StorageService {
 
     private final BlobContainerClient blobContainerClient;

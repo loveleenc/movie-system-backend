@@ -42,11 +42,7 @@ public class MovieDtoMapper {
         return movies.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public Movie toMovie(MovieDto movieDTO) throws InvalidDataException{
-        List<String> unsetValues = this.anyUnsetValues(movieDTO.getName(), movieDTO.getDuration(), movieDTO.getPoster(), movieDTO.getGenreList(), movieDTO.getLanguages(), movieDTO.getReleaseDate().toString());
-        if(!unsetValues.isEmpty()){
-            throw new InvalidDataException("The following data appears to be missing: " + unsetValues);
-        }
+    public Movie toMovie(MovieDto movieDTO) throws NullPointerException{
         return new Movie(movieDTO.getName(),
                 movieDTO.getDuration(),
                 movieDTO.getPoster(),
@@ -54,29 +50,5 @@ public class MovieDtoMapper {
                 movieDTO.getReleaseDate(),
                 movieDTO.getLanguages(),
                 null);
-    }
-
-    public List<String> anyUnsetValues(String name, Integer duration, String poster, List<String> genreList, List<String> languages, String releaseDate){
-        List<String> unsetValues = new ArrayList<>();
-        if(name == null){
-            unsetValues.add("name");
-        }
-        if(duration == null){
-            unsetValues.add("duration");
-        }
-
-        if(poster == null){
-            unsetValues.add("poster");
-        }
-        if(genreList == null){
-            unsetValues.add("genre");
-        }
-        if(languages == null){
-            unsetValues.add("language");
-        }
-        if(releaseDate == null){
-            unsetValues.add("release date");
-        }
-        return unsetValues;
     }
 }

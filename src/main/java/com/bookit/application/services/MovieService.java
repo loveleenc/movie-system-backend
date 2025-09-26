@@ -24,19 +24,19 @@ public class MovieService {
         this.storageService = storageService;
     }
 
-    public Movie findMovie(Long id){
+    public Movie findMovie(Long id) throws DataAccessException{
         return this.movieDao.findById(id);
     }
 
-    public List<Movie> getMovies(){
+    public List<Movie> getMovies() throws DataAccessException{
         return this.movieDao.findAll();
     }
 
-    public List<Movie> getOngoingMovies(){
+    public List<Movie> getOngoingMovies() throws DataAccessException{
         return this.movieDao.findOngoingMovies();
     }
 
-    public List<Movie> getUpcomingMovies(){
+    public List<Movie> getUpcomingMovies() throws DataAccessException{
         return this.movieDao.findUpcomingMovies();
     }
 
@@ -46,7 +46,7 @@ public class MovieService {
         return this.movieDao.filterMovies(genre, languages, date);
     }
 
-    public Movie addMovie(Movie movie, MultipartFile file) throws MovieException {
+    public Movie addMovie(Movie movie, MultipartFile file) throws ResourceCreationException {
         try{
             movie.setPoster(file.getOriginalFilename());
             Long movieId = this.movieDao.create(movie);
@@ -55,12 +55,11 @@ public class MovieService {
             return createdMovie;
         }
         catch(DataAccessException | NullPointerException e){
-            throw new MovieException("Unable to create the movie", e);
+            throw new ResourceCreationException("Unable to create the movie", e);
         }
         catch(UploadException e){
-            System.out.println(e.getMessage());
             this.movieDao.deleteMovie(movie);
-            throw new MovieException("Unable to create the movie due to ", e);
+            throw new ResourceCreationException("Unable to create the movie: poster upload has failed", e);
         }
     }
 }

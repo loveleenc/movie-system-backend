@@ -59,4 +59,16 @@ public class Show {
     public UUID getId() {
         return id;
     }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public void setTimeSlot(ShowTimeSlot timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 }

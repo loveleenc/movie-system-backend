@@ -4,7 +4,6 @@ package com.bookit.application.controller.movie;
 import com.bookit.application.dto.movie.MovieDto;
 import com.bookit.application.dto.movie.MovieDtoMapper;
 import com.bookit.application.entity.Movie;
-import com.bookit.application.services.MovieException;
 import com.bookit.application.services.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,9 +62,7 @@ public class MovieController {
 
     @PostMapping("/movie")
     ResponseEntity<MovieDto> addMovie(@RequestPart MovieDto movieData, @RequestPart MultipartFile file){
-        if(Objects.isNull(file)){
-            throw new MovieException("Poster has not been provided");
-        }
+        Objects.requireNonNull(file);
         Movie movie = this.movieDTOMapper.toMovie(movieData);
         Movie createdMovie = this.movieService.addMovie(movie, file);
         return new ResponseEntity<>(this.movieDTOMapper.toDTO(createdMovie), HttpStatus.CREATED);

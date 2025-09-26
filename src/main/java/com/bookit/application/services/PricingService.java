@@ -19,7 +19,8 @@ public class PricingService {
     }
 
     private Boolean showStartsAfterFourPm(LocalDateTime showStartTime) {
-        return showStartTime.isBefore(LocalDateTime.of(showStartTime.toLocalDate(), LocalTime.of(16, 0, 0)));
+        return showStartTime.isAfter(LocalDateTime.of(showStartTime.toLocalDate(), LocalTime.of(16, 0, 0))) ||
+                showStartTime.isEqual(LocalDateTime.of(showStartTime.toLocalDate(), LocalTime.of(16, 0, 0)));
     }
 
     private Double applyTax(Long totalPrice) {
@@ -30,10 +31,13 @@ public class PricingService {
         Long currentPrice = seatPrice + moviePrice;
         Double priceAfterTax = this.applyTax(currentPrice);
         DayOfWeek day = timeSlot.startTime().getDayOfWeek();
-        if (isWeekend(day) || this.showStartsBeforeNoon(timeSlot.startTime())) {
+        if (this.showStartsBeforeNoon(timeSlot.startTime())) {
             priceAfterTax = priceAfterTax - (priceAfterTax * 0.05);
         }
-        if(this.showStartsAfterFourPm(timeSlot.startTime())){
+        else if(this.showStartsAfterFourPm(timeSlot.startTime())){
+            priceAfterTax = priceAfterTax + (priceAfterTax * 0.05);
+        }
+        if(isWeekend(day)){
             priceAfterTax = priceAfterTax + (priceAfterTax * 0.05);
         }
         return Math.round(priceAfterTax);

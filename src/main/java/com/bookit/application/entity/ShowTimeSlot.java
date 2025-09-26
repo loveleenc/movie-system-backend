@@ -12,7 +12,7 @@ public record ShowTimeSlot(LocalDateTime startTime, LocalDateTime endTime) {
     }
 
     public Long getSlotDuration() {
-        return this.endTime.toEpochSecond(ZoneOffset.UTC) - this.startTime.toEpochSecond(ZoneOffset.UTC);
+        return (this.endTime.toEpochSecond(ZoneOffset.UTC) - this.startTime.toEpochSecond(ZoneOffset.UTC))/60;
     }
 
     private Boolean inRange(LocalDateTime timestamp) {
@@ -22,7 +22,9 @@ public record ShowTimeSlot(LocalDateTime startTime, LocalDateTime endTime) {
     public static Boolean noOverlapBetweenTimeSlotsExists(List<ShowTimeSlot> slots, ShowTimeSlot expectedTimeSlot) {
         boolean noOverlapExists = true;
         for (ShowTimeSlot slot : slots) {
-            if (slot.inRange(expectedTimeSlot.startTime()) || slot.inRange(expectedTimeSlot.endTime())) {
+            if ((slot.inRange(expectedTimeSlot.startTime()) || slot.inRange(expectedTimeSlot.endTime())) ||
+                    (expectedTimeSlot.startTime.isEqual(slot.startTime) && expectedTimeSlot.endTime.isEqual(slot.endTime))
+            ) {
                 noOverlapExists = false;
                 break;
             }
