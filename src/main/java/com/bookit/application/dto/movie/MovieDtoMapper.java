@@ -1,6 +1,5 @@
 package com.bookit.application.dto.movie;
 
-import com.bookit.application.dto.InvalidDataException;
 import com.bookit.application.entity.Movie;
 import com.bookit.application.services.MovieException;
 import com.bookit.application.services.storage.StorageException;

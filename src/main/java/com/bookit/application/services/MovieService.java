@@ -54,7 +54,7 @@ public class MovieService {
             this.storageService.store(file, false);
             return createdMovie;
         }
-        catch(DataAccessException | NullPointerException e){
+        catch(DataAccessException e){
             throw new ResourceCreationException("Unable to create the movie", e);
         }
         catch(UploadException e){

@@ -2,26 +2,27 @@ package com.bookit.application.dto.show;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.lang.NonNull;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShowAndTicketCreationDto {
     @JsonProperty
+    @NonNull
     private ShowDto show;
     private Long moviePrice;
     private String status;
 
-    public ShowAndTicketCreationDto(ShowDto show) {
+    public ShowAndTicketCreationDto(@NonNull ShowDto show) {
         this.show = show;
     }
 
-    public ShowAndTicketCreationDto(ShowDto show, Long moviePrice, String status) {
+    public ShowAndTicketCreationDto(@NonNull ShowDto show, Long moviePrice, String status) {
         this.show = show;
         this.moviePrice = moviePrice;
         this.status = status;
     }
 
-    public ShowAndTicketCreationDto(){}
-
+    @NonNull
     public ShowDto getShow() {
         return show;
     }

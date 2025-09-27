@@ -1,12 +1,10 @@
-package com.bookit.application.controller;
+package com.bookit.application.controller.show;
 
 import com.bookit.application.dto.show.ShowAndTicketCreationDto;
 import com.bookit.application.dto.show.ShowDto;
 import com.bookit.application.dto.show.ShowDtoMapper;
 import com.bookit.application.entity.Show;
 import com.bookit.application.services.ShowService;
-import com.bookit.application.services.TicketService;
-import com.bookit.application.types.TicketStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

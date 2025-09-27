@@ -1,15 +1,19 @@
-package com.bookit.application.controller.ticket;
+package com.bookit.application.controller.movie;
 
-
+import com.bookit.application.services.MovieException;
+import com.bookit.application.services.ResourceCreationException;
 import com.bookit.application.services.ResourceNotFoundException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(assignableTypes = {TicketsController.class})
-public class TicketExceptionsAdvice {
+import java.time.format.DateTimeParseException;
+
+@RestControllerAdvice(assignableTypes = MovieController.class)
+public class MovieExceptionsAdvice {
 
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -17,10 +21,10 @@ public class TicketExceptionsAdvice {
         return "Data appears to be missing in the request. Please check the request details and try again";
     }
 
-    @ExceptionHandler(UnsupportedOperationException.class)
+    @ExceptionHandler(ResourceCreationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String invalidTicketStatusHandler(UnsupportedOperationException e){
-        return "The ticket status cannot be changed to the requested status.";
+    String resourceCreationExceptionHandler(ResourceCreationException e){
+        return "Unable to create or fetch movie details. Please check the request details or try again later.";
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -29,12 +33,22 @@ public class TicketExceptionsAdvice {
         return "Resource not found";
     }
 
+    @ExceptionHandler(MovieException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    String movieExceptionHandler(MovieException e){
+        return "Unable to fetch movie(s) at the moment. Please try later";
+    }
+
     @ExceptionHandler(DataAccessException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     String dataAccessExceptionHandler(DataAccessException e){
         return "Unable to fetch details at the moment. Please try later";
     }
 
-
+    @ExceptionHandler(DateTimeParseException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String invalidDateFormatHandler(DateTimeParseException e){
+        return "Provided date is not in the acceptable format.";
+    }
 
 }

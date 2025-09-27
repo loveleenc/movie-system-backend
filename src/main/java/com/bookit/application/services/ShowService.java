@@ -4,6 +4,7 @@ import com.bookit.application.entity.*;
 import com.bookit.application.persistence.IMovieDao;
 import com.bookit.application.persistence.IShowDao;
 import com.bookit.application.types.TicketStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class ShowService {
         this.ticketService = ticketService;
     }
 
-    public List<Show> getShowsByMovie(Long movieId) {
+    public List<Show> getShowsByMovie(@NonNull Long movieId) {
         return this.showDAO.findShowsByMovie(movieId);
     }
 

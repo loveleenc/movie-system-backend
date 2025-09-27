@@ -3,7 +3,9 @@ package com.bookit.application.persistence.jdbcDao;
 import com.bookit.application.entity.Movie;
 import com.bookit.application.persistence.IMovieDao;
 import com.bookit.application.persistence.jdbcDao.mappers.MovieMapper;
+import com.bookit.application.services.ResourceNotFoundException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -26,8 +28,13 @@ public class MovieDao implements IMovieDao {
     }
 
     @Override
-    public Movie findById(Long id) throws DataAccessException {
-        return this.jdbcTemplate.queryForObject("SELECT * FROM movies WHERE id = ?", this.movieMapper, id);
+    public Movie findById(Long id) throws IncorrectResultSizeDataAccessException {
+        try{
+            return this.jdbcTemplate.queryForObject("SELECT * FROM movies WHERE id = ?", this.movieMapper, id);
+        }
+        catch (IncorrectResultSizeDataAccessException e){
+            throw new ResourceNotFoundException(String.format("Movie with id %s is not found", id), e);
+        }
     }
 
     @Override

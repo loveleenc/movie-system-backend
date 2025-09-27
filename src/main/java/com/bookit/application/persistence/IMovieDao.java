@@ -1,6 +1,7 @@
 package com.bookit.application.persistence;
 
 import com.bookit.application.entity.Movie;
+import com.bookit.application.services.ResourceNotFoundException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +16,8 @@ public interface IMovieDao extends Crud<Movie, Long> {
 
     void deleteMovie(Movie movie);
 
+    @Override
+    Movie findById(Long id) throws ResourceNotFoundException;
 //    @Override
 //    List<Movie> findAll();
 }

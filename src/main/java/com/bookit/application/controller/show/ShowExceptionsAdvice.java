@@ -1,16 +1,12 @@
-package com.bookit.application.controller.ticket;
-
+package com.bookit.application.controller.show;
 
 import com.bookit.application.services.ResourceNotFoundException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(assignableTypes = {TicketsController.class})
-public class TicketExceptionsAdvice {
-
+public class ShowExceptionsAdvice {
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String nullDataInRequestHandler(NullPointerException e){
@@ -34,7 +30,5 @@ public class TicketExceptionsAdvice {
     String dataAccessExceptionHandler(DataAccessException e){
         return "Unable to fetch details at the moment. Please try later";
     }
-
-
 
 }
