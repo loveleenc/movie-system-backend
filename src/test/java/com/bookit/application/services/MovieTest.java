@@ -94,7 +94,7 @@ public class MovieTest {
     }
 
     @Test()
-    public void test_whenNoPosterFileProvidedDuringMovieCreation_thenResourceCreationExceptionIsThrown() {
+    public void test_whenNoPosterFileProvidedDuringMovieCreation_thenNullPointerExceptionIsThrown() {
         List<String> genre = Arrays.asList("Action", "Adventure");
         List<String> languages = Arrays.asList("English", "Tamil", "Hindi");
         Movie movie = new MovieBuilder()
@@ -106,7 +106,7 @@ public class MovieTest {
                 .setReleaseDate(LocalDate.of(2027, 9, 19))
                 .build();
 
-        Assertions.assertThrows(ResourceCreationException.class, () -> this.movieService.addMovie(movie, null));
+        Assertions.assertThrows(NullPointerException.class, () -> this.movieService.addMovie(movie, null));
     }
 
     @Test

@@ -4,11 +4,7 @@ import com.bookit.application.entity.*;
 import com.bookit.application.persistence.ISeatDao;
 import com.bookit.application.persistence.ITicketDao;
 import com.bookit.application.types.TicketStatus;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 
 import java.time.LocalDate;
@@ -24,10 +20,10 @@ public class TicketTest {
     private List<Ticket> tickets;
     private List<Seat> seats;
     private static Show show;
-    private static ISeatDao seatDao = mock(ISeatDao.class);
-    private static ITicketDao ticketDao = mock(ITicketDao.class);
+    private ISeatDao seatDao;
+    private ITicketDao ticketDao;
+    private TicketService ticketService;
     private static PricingService pricingService = new PricingService();
-    private static TicketService ticketService = new TicketService(seatDao, pricingService, ticketDao);
 
 
     @BeforeAll
@@ -54,6 +50,9 @@ public class TicketTest {
 
     @BeforeEach
     public void before() {
+        this.seatDao = mock(ISeatDao.class);
+        this.ticketDao = mock(ITicketDao.class);
+        this.ticketService = new TicketService(seatDao, pricingService, ticketDao);
         Seat seat1 = new Seat("A1", "Bronze", 100L, 1L);
         Seat seat2 = new Seat("B1", "Silver", 250L, 11L);
         Seat seat3 = new Seat("C2", "Diamond", 300L, 25L);
@@ -173,6 +172,7 @@ public class TicketTest {
     }
 
     @Test
+
     public void test_ticketCreationForShowFailsWhenTicketsAlreadyExist() {
         Long moviePrice = 100L;
         String status = TicketStatus.AVAILABLE.code();
