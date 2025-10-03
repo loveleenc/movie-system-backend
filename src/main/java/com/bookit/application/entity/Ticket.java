@@ -5,6 +5,8 @@ public class Ticket {
     private String status;
     private Long price;
     private Seat seat;
+    private String id;
+    private Long ownerId;
 
     public Long getPrice() {
         return price;
@@ -50,5 +52,21 @@ public class Ticket {
             return true;
         }
         return false;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 }

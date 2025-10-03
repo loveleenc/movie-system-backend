@@ -15,24 +15,31 @@ public class ShowService {
     private IShowDao showDAO;
     private IMovieDao movieDAO;
     private TicketService ticketService;
+    private TheatreService theatreService;
 
-    public ShowService(IShowDao showDAO, IMovieDao movieDAO, TicketService ticketService) {
+    public ShowService(IShowDao showDAO, IMovieDao movieDAO, TicketService ticketService, TheatreService theatreService) {
         this.showDAO = showDAO;
         this.movieDAO = movieDAO;
         this.ticketService = ticketService;
+        this.theatreService = theatreService;
     }
 
     public List<Show> getShowsByMovie(@NonNull Long movieId) {
         return this.showDAO.findShowsByMovie(movieId);
     }
 
+    public List<Show> getShowsByTheatre(@NonNull Integer theatreId) throws ResourceNotFoundException{
+        Theatre theatre = this.theatreService.getTheatre(theatreId);
+        return this.showDAO.findShowsByTheatre(theatreId);
+    }
+    
     public Show createShowAndTickets(Show show, Long moviePrice, String ticketStatus) throws NullPointerException, ResourceCreationException {
         Show createdShow = this.createShow(show);
         this.ticketService.createTickets(Objects.requireNonNull(moviePrice), createdShow, Objects.requireNonNull(ticketStatus));
         return createdShow;
     }
 
-    private Show createShow(Show show) throws ResourceCreationException{
+    private Show createShow(Show show) throws ResourceCreationException {
         Long movieId = show.getMovieId();
         Movie movie = this.movieDAO.findById(movieId);
         Long theatreId = show.getTheatreId();
@@ -59,6 +66,7 @@ public class ShowService {
     }
 
     public void cancelShow(String showId) {
+
         this.ticketService.updateTicketStatusForShow(showId, TicketStatus.CANCELLED.code(), true);
     }
 

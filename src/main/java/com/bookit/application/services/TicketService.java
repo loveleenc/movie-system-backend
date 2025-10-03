@@ -5,32 +5,38 @@ import com.bookit.application.entity.Show;
 import com.bookit.application.entity.Ticket;
 import com.bookit.application.persistence.ISeatDao;
 import com.bookit.application.persistence.ITicketDao;
+import com.bookit.application.persistence.IUserDao;
+import com.bookit.application.security.entity.User;
+import com.bookit.application.types.Role;
+import com.bookit.application.types.SeatCategory;
 import com.bookit.application.types.TicketStatus;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class TicketService {
     private ISeatDao seatDAO;
     private PricingService pricingService;
     private ITicketDao ticketDAO;
+    private IUserDao userDao;
 
-    public TicketService(ISeatDao seatDAO, PricingService pricingService, ITicketDao ticketDAO) {
+    public TicketService(ISeatDao seatDAO, PricingService pricingService, ITicketDao ticketDAO, IUserDao userDao) {
         this.seatDAO = seatDAO;
         this.pricingService = pricingService;
         this.ticketDAO = ticketDAO;
+        this.userDao = userDao;
     }
 
     public List<Ticket> getTicketsByShow(@NonNull String showId) throws NullPointerException {
         return this.ticketDAO.findTicketsByShow(showId);
     }
 
-    public List<Seat> getSeatsFromTheatre(Long theatreId) {
+    public List<Seat> getSeatsFromTheatre(Integer theatreId) {
         return this.seatDAO.getSeatPricesByTheatre(theatreId);
     }
 
@@ -99,7 +105,7 @@ public class TicketService {
             throw new ResourceCreationException("Unable to create tickets as they already exist for this show");
         }
 
-        Map<String, Long> ticketPricePerSeatType = new HashMap<>();
+        Map<SeatCategory, Long> ticketPricePerSeatType = new HashMap<>();
         List<Ticket> tickets = new ArrayList<>();
 
         for (Seat seat : seats) {
@@ -117,5 +123,71 @@ public class TicketService {
             tickets.add(ticket);
         }
         this.ticketDAO.createTickets(tickets);
+    }
+
+    public List<Ticket> bookTickets(List<String> ticketIds) throws TicketBookingException, ResourceNotFoundException{
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userDao.findUserByUsername(username);
+        if(!user.getRoles().contains(Role.REGULAR_USER)){
+            throw new AccessDeniedException(String.format("Tickets cannot be booked by users that are not of type %s", Role.REGULAR_USER.code()));
+        }
+        Long userId = user.getId();
+
+        List<Ticket> tickets = new ArrayList<>();
+        ticketIds.forEach(ticketId -> {
+            Ticket ticket = this.ticketDAO.findById(ticketId);
+            try{
+                TicketStatus ticketStatus = Objects.requireNonNull(TicketStatus.getTicketStatusEnum(ticket.getStatus()));
+                if(!ticketStatus.equals(TicketStatus.AVAILABLE)){
+                    throw new TicketBookingException("This ticket is not available for booking");
+                }
+                if(!Objects.isNull(ticket.getOwnerId())){
+                    throw new TicketBookingException("This ticket has already been booked by a user");
+                }
+                ticket.setStatus(TicketStatus.BOOKED.code());
+                ticket.setOwnerId(userId);
+                tickets.add(ticket);
+            }
+            catch (NullPointerException e) {
+                throw new TicketBookingException("Retrieved tickets from data source have an invalid ticket status", e);
+            }
+            catch(EmptyResultDataAccessException e){
+                throw new ResourceNotFoundException("The ticket was not found");
+            }
+        });
+
+        this.ticketDAO.bookOrCancelTickets(tickets);
+        return tickets;
+    }
+
+    public List<Ticket> cancelTicketBookings(List<String> ticketIds){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userDao.findUserByUsername(username);
+        if(!user.getRoles().contains(Role.REGULAR_USER)){
+            throw new AccessDeniedException(String.format("Tickets cannot be booked by users that are not of type %s", Role.REGULAR_USER.code()));
+        }
+        Long userId = user.getId();
+
+        List<Ticket> tickets = new ArrayList<>();
+        ticketIds.forEach(ticketId -> {
+            try{
+                Ticket ticket = this.ticketDAO.findById(ticketId);
+                TicketStatus ticketStatus = Objects.requireNonNull(TicketStatus.getTicketStatusEnum(ticket.getStatus()));
+                if(!ticket.getOwnerId().equals(userId)){
+                    throw new TicketBookingException("Ticket cannot be cancelled by another user");
+                }
+                if(!ticketStatus.equals(TicketStatus.BOOKED)){
+                    throw new TicketBookingException("This ticket cannot be cancelled");
+                }
+                ticket.setStatus(TicketStatus.AVAILABLE.code());
+                ticket.setOwnerId(null);
+                tickets.add(ticket);
+            }
+            catch(EmptyResultDataAccessException e){
+                throw new TicketBookingException("The ticket was not found");
+            }
+        });
+        this.ticketDAO.bookOrCancelTickets(tickets);
+        return tickets;
     }
 }

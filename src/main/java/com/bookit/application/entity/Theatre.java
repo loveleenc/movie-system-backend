@@ -6,10 +6,11 @@ public class Theatre {
     private String name;
     private String location;
     private List<Seat> seats;
-    private long id;
+    private Integer id;
+    private Long ownerId;
 
 
-    public Theatre(String name, String location, Long id) {
+    public Theatre(String name, String location, Integer id) {
         this.name = name;
         this.location = location;
         this.id = id;
@@ -25,12 +26,27 @@ public class Theatre {
         return location;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public List<Seat> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(List<Seat> seats) {
+        this.seats = seats;
+    }
 }

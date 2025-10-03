@@ -13,6 +13,7 @@ public class TicketDto {
     private SeatDto seat;
     private String status;
     private Long price;
+    private String ticketId;
 
     public TicketDto(ShowDto show, SeatDto seat, String status, Long price) {
         this.show = show;

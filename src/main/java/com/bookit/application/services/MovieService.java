@@ -6,6 +6,7 @@ import com.bookit.application.services.storage.UploadException;
 import com.bookit.application.entity.Movie;
 import com.bookit.application.persistence.IMovieDao;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 

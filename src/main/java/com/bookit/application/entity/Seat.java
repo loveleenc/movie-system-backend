@@ -1,16 +1,26 @@
 package com.bookit.application.entity;
 
+import com.bookit.application.types.SeatCategory;
+
+import java.util.Objects;
+
 public class Seat {
     private Long id;
     private Long seatPrice;
-    private String seatType;
+    private SeatCategory seatType;
     private String seatNumber;
 
     public Seat(String seatNumber, String seatType, Long seatPrice, Long id) {
         this.seatNumber = seatNumber;
-        this.seatType = seatType;
         this.seatPrice = seatPrice;
         this.id = id;
+        this.setSeatType(seatType);
+    }
+
+    public Seat(String seatNumber, String seatType, Long seatPrice) {
+        this.seatNumber = seatNumber;
+        this.seatPrice = seatPrice;
+        this.setSeatType(seatType);
     }
 
     public Long getId() {
@@ -25,8 +35,15 @@ public class Seat {
         return seatNumber;
     }
 
-    public String getSeatType() {
+    public SeatCategory getSeatType() {
         return seatType;
     }
 
+    private void setSeatType(String seatType){
+        SeatCategory category = SeatCategory.getEnum(seatType);
+        if(Objects.isNull(category)){
+            throw new IllegalArgumentException("Provided seat category does not exist in the list of categories");
+        }
+        this.seatType = category;
+    }
 }

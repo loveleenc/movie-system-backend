@@ -21,10 +21,13 @@ public class TicketMapper implements RowMapper<Ticket> {
     public Ticket mapRow(ResultSet rs, int rowNum) throws SQLException {
         Show show = new Show();
         Seat seat = this.seatMapper.getSeat(rs, "seatid", null);
-        return new Ticket(show,
+        Ticket ticket = new Ticket(show,
                 seat,
                 rs.getString("status"),
                 rs.getLong("price")
         );
+        ticket.setId(rs.getString("id"));
+        ticket.setOwnerId(rs.getLong("owner"));
+        return ticket;
     }
 }

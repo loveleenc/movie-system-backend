@@ -18,13 +18,16 @@ public enum TicketStatus {
     }
 
     public static boolean isTicketStatusEnum(String possibleStatus){
-        for(TicketStatus status: TicketStatus.values()){
-            if(status.code().equals(possibleStatus)){
-                return true;
-            }
-        }
-        return false;
+        return TicketStatus.getTicketStatusEnum(possibleStatus) != null;
     }
 
+    public static TicketStatus getTicketStatusEnum(String possibleStatus){
+        for(TicketStatus status: TicketStatus.values()){
+            if(status.code().equals(possibleStatus)){
+                return status;
+            }
+        }
+        return null;
+    }
 
 }

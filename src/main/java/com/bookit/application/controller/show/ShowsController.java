@@ -21,10 +21,16 @@ public class ShowsController {
         this.showDTOMapper = showDTOMapper;
     }
 
-    @GetMapping("/shows/{movieId}")
-    ResponseEntity<List<ShowDto>> getShowsByMovie(@PathVariable Long movieId) {
+    @GetMapping("/shows")
+    ResponseEntity<List<ShowDto>> getShowsByMovie(@RequestParam Long movieId) {
         List<ShowDto> shows = this.showService.getShowsByMovie(movieId).stream().map(this.showDTOMapper::toShowTheatreDTO).toList();
         return new ResponseEntity<>(shows, HttpStatus.OK);
+    }
+
+    @GetMapping("/shows")
+    ResponseEntity<List<ShowDto>> getShows(@RequestParam Integer theatreId){
+        List<Show> shows = this.showService.getShowsByTheatre(theatreId);
+        return new ResponseEntity<>(this.showDTOMapper.showTheatreDTO(shows), HttpStatus.OK);
     }
 
     //TODO: add methods to update shows

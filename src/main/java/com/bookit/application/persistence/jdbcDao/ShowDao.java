@@ -57,7 +57,18 @@ public class ShowDao implements IShowDao {
 
     @Override
     public List<Show> findAll() throws DataAccessException {
-        return List.of();
+        String message = "Method findAll for shows has not been implemented";
+        throw new DataAccessException(message) {
+            @Override
+            public String getMessage() {
+                return super.getMessage();
+            }
+        };
+    }
+
+    public List<Show> findShowsByTheatre(Integer theatreId) throws DataAccessException{
+        String sql = "SELECT * FROM shows WHERE theatre = ?";
+        return this.jdbcTemplate.query(sql, this.showMapper, theatreId);
     }
 
     @Override

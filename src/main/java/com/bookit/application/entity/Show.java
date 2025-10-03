@@ -32,7 +32,7 @@ public class Show {
         return this.movie.getId();
     }
 
-    public Long getTheatreId() {
+    public Integer getTheatreId() {
         return this.theatre.getId();
     }
 

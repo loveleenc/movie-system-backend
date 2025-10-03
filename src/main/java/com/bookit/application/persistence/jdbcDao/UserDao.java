@@ -3,6 +3,7 @@ package com.bookit.application.persistence.jdbcDao;
 import com.bookit.application.persistence.IUserDao;
 import com.bookit.application.persistence.jdbcDao.mappers.UserMapper;
 import com.bookit.application.security.entity.User;
+import com.bookit.application.types.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,11 +11,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.stereotype.Component;
 
 import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.util.Objects;
 
+@Component
 public class UserDao implements IUserDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -25,7 +28,7 @@ public class UserDao implements IUserDao {
     }
 
     @Override
-    public User findUserByUsername(String username) throws DataAccessException {
+    public User findUserByUsername(String username) throws DataAccessException, UsernameNotFoundException {
         String sql = "SELECT * FROM users WHERE username = ?";
         try {
             return this.jdbcTemplate.queryForObject(sql, this.userMapper, username);
@@ -42,8 +45,8 @@ public class UserDao implements IUserDao {
 
     @Override
     public Long createUser(User newUser) {
-        String sql = "INSERT INTO users(firstname, lastname, email, password, username, roles) " +
-                "VALUES(?, ?, ?, ?, ?, ?::role[]) RETURNING id";
+        String sql = "INSERT INTO users(firstname, lastname, email, password, username, roles, status) " +
+                "VALUES(?, ?, ?, ?, ?, ?::role[], ?::accountstatus) RETURNING id";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         this.jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -52,8 +55,9 @@ public class UserDao implements IUserDao {
             ps.setString(3, newUser.getEmail());
             ps.setString(4, newUser.getPassword());
             ps.setString(5, newUser.getUsername());
-            Array rolesArray = connection.createArrayOf("roles", newUser.getRoles().toArray());
+            Array rolesArray = connection.createArrayOf("role", newUser.getRoles().stream().map(Role::code).toArray());
             ps.setArray(6, rolesArray);
+            ps.setString(7, newUser.getAccountStatus().code());
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();

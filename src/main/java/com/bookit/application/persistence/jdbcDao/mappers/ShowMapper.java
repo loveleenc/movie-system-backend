@@ -14,9 +14,10 @@ import java.util.UUID;
 @Component
 public class ShowMapper implements RowMapper<Show> {
     private MovieMapper movieMapper;
-
-    public ShowMapper(MovieMapper movieMapper) {
+    private TheatreMapper theatreMapper;
+    public ShowMapper(MovieMapper movieMapper, TheatreMapper theatreMapper) {
         this.movieMapper = movieMapper;
+        this.theatreMapper = theatreMapper;
     }
 
     @Override
@@ -24,9 +25,10 @@ public class ShowMapper implements RowMapper<Show> {
         ShowTimeSlot timeSlot = new ShowTimeSlot(rs.getTimestamp("starttime").toLocalDateTime(),
                 rs.getTimestamp("endtime").toLocalDateTime());
         Movie movie = this.movieMapper.getMovie(rs, "movieid");
-        Theatre theatre = new Theatre(rs.getString("theatrename"),
-                rs.getString("location"),
-                rs.getLong("theatreid"));
+        Theatre theatre = this.theatreMapper.mapRow(rs, rowNum);
+//                new Theatre(rs.getString("theatrename"),
+//                rs.getString("location"),
+//                rs.getLong("theatreid"));
         UUID showId = UUID.fromString(rs.getString("id"));
         return new Show(timeSlot,
                 theatre,

@@ -3,6 +3,7 @@ package com.bookit.application.persistence.jdbcDao;
 import com.bookit.application.entity.Ticket;
 import com.bookit.application.persistence.ITicketDao;
 import com.bookit.application.persistence.jdbcDao.mappers.TicketMapper;
+import com.bookit.application.types.TicketStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -49,6 +50,26 @@ public class TicketDao implements ITicketDao {
         String sql = "UPDATE tickets SET status = ?::ticketstatus WHERE show = ?::uuid";
         this.jdbcTemplate.update(sql, status, showId);
     }
+
+    @Override
+    public void bookOrCancelTickets(List<Ticket> tickets) {
+        //TODO: how to recover if only some of the tickets get booked
+        String sql = "UPDATE tickets SET owner = ? AND status = ?::ticketstatus WHERE id = ?::uuid";
+        List<Object[]> parameters = tickets.stream().map(ticket -> new Object[]{ticket.getId(), ticket.getOwnerId(), ticket.getStatus()}).toList();
+        int[] argTypes = new int[3];
+        argTypes[0] = Types.VARCHAR;
+        argTypes[1] = Types.BIGINT;
+        argTypes[2] = Types.VARCHAR;
+        this.jdbcTemplate.batchUpdate(sql, parameters, argTypes);
+    }
+
+    @Override
+    public Ticket findById(String id) throws DataAccessException {
+        String sql = "SELECT * FROM tickets WHERE id = ?::uuid";
+        return this.jdbcTemplate.queryForObject(sql, this.ticketMapper, id);
+    }
+
+
 }
 
 

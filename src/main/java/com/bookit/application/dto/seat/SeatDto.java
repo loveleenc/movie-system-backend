@@ -5,24 +5,18 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SeatDto {
     private Long id;
-    private Long seatPrice;
     private String seatType;
     private String seatNumber;
 
 
-    public SeatDto(String seatNumber, String seatType, Long seatPrice, Long id) {
-        this.id = id;
+    public SeatDto(String seatNumber, String seatType, Long id) {
         this.seatNumber = seatNumber;
         this.seatType = seatType;
-        this.seatPrice = seatPrice;
+        this.id = id;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public Long getSeatPrice() {
-        return seatPrice;
     }
 
     public String getSeatType() {
