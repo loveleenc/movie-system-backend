@@ -27,4 +27,6 @@ public class UserController {
         User createdUser = this.userService.createUser(user);
         return new ResponseEntity<>(this.userDtoMapper.toUserDto(createdUser), HttpStatus.CREATED);
     }
+
+
 }

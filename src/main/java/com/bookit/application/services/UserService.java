@@ -29,6 +29,9 @@ public class UserService {
         }
 
         List<Role> roles = user.getRoles();
+        if(roles.contains(Role.ADMIN)){
+          throw new IllegalArgumentException(String.format("Cannot create a user with the role %s", Role.ADMIN.code()));
+        }
         if(roles.contains(Role.THEATRE_OWNER)){
             user.setAccountStatus(AccountStatus.INACTIVE);
             //TODO: send out an e-mail to notify when the account has been verified and activated

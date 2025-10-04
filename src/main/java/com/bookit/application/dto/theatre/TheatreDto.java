@@ -3,6 +3,7 @@ package com.bookit.application.dto.theatre;
 import com.bookit.application.dto.seat.TheatreRowDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class TheatreDto {
     private String name;
     private String location;
     private Integer id;
+    @JsonProperty
     private List<TheatreRowDto> theatreRowDtos;
 
 

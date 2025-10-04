@@ -28,17 +28,18 @@ public class SecurityConfiguration {
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(HttpMethod.POST, "/register").permitAll()
 
-                                .requestMatchers("/movies").hasRole(Role.ADMIN.code())
+                                .requestMatchers("/movies").hasAuthority(Role.ADMIN.code())
                                 .requestMatchers(HttpMethod.GET, "/movies/**").authenticated()
 
-                                .requestMatchers(HttpMethod.POST, "/theatre", "/theatre/**").hasRole(Role.THEATRE_OWNER.code())
-                                .requestMatchers(HttpMethod.POST, "/show").hasRole(Role.THEATRE_OWNER.code())
-                                .requestMatchers(HttpMethod.PATCH, "/show/cancel").hasRole(Role.THEATRE_OWNER.code())
+                                .requestMatchers(HttpMethod.POST, "/theatre").hasAuthority(Role.THEATRE_OWNER.code())
+                                .requestMatchers(HttpMethod.GET, "/theatre", "/theatre/**").hasAuthority(Role.THEATRE_OWNER.code())
+                                .requestMatchers(HttpMethod.POST, "/show").hasAuthority(Role.THEATRE_OWNER.code())
+                                .requestMatchers(HttpMethod.PATCH, "/show/cancel").hasAuthority(Role.THEATRE_OWNER.code())
 
 
                                 .requestMatchers(HttpMethod.GET, "/tickets").authenticated()
-                                .requestMatchers(HttpMethod.PATCH, "/tickets").hasRole(Role.THEATRE_OWNER.code())
-                                .requestMatchers(HttpMethod.PATCH, "/tickets/book", "/tickets/cancel").hasRole(Role.REGULAR_USER.code())
+                                .requestMatchers(HttpMethod.PATCH, "/tickets").hasAuthority(Role.THEATRE_OWNER.code())
+                                .requestMatchers(HttpMethod.PATCH, "/tickets/book", "/tickets/cancel").hasAuthority(Role.REGULAR_USER.code())
 
 
                                 .anyRequest().authenticated()

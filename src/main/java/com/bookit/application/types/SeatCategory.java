@@ -1,9 +1,9 @@
 package com.bookit.application.types;
 
 public enum SeatCategory {
-    GOLD("gold"),
-    SILVER("silver"),
-    BRONZE("bronze");
+    GOLD("Gold"),
+    SILVER("Silver"),
+    BRONZE("Bronze");
 
     private String code;
 

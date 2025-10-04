@@ -1,6 +1,9 @@
 package com.bookit.application.entity;
 
-import java.util.List;
+import com.bookit.application.types.SeatCategory;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Theatre {
     private String name;
@@ -48,5 +51,10 @@ public class Theatre {
 
     public void setSeats(List<Seat> seats) {
         this.seats = seats;
+    }
+
+    public Map<SeatCategory, Long> getSeatCategoryAndPrices(){
+        Set<SeatCategory> categories = new HashSet<>();
+        return this.seats.stream().filter(seat -> categories.add(seat.getSeatType())).collect(Collectors.toMap(Seat::getSeatType, Seat::getSeatPrice));
     }
 }

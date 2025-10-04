@@ -1,5 +1,6 @@
 package com.bookit.application.services;
 
+import com.bookit.application.entity.Cart;
 import com.bookit.application.entity.Seat;
 import com.bookit.application.entity.Show;
 import com.bookit.application.entity.Ticket;
@@ -190,4 +191,5 @@ public class TicketService {
         this.ticketDAO.bookOrCancelTickets(tickets);
         return tickets;
     }
+
 }

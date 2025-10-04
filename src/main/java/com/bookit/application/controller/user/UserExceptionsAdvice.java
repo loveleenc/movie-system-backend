@@ -15,4 +15,9 @@ public class UserExceptionsAdvice {
         return "Please select another username or email";
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String illegalArgumentHandler(IllegalArgumentException e){
+        return "Data appears to be incorrect in the request. Please check the request details and try again";
+    }
 }
