@@ -3,8 +3,11 @@ package com.bookit.application.controller.movie;
 
 import com.bookit.application.dto.movie.MovieDto;
 import com.bookit.application.dto.movie.MovieDtoMapper;
+import com.bookit.application.dto.show.ShowDto;
+import com.bookit.application.dto.show.ShowDtoMapper;
 import com.bookit.application.entity.Movie;
 import com.bookit.application.services.MovieService;
+import com.bookit.application.services.ShowService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +22,15 @@ public class MovieController {
     private final static String START_DATE = "1970-01-01";
     private final MovieService movieService;
     private final MovieDtoMapper movieDTOMapper;
-    MovieController(MovieService movieService, MovieDtoMapper movieDTOMapper){
+    private final ShowService showService;
+    private final ShowDtoMapper showDTOMapper;
+
+
+    MovieController(MovieService movieService, MovieDtoMapper movieDTOMapper, ShowService showService, ShowDtoMapper showDTOMapper){
         this.movieService = movieService;
         this.movieDTOMapper = movieDTOMapper;
+        this.showService = showService;
+        this.showDTOMapper = showDTOMapper;
     }
 //    @GetMapping("/")
 //    public String listUploadedFiles(Model model) {
@@ -66,6 +75,12 @@ public class MovieController {
         Movie movie = this.movieDTOMapper.toMovie(movieData);
         Movie createdMovie = this.movieService.addMovie(movie, file);
         return new ResponseEntity<>(this.movieDTOMapper.toDTO(createdMovie), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/movie/{id}/shows")
+    ResponseEntity<List<ShowDto>> getShowsByMovie(@PathVariable Long id){
+        List<ShowDto> shows = this.showService.getShowsByMovie(id).stream().map(this.showDTOMapper::toShowTheatreDTO).toList();
+        return new ResponseEntity<>(shows, HttpStatus.OK);
     }
 
     //TODO: Delete movie

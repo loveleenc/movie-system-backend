@@ -2,7 +2,8 @@ package com.bookit.application.types;
 
 public enum Role {
     REGULAR_USER("regularUser"),
-    THEATRE_OWNER("theatreOwner");
+    THEATRE_OWNER("theatreOwner"),
+    ADMIN("admin");
 
     private final String code;
 

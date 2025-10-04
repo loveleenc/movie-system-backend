@@ -42,7 +42,7 @@ public class ShowService {
     private Show createShow(Show show) throws ResourceCreationException {
         Long movieId = show.getMovieId();
         Movie movie = this.movieDAO.findById(movieId);
-        Long theatreId = show.getTheatreId();
+        Integer theatreId = show.getTheatreId();
 
         if (!movie.getLanguages().contains(show.getLanguage())) {
             throw new ResourceCreationException("Movie is not available in the language selected for the show to be created");

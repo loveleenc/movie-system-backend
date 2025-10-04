@@ -18,7 +18,7 @@ public class ShowTheatreMapper implements RowMapper<Show> {
                 rs.getTimestamp("endtime").toLocalDateTime());
         Theatre theatre = new Theatre(rs.getString("theatrename"),
                 rs.getString("location"),
-                rs.getLong("theatreid"));
+                rs.getInt("theatreid"));
         UUID showId = UUID.fromString(rs.getString("id"));
         return new Show(timeSlot,
                 theatre,

@@ -72,7 +72,7 @@ public class ShowDao implements IShowDao {
     }
 
     @Override
-    public List<ShowTimeSlot> getBookedSlotsByTheatreId(Long theatreId) {
+    public List<ShowTimeSlot> getBookedSlotsByTheatreId(Integer theatreId) {
         String sql = "SELECT starttime, endtime FROM shows WHERE shows.theatre = ?";
         return this.jdbcTemplate.query(sql, (rs, rowNum) -> new ShowTimeSlot(rs.getTimestamp("starttime").toLocalDateTime(),
                 rs.getTimestamp("endtime").toLocalDateTime()), theatreId);

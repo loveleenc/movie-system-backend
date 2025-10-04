@@ -11,7 +11,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,12 +26,21 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizationManagerRequestMatcherRegistry) ->
                         authorizationManagerRequestMatcherRegistry
+                                .requestMatchers(HttpMethod.POST, "/register").permitAll()
+
+                                .requestMatchers("/movies").hasRole(Role.ADMIN.code())
+                                .requestMatchers(HttpMethod.GET, "/movies/**").authenticated()
+
+                                .requestMatchers(HttpMethod.POST, "/theatre", "/theatre/**").hasRole(Role.THEATRE_OWNER.code())
                                 .requestMatchers(HttpMethod.POST, "/show").hasRole(Role.THEATRE_OWNER.code())
-                                .requestMatchers(HttpMethod.PATCH, "/cancelShow").hasRole(Role.THEATRE_OWNER.code())
-                                .requestMatchers(HttpMethod.PATCH, "/tickets/update").hasRole(Role.THEATRE_OWNER.code())
-                                .requestMatchers(HttpMethod.PATCH, "/tickets/book").hasRole(Role.REGULAR_USER.code())
-                                .requestMatchers(HttpMethod.POST, "/movies").denyAll()
-                                .requestMatchers("/register").permitAll()
+                                .requestMatchers(HttpMethod.PATCH, "/show/cancel").hasRole(Role.THEATRE_OWNER.code())
+
+
+                                .requestMatchers(HttpMethod.GET, "/tickets").authenticated()
+                                .requestMatchers(HttpMethod.PATCH, "/tickets").hasRole(Role.THEATRE_OWNER.code())
+                                .requestMatchers(HttpMethod.PATCH, "/tickets/book", "/tickets/cancel").hasRole(Role.REGULAR_USER.code())
+
+
                                 .anyRequest().authenticated()
                                 )
                 .httpBasic(Customizer.withDefaults());
