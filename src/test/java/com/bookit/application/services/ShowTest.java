@@ -28,11 +28,12 @@ public class ShowTest {
     static IShowDao showDao;
     static IMovieDao movieDao;
     static TicketService ticketService;
+    static TheatreService theatreService;
     private Show show;
 
     @BeforeAll
     public static void beforeAll(){
-        theatre = new Theatre("ABC Inox Theatre", "Antarctica", 1L);
+        theatre = new Theatre("ABC Inox Theatre", "Antarctica", 1);
         genre = Arrays.asList(MovieGenre.ACTION.code(), MovieGenre.ADVENTURE.code());
         languages = Arrays.asList(MovieLanguage.ENGLISH.code(), MovieLanguage.TAMIL.code(), MovieLanguage.HINDI.code());
         movie = new MovieBuilder()
@@ -47,12 +48,13 @@ public class ShowTest {
         showDao = mock(IShowDao.class);
         movieDao = mock(IMovieDao.class);
         ticketService = mock(TicketService.class);
-        showService = new ShowService(showDao, movieDao, ticketService);
+        theatreService = mock(TheatreService.class);
+        showService = new ShowService(showDao, movieDao, ticketService, theatreService);
     }
 
     @BeforeEach
     public void before() {
-        Theatre theatre = new Theatre("ABC Inox Theatre", "Antarctica", 1L);
+        Theatre theatre = new Theatre("ABC Inox Theatre", "Antarctica", 1);
         LocalDateTime startTime = LocalDateTime.of(2025, 9, 20, 17, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2025, 9, 20, 19, 30, 0);
         ShowTimeSlot timeSlot = new ShowTimeSlot(startTime, endTime);
