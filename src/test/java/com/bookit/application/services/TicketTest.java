@@ -55,10 +55,10 @@ public class TicketTest {
         this.ticketDao = mock(ITicketDao.class);
         this.userService = mock(UserService.class);
         this.ticketService = new TicketService(seatDao, pricingService, ticketDao, userService);
-        Seat seat1 = new Seat("A1", "bronze", 100L, 1L);
-        Seat seat2 = new Seat("B1", "silver", 250L, 11L);
-        Seat seat3 = new Seat("C2", "gold", 300L, 25L);
-        Seat seat4 = new Seat("C9", "gold", 300L, 28L);
+        Seat seat1 = new Seat("A1", "Bronze", 100L, 1L);
+        Seat seat2 = new Seat("B1", "Silver", 250L, 11L);
+        Seat seat3 = new Seat("C2", "Gold", 300L, 25L);
+        Seat seat4 = new Seat("C9", "Gold", 300L, 28L);
         Ticket ticket1 = new Ticket(show, seat1, TicketStatus.AVAILABLE, 243L);
         Ticket ticket2 = new Ticket(show, seat2, TicketStatus.BOOKED, 424L);
         Ticket ticket3 = new Ticket(show, seat3, TicketStatus.BLOCKED, 485L);
