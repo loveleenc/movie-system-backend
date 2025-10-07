@@ -63,4 +63,8 @@ public class CartService {
         return bookedTickets;
     }
 
+    public void createCartForNewUser(Long userId){
+        this.cartDao.createNewCart(userId);
+    }
+
 }

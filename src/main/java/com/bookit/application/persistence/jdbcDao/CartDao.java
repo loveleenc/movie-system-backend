@@ -71,4 +71,10 @@ public class CartDao implements ICartDao {
             return new Item(ticket, itemId);
         }, itemId);
     }
+
+    @Override
+    public void createNewCart(Long userId){
+        String sql = "INSERT INTO cart(owner, expiryjobid) VALUES(?, ?)";
+        this.jdbcTemplate.update(sql, userId, null);
+    }
 }

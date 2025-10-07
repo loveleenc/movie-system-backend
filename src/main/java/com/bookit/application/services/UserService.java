@@ -40,8 +40,6 @@ public class UserService {
         } else if (roles.contains(Role.REGULAR_USER)) {
             user.setAccountStatus(AccountStatus.INACTIVE);
             //TODO: send out an e-mail with account activation link
-
-            //TODO: create a cart for the user during registration
             return this.customUserDetailsService.createUser(user);
         }
         return null;
