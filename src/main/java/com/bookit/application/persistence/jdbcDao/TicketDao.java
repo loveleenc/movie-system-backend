@@ -3,7 +3,7 @@ package com.bookit.application.persistence.jdbcDao;
 import com.bookit.application.entity.Ticket;
 import com.bookit.application.persistence.ITicketDao;
 import com.bookit.application.persistence.jdbcDao.mappers.TicketMapper;
-import com.bookit.application.types.TicketStatus;
+import com.bookit.application.persistence.jdbcDao.mappers.TicketSeatMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,9 +16,11 @@ import java.util.List;
 public class TicketDao implements ITicketDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    private TicketSeatMapper ticketSeatMapper;
     private TicketMapper ticketMapper;
 
-    public TicketDao(TicketMapper ticketMapper) {
+    public TicketDao(TicketSeatMapper ticketSeatMapper, TicketMapper ticketMapper) {
+        this.ticketSeatMapper = ticketSeatMapper;
         this.ticketMapper = ticketMapper;
     }
 
@@ -26,7 +28,7 @@ public class TicketDao implements ITicketDao {
         String sql = "SELECT T.id as ticketid, T.price, S.seatnumber, S.seattype, S.id as seatid, T.status FROM tickets T " +
                 "JOIN seats S on T.seat = S.id " +
                 "WHERE show = ?::uuid";
-        return this.jdbcTemplate.query(sql, this.ticketMapper, showId);
+        return this.jdbcTemplate.query(sql, this.ticketSeatMapper, showId);
     }
 
     public void createTickets(List<Ticket> tickets) throws DataAccessException {
@@ -65,22 +67,17 @@ public class TicketDao implements ITicketDao {
 
     @Override
     public Ticket findById(String id) throws DataAccessException {
-        String sql = "SELECT * FROM tickets WHERE id = ?::uuid";
+        String sql = "SELECT T.id as ticketid, T.price, T.status, T.show as showid" +
+                "S.seatnumber, S.seattype, S.id as seatid" +
+                "SH.starttime, SH.endtime, SH.showlanguage, " +
+                "TH.theatrename, TH.location, TH.id as theatreid" +
+                "M.name " +
+                "FROM tickets T " +
+                "JOIN seats S ON T.seat = S.id " +
+                "JOIN shows SH ON T.show = SH.id " +
+                "JOIN theatre TH on SH.theatre = TH.id " +
+                "JOIN movies M ON M.id = SH.movie " +
+                "WHERE ticketid = ?::uuid";
         return this.jdbcTemplate.queryForObject(sql, this.ticketMapper, id);
     }
-
-
 }
-
-
-//    public Seat getSeat(String seatNumber, String theatreName) throws DataAccessException{
-//        String sql = "select id, price FROM " +
-//                "(select id, price from seats JOIN seatprices ON seats.theatre = seatprices.theatre AND seats.seattype = seatprices.seattype) as foo " +
-//                "WHERE seatnumber = ? AND theatre = (SELECT id from theatre WHERE theatre.name = ?)";
-//        return this.jdbcTemplate.queryForObject(sql, new SeatMapper(), seatNumber, theatreName);
-//    }
-//
-//    public List<Ticket> getTicketsByShow(String showId){
-//        String sql = "SELECT * FROM tickets T join seats S on T.seat = S.id WHERE show = ?::uuid";
-//        return this.jdbcTemplate.query(sql, this.ticketsForSeatsMapper, showId);
-//    }

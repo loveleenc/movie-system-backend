@@ -3,7 +3,6 @@ package com.bookit.application.services;
 import com.bookit.application.entity.*;
 import com.bookit.application.persistence.ISeatDao;
 import com.bookit.application.persistence.ITicketDao;
-import com.bookit.application.persistence.IUserDao;
 import com.bookit.application.types.TicketStatus;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
@@ -24,7 +23,7 @@ public class TicketTest {
     private ISeatDao seatDao;
     private ITicketDao ticketDao;
     private TicketService ticketService;
-    private IUserDao userDao;
+    private UserService userService;
     private static PricingService pricingService = new PricingService();
 
 
@@ -54,16 +53,16 @@ public class TicketTest {
     public void before() {
         this.seatDao = mock(ISeatDao.class);
         this.ticketDao = mock(ITicketDao.class);
-        this.userDao = mock(IUserDao.class);
-        this.ticketService = new TicketService(seatDao, pricingService, ticketDao, userDao);
+        this.userService = mock(UserService.class);
+        this.ticketService = new TicketService(seatDao, pricingService, ticketDao, userService);
         Seat seat1 = new Seat("A1", "bronze", 100L, 1L);
         Seat seat2 = new Seat("B1", "silver", 250L, 11L);
         Seat seat3 = new Seat("C2", "gold", 300L, 25L);
         Seat seat4 = new Seat("C9", "gold", 300L, 28L);
-        Ticket ticket1 = new Ticket(show, seat1, TicketStatus.AVAILABLE.code(), 243L);
-        Ticket ticket2 = new Ticket(show, seat2, TicketStatus.BOOKED.code(), 424L);
-        Ticket ticket3 = new Ticket(show, seat3, TicketStatus.BLOCKED.code(), 485L);
-        Ticket ticket4 = new Ticket(show, seat4, TicketStatus.AVAILABLE.code(), 485L);
+        Ticket ticket1 = new Ticket(show, seat1, TicketStatus.AVAILABLE, 243L);
+        Ticket ticket2 = new Ticket(show, seat2, TicketStatus.BOOKED, 424L);
+        Ticket ticket3 = new Ticket(show, seat3, TicketStatus.BLOCKED, 485L);
+        Ticket ticket4 = new Ticket(show, seat4, TicketStatus.AVAILABLE, 485L);
         this.tickets = Arrays.asList(ticket1, ticket2, ticket3, ticket4);
         this.seats = Arrays.asList(seat1, seat2, seat3, seat4);
     }

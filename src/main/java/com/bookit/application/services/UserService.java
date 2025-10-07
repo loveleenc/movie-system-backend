@@ -6,6 +6,7 @@ import com.bookit.application.security.entity.User;
 import com.bookit.application.types.AccountStatus;
 import com.bookit.application.types.Role;
 import com.bookit.application.utils.UserUtil;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -44,7 +45,9 @@ public class UserService {
         return null;
     }
 
-
+    public Long getCurrentUserId(){
+        return this.customUserDetailsService.getCurrentUserId();
+    }
 
 
 

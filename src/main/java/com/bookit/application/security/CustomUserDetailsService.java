@@ -3,6 +3,7 @@ package com.bookit.application.security;
 import com.bookit.application.persistence.IUserDao;
 import com.bookit.application.security.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //TODO: what exception is thrown if userMapper does not get a record?
         return this.userDao.findUserByUsername(username);
@@ -35,11 +37,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         //TODO: implement
     }
 
-    public void deleteUser(String username) {
-        //TODO: handle deletion of tickets for this user?
-        this.userDao.deleteUser(username);
-    }
-
     public void changePassword(String username, String newPassword) throws UsernameNotFoundException{
         if(!this.userExists(username)){
             throw new UsernameNotFoundException("Unable to change password as user with username does not exist");
@@ -55,6 +52,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     private Boolean usernameOrEmailAlreadyExists(String username, String email){
         Integer count = this.userDao.findUserCountByUsernameOrEmail(username, email);
         return count > 0;
+    }
+
+    public Long getCurrentUserId(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userDao.findUserByUsername(username);
+        return user.getId();
     }
 
 }

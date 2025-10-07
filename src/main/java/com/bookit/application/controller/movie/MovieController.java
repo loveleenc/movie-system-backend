@@ -83,6 +83,5 @@ public class MovieController {
         return new ResponseEntity<>(shows, HttpStatus.OK);
     }
 
-    //TODO: Delete movie
     //TODO: update movie details
 }

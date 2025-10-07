@@ -1,8 +1,14 @@
 package com.bookit.application.entity;
 
+import com.bookit.application.types.TicketStatus;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 public class Ticket {
+    private static final Integer TICKET_CANCELLATION_DEADLINE_OFFSET_MINUTES = 30;
     private Show show;
-    private String status;
+    private TicketStatus status;
     private Long price;
     private Seat seat;
     private String id;
@@ -12,7 +18,7 @@ public class Ticket {
         return price;
     }
 
-    public String getStatus() {
+    public TicketStatus getStatus() {
         return status;
     }
 
@@ -27,11 +33,26 @@ public class Ticket {
     public Ticket(Show show, Seat seat, String status, Long price) {
         this.show = show;
         this.seat = seat;
+        this.setStatus(status);
+        this.price = price;
+    }
+
+    public Ticket(Show show, Seat seat, TicketStatus status, Long price) {
+        this.show = show;
+        this.seat = seat;
         this.status = status;
         this.price = price;
     }
 
     public void setStatus(String status) {
+        TicketStatus statusEnum = TicketStatus.getTicketStatusEnum(status);
+        if(Objects.isNull(statusEnum)){
+            throw new IllegalArgumentException("Invalid status set");
+        }
+        this.status = statusEnum;
+    }
+
+    public void setStatus(TicketStatus status){
         this.status = status;
     }
 
@@ -68,5 +89,9 @@ public class Ticket {
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public Boolean isWithinCancellationDeadline(){
+        return LocalDateTime.now().isBefore(this.show.getStartTime().minusMinutes(TICKET_CANCELLATION_DEADLINE_OFFSET_MINUTES));
     }
 }

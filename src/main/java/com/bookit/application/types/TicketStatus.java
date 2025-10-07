@@ -5,7 +5,8 @@ public enum TicketStatus {
     BOOKED("booked"),
     BLOCKED("blocked"),
     USED("used"),
-    CANCELLED("cancelled");
+    CANCELLED("cancelled"),
+    RESERVED("reserved");
 
     private final String code;
 

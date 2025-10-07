@@ -66,7 +66,6 @@ public class ShowService {
     }
 
     public void cancelShow(String showId) {
-
         this.ticketService.updateTicketStatusForShow(showId, TicketStatus.CANCELLED.code(), true);
     }
 

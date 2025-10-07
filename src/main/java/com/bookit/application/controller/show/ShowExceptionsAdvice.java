@@ -31,4 +31,10 @@ public class ShowExceptionsAdvice {
         return "Unable to fetch details at the moment. Please try later";
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String illegalArgumentExceptionHandler(IllegalArgumentException e){
+        return "Incorrect data provided in the request. Please check the request details and try again";
+    }
+
 }

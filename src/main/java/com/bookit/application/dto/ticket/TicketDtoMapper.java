@@ -15,20 +15,19 @@ public class TicketDtoMapper {
         ShowDto showDTO = new ShowDto();
 
         SeatDto seatDTO = new SeatDto(ticket.getSeat().getSeatNumber(),
-                ticket.getSeat().getSeatType().code(),
-                ticket.getSeat().getId());
+                ticket.getSeat().getSeatType().code());
         String maskedStatus = TicketDtoMapper.maskActualTicketStatus(ticket);
         return new TicketDto(showDTO, seatDTO, maskedStatus, ticket.getPrice());
     }
 
     private static String maskActualTicketStatus(Ticket ticket){
-        TicketStatus status = TicketStatus.getTicketStatusEnum(ticket.getStatus());
+        TicketStatus status = ticket.getStatus();
         String maskedStatus = null;
         switch(status){
             case AVAILABLE:
                 maskedStatus = MaskedTicketStatus.AVAILABLE.code();
                 break;
-            case BLOCKED, CANCELLED, USED, BOOKED:
+            case BLOCKED, CANCELLED, USED, BOOKED, RESERVED:
                 maskedStatus = MaskedTicketStatus.BOOKED.code();
                 break;
             default:

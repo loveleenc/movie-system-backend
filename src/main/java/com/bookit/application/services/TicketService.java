@@ -1,20 +1,14 @@
 package com.bookit.application.services;
 
-import com.bookit.application.entity.Cart;
 import com.bookit.application.entity.Seat;
 import com.bookit.application.entity.Show;
 import com.bookit.application.entity.Ticket;
 import com.bookit.application.persistence.ISeatDao;
 import com.bookit.application.persistence.ITicketDao;
-import com.bookit.application.persistence.IUserDao;
-import com.bookit.application.security.entity.User;
-import com.bookit.application.types.Role;
 import com.bookit.application.types.SeatCategory;
 import com.bookit.application.types.TicketStatus;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.lang.NonNull;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -24,13 +18,13 @@ public class TicketService {
     private ISeatDao seatDAO;
     private PricingService pricingService;
     private ITicketDao ticketDAO;
-    private IUserDao userDao;
+    private UserService userService;
 
-    public TicketService(ISeatDao seatDAO, PricingService pricingService, ITicketDao ticketDAO, IUserDao userDao) {
+    public TicketService(ISeatDao seatDAO, PricingService pricingService, ITicketDao ticketDAO, UserService userService) {
         this.seatDAO = seatDAO;
         this.pricingService = pricingService;
         this.ticketDAO = ticketDAO;
-        this.userDao = userDao;
+        this.userService = userService;
     }
 
     public List<Ticket> getTicketsByShow(@NonNull String showId) throws NullPointerException {
@@ -41,7 +35,7 @@ public class TicketService {
         return this.seatDAO.getSeatPricesByTheatre(theatreId);
     }
 
-    private Boolean statusChangeIsValid(List<String> currentStatuses, String newStatus, Boolean override) {
+    private Boolean statusChangeIsValid(List<TicketStatus> currentStatuses, String newStatus, Boolean override) {
         if (!TicketStatus.isTicketStatusEnum(newStatus)) {
             return false;
         }
@@ -49,33 +43,31 @@ public class TicketService {
         if (override) {
             return true;
         }
-        List<TicketStatus> currentStatusEnums = currentStatuses.stream().map(currentStatus -> TicketStatus.valueOf(currentStatus.toUpperCase())).toList();
         TicketStatus newStatusEnum = TicketStatus.valueOf(newStatus.toUpperCase());
 
-
-        for (TicketStatus currentStatus : currentStatusEnums) {
+        for (TicketStatus currentStatus : currentStatuses) {
             if (
-                    !((currentStatus.equals(TicketStatus.BLOCKED) && newStatusEnum.equals(TicketStatus.AVAILABLE))
-                            || (currentStatus.equals(TicketStatus.AVAILABLE) && newStatusEnum.equals(TicketStatus.BLOCKED)))
+                    !(
+                            (currentStatus.equals(TicketStatus.BLOCKED) && newStatusEnum.equals(TicketStatus.AVAILABLE))
+                            || (currentStatus.equals(TicketStatus.AVAILABLE) && newStatusEnum.equals(TicketStatus.BLOCKED))
+//                            || (currentStatus.equals(TicketStatus.AVAILABLE) && newStatusEnum.equals(TicketStatus.RESERVED))
+//                            || (currentStatus.equals(TicketStatus.RESERVED) && newStatusEnum.equals(TicketStatus.AVAILABLE))
+                    )
             ) {
                 return false;
             }
         }
-//        if(currentStatusEnums.contains(TicketStatus.USED) || (currentStatusEnums.contains(TicketStatus.BOOKED) &&
-//                (newStatusEnum.equals(TicketStatus.AVAILABLE) || newStatusEnum.equals(TicketStatus.USED))) ||
-//                (currentStatusEnums.contains(TicketStatus.BLOCKED) && newStatusEnum.equals(TicketStatus.USED))
-//        ){
-//            return false;
-//        }
         return true;
     }
 
+
     public void updateTicketStatusForShow(String showId, String newStatus, Boolean overrideStatusChangeValidation) throws ResourceNotFoundException, UnsupportedOperationException {
+        //TODO: if overriding status validation, initiation refund/send out notifications for users who have booked the tickets.
         List<Ticket> tickets = this.getTicketsByShow(showId);
         if (tickets.isEmpty()) {
             throw new ResourceNotFoundException(String.format("Tickets for the show %s are not found", showId));
         }
-        List<String> currentStatus = tickets.stream().map(Ticket::getStatus).distinct().toList();
+        List<TicketStatus> currentStatus = tickets.stream().map(Ticket::getStatus).distinct().toList();
         if (!this.statusChangeIsValid(currentStatus, newStatus, overrideStatusChangeValidation)) {
             throw new UnsupportedOperationException(String.format("Cannot change ticket status from %s to %s", currentStatus, newStatus));
         }
@@ -126,27 +118,49 @@ public class TicketService {
         this.ticketDAO.createTickets(tickets);
     }
 
-    public List<Ticket> bookTickets(List<String> ticketIds) throws TicketBookingException, ResourceNotFoundException{
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = this.userDao.findUserByUsername(username);
-        if(!user.getRoles().contains(Role.REGULAR_USER)){
-            throw new AccessDeniedException(String.format("Tickets cannot be booked by users that are not of type %s", Role.REGULAR_USER.code()));
+    public void releaseTicket(Ticket ticket){
+        try {
+            TicketStatus ticketStatus = ticket.getStatus();
+            if(!ticketStatus.equals(TicketStatus.RESERVED)){
+                throw new TicketBookingException("Ticket reservation cannot be removed as it is not reserved in the first place");
+            }
+            ticket.setStatus(TicketStatus.AVAILABLE);
+            ticket.setOwnerId(null);
+            //TODO: remove ticket reservation in dao
         }
-        Long userId = user.getId();
+        catch(EmptyResultDataAccessException e){
+            throw new ResourceNotFoundException("The ticket was not found");
+        }
+    }
 
-        List<Ticket> tickets = new ArrayList<>();
-        ticketIds.forEach(ticketId -> {
-            Ticket ticket = this.ticketDAO.findById(ticketId);
+    public Ticket reserveTicket(String ticketId, Long userId){
             try{
-                TicketStatus ticketStatus = Objects.requireNonNull(TicketStatus.getTicketStatusEnum(ticket.getStatus()));
+                Ticket ticket = this.ticketDAO.findById(ticketId);
+                TicketStatus ticketStatus = ticket.getStatus();
+                if(!Objects.isNull(ticket.getOwnerId())){
+                    throw new TicketBookingException("This ticket has already been booked/reserved by a user");
+                }
                 if(!ticketStatus.equals(TicketStatus.AVAILABLE)){
                     throw new TicketBookingException("This ticket is not available for booking");
                 }
-                if(!Objects.isNull(ticket.getOwnerId())){
-                    throw new TicketBookingException("This ticket has already been booked by a user");
-                }
-                ticket.setStatus(TicketStatus.BOOKED.code());
+                ticket.setStatus(TicketStatus.RESERVED);
                 ticket.setOwnerId(userId);
+                //TODO: reserve ticket in dao
+                return ticket;
+            }
+            catch(EmptyResultDataAccessException e){
+                throw new ResourceNotFoundException("The ticket was not found");
+            }
+    }
+
+    public List<Ticket> bookTickets(List<Ticket> tickets) throws TicketBookingException, ResourceNotFoundException{
+        tickets.forEach(ticket -> {
+            try{
+                TicketStatus ticketStatus = ticket.getStatus();
+                if(!ticketStatus.equals(TicketStatus.RESERVED)){
+                    throw new TicketBookingException("This ticket has been not reserved for booking");
+                }
+                ticket.setStatus(TicketStatus.BOOKED);
                 tickets.add(ticket);
             }
             catch (NullPointerException e) {
@@ -156,40 +170,36 @@ public class TicketService {
                 throw new ResourceNotFoundException("The ticket was not found");
             }
         });
-
         this.ticketDAO.bookOrCancelTickets(tickets);
         return tickets;
     }
 
-    public List<Ticket> cancelTicketBookings(List<String> ticketIds){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = this.userDao.findUserByUsername(username);
-        if(!user.getRoles().contains(Role.REGULAR_USER)){
-            throw new AccessDeniedException(String.format("Tickets cannot be booked by users that are not of type %s", Role.REGULAR_USER.code()));
-        }
-        Long userId = user.getId();
-
+    public List<Ticket> cancelBookings(List<String> ticketIds){
+        Long userId = this.userService.getCurrentUserId();
         List<Ticket> tickets = new ArrayList<>();
         ticketIds.forEach(ticketId -> {
             try{
                 Ticket ticket = this.ticketDAO.findById(ticketId);
-                TicketStatus ticketStatus = Objects.requireNonNull(TicketStatus.getTicketStatusEnum(ticket.getStatus()));
+                if(!ticket.isWithinCancellationDeadline()){
+                    throw new TicketBookingException("Ticket cannot be cancelled when less than 30 mins are left for a show to begin");
+                }
                 if(!ticket.getOwnerId().equals(userId)){
                     throw new TicketBookingException("Ticket cannot be cancelled by another user");
                 }
-                if(!ticketStatus.equals(TicketStatus.BOOKED)){
+                if(!ticket.getStatus().equals(TicketStatus.BOOKED)){
                     throw new TicketBookingException("This ticket cannot be cancelled");
                 }
-                ticket.setStatus(TicketStatus.AVAILABLE.code());
+                ticket.setStatus(TicketStatus.AVAILABLE);
                 ticket.setOwnerId(null);
                 tickets.add(ticket);
             }
             catch(EmptyResultDataAccessException e){
-                throw new TicketBookingException("The ticket was not found");
+                throw new ResourceNotFoundException("The ticket was not found");
             }
         });
         this.ticketDAO.bookOrCancelTickets(tickets);
         return tickets;
     }
+
 
 }

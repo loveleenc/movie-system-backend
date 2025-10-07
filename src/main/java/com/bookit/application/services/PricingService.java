@@ -28,6 +28,7 @@ public class PricingService {
     }
 
     public Long calculateTicketPrice(Long seatPrice, Long moviePrice, ShowTimeSlot timeSlot) {
+        //TODO: remove tax and apply component only at checkout
         Long currentPrice = seatPrice + moviePrice;
         Double priceAfterTax = this.applyTax(currentPrice);
         DayOfWeek day = timeSlot.startTime().getDayOfWeek();
@@ -42,4 +43,6 @@ public class PricingService {
         }
         return Math.round(priceAfterTax);
     }
+
+
 }

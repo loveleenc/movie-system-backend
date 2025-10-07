@@ -1,33 +1,31 @@
 package com.bookit.application.persistence.jdbcDao.mappers;
 
-import com.bookit.application.entity.Seat;
-import com.bookit.application.entity.Show;
-import com.bookit.application.entity.Ticket;
+import com.bookit.application.entity.*;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
-@Component
 public class TicketMapper implements RowMapper<Ticket> {
-
     private SeatMapper seatMapper;
+
     public TicketMapper(SeatMapper seatMapper) {
         this.seatMapper = seatMapper;
     }
 
     @Override
     public Ticket mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Show show = new Show();
+
+        Theatre theatre = new Theatre(rs.getString("theatrename"), rs.getString("location"), rs.getInt("theatreid"));
+        ShowTimeSlot showTimeSlot = new ShowTimeSlot(rs.getTimestamp("starttime").toLocalDateTime(),
+                rs.getTimestamp("endtime").toLocalDateTime());
+        Movie movie = new MovieBuilder().setName(rs.getString("name")).build();
+        UUID showId = UUID.fromString(rs.getString("showid"));
+        Show show = new Show(showTimeSlot, theatre, movie, rs.getString("showlanguage"), showId);
         Seat seat = this.seatMapper.getSeat(rs, "seatid", null);
-        Ticket ticket = new Ticket(show,
-                seat,
-                rs.getString("status"),
-                rs.getLong("price")
-        );
-        ticket.setId(rs.getString("id"));
-        ticket.setOwnerId(rs.getLong("owner"));
+        Ticket ticket = new Ticket(show, seat, rs.getString("status"), rs.getLong("price"));
+        ticket.setId(rs.getString("ticketid"));
         return ticket;
     }
 }

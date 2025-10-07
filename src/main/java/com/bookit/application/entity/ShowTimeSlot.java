@@ -7,7 +7,7 @@ import java.util.List;
 public record ShowTimeSlot(LocalDateTime startTime, LocalDateTime endTime) {
     public ShowTimeSlot {
         if (startTime.isAfter(endTime) || startTime.equals(endTime)) {
-            //TODO: throw error
+            throw new IllegalArgumentException("Show cannot start after or at the same time as end time");
         }
     }
 
