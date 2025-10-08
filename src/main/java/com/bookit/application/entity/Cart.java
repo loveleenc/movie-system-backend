@@ -1,22 +1,26 @@
 package com.bookit.application.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Cart {
+    private Long cartId;
+    private LocalDateTime expiry;
 
-    private List<Item> items;
-
-    public Cart() {
-        this.items = new ArrayList<>();
+    public Cart(Long cartId, LocalDateTime expiry) {
+        this.cartId = cartId;
+        this.expiry = expiry;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public void extendExpiry(){
+        this.expiry = LocalDateTime.now().plusMinutes(30);
     }
 
-    public void addItem(Item item){
-        this.items.add(item);
+    public Long getCartId() {
+        return cartId;
     }
 
+    public LocalDateTime getExpiry() {
+        return expiry;
+    }
 }

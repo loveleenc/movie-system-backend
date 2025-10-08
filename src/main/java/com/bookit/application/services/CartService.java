@@ -33,7 +33,7 @@ public class CartService {
                 throw new TicketBookingException("Item cannot be removed from cart by another user");
             }
             this.cartDao.remove(itemId);
-            //TODO: update cart expiry time
+            this.cartDao.extendCartExpiry(userId);
             this.ticketService.releaseTicket(item.getTicket());
         }
     }
@@ -41,30 +41,34 @@ public class CartService {
     public Item addItem(String ticketId){
         Long userId = this.userService.getCurrentUserId();
         Ticket ticket = this.ticketService.reserveTicket(ticketId, userId);
+        this.cartDao.extendCartExpiry(userId);
         Long itemId = this.cartDao.add(ticket, userId);
-        //TODO: update cart expiry time
         return this.cartDao.findById(itemId);
     }
 
     public void checkout(){
-        List<Item> items = this.getCart();
-        //TODO: update cart expiry time
+        Long userId = this.userService.getCurrentUserId();
+        this.cartDao.extendCartExpiry(userId);
+        List<Item> items = this.cartDao.get(userId);
         //TODO: get price breakdown for each of the items and add the tax
         //TODO: return the items and the price breakdown
     }
 
     public List<Ticket> confirmBooking(){
-        List<Item> items = this.getCart();
+        Long userId = this.userService.getCurrentUserId();
+        List<Item> items = this.cartDao.get(userId);
         List<Ticket> bookedTickets = this.ticketService.bookTickets(items.stream().map(Item::getTicket).toList());
         items.forEach(item -> {
             this.cartDao.remove(item.getId());
         });
-        //TODO: cancel cart expiry job
         return bookedTickets;
     }
 
     public void createCartForNewUser(Long userId){
-        this.cartDao.createNewCart(userId);
+        this.cartDao.createCart(userId);
     }
+
+
+
 
 }

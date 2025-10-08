@@ -20,7 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //TODO: what exception is thrown if userMapper does not get a record?
         return this.userDao.findUserByUsername(username);
     }
 

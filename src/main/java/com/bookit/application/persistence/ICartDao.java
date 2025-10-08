@@ -10,5 +10,6 @@ public interface ICartDao {
     void remove(Long itemId);
     List<Item> get(Long userId);
     Item findById(Long itemId);
-    void createNewCart(Long userId);
+    void createCart(Long userId);
+    void extendCartExpiry(Long userId);
 }
