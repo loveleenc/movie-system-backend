@@ -90,6 +90,11 @@ public class CartDao implements ICartDao {
         this.jdbcTemplate.update(sql, Timestamp.valueOf(cart.getExpiry()), cart.getCartId());
     }
 
+    @Override
+    public Integer getItemCount(Long userId){
+        String sql = "SELECT COUNT(*) FROM cartdetails CD JOIN cart C ON CD.cartid = C.id WHERE C.owner = ?";
+        return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("count"), userId);
+    }
 
 //    CREATE OR REPLACE FUNCTION get_tickets_to_release()
 //    RETURNS TABLE(id uuid) AS $$

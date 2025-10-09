@@ -40,6 +40,9 @@ public class CartService {
 
     public Item addItem(String ticketId){
         Long userId = this.userService.getCurrentUserId();
+        if(this.cartDao.getItemCount(userId).equals(10)){
+            throw new TicketBookingException("Cannot add more than 10 items to the cart");
+        }
         Ticket ticket = this.ticketService.reserveTicket(ticketId, userId);
         this.cartDao.extendCartExpiry(userId);
         Long itemId = this.cartDao.add(ticket, userId);

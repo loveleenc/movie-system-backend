@@ -12,4 +12,5 @@ public interface ICartDao {
     Item findById(Long itemId);
     void createCart(Long userId);
     void extendCartExpiry(Long userId);
+    Integer getItemCount(Long userId);
 }
