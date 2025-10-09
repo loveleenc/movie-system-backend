@@ -28,7 +28,8 @@ public class SecurityConfiguration {
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(HttpMethod.POST, "/register").permitAll()
 
-                                .requestMatchers("/movies").hasAuthority(Role.ADMIN.code())
+                                .requestMatchers(HttpMethod.POST, "/movie").hasAuthority(Role.ADMIN.code())
+                                .requestMatchers(HttpMethod.GET, "/movies").hasAnyAuthority(Role.THEATRE_OWNER.code(), Role.ADMIN.code())
                                 .requestMatchers(HttpMethod.GET, "/movies/**").authenticated()
 
                                 .requestMatchers(HttpMethod.POST, "/theatre").hasAuthority(Role.THEATRE_OWNER.code())
