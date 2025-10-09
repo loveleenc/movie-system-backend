@@ -43,13 +43,13 @@ public class MovieController {
     }
 
     @GetMapping("/movies/ongoing")
-    List<MovieDto> getOngoingMovies(){
-        return this.movieService.getOngoingMovies().stream().map(this.movieDTOMapper::toDTO).toList();
+    ResponseEntity<List<MovieDto>> getOngoingMovies(){
+        return new ResponseEntity<>(this.movieService.getOngoingMovies().stream().map(this.movieDTOMapper::toDTO).toList(), HttpStatus.OK);
     }
 
     @GetMapping("/movies/upcoming")
-    List<MovieDto> getUpcomingMovies(){
-        return this.movieService.getUpcomingMovies().stream().map(this.movieDTOMapper::toDTO).toList();
+    ResponseEntity<List<MovieDto>> getUpcomingMovies(){
+        return new ResponseEntity<>(this.movieService.getUpcomingMovies().stream().map(this.movieDTOMapper::toDTO).toList(), HttpStatus.OK);
     }
 
     @GetMapping("/movies/filter")

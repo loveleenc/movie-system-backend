@@ -23,7 +23,7 @@ public class ShowsController {
 
     @PostMapping("/show")
     ResponseEntity<ShowDto> createShow(@RequestBody ShowAndTicketCreationDto showAndTicketCreationDTO) {
-        ShowDto showDTO = showAndTicketCreationDTO.getShow();
+        ShowDto showDTO = showAndTicketCreationDTO.getShowDto();
         Show show = this.showDTOMapper.toShow(showDTO);
         Show createdShow = this.showService.createShowAndTickets(show, showAndTicketCreationDTO.getMoviePrice(), showAndTicketCreationDTO.getStatus());
         return new ResponseEntity<>(this.showDTOMapper.toDTO(createdShow), HttpStatus.CREATED);

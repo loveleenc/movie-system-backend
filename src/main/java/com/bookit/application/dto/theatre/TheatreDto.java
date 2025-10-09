@@ -12,7 +12,7 @@ public class TheatreDto {
     private String name;
     private String location;
     private Integer id;
-    @JsonProperty
+    @JsonProperty("theatreRows")
     private List<TheatreRowDto> theatreRowDtos;
 
 

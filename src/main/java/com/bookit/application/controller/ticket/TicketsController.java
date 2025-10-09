@@ -27,26 +27,26 @@ public class TicketsController {
     @GetMapping("/tickets")
     List<TicketDto> getTicketsForShow(@RequestParam String showId){
         return this.ticketService.getTicketsByShow(showId)
-                .stream().map(this.ticketDTOMapper::toTicketDto).toList();
+                .stream().map(ticket -> this.ticketDTOMapper.toTicketDto(ticket, false)).toList();
     }
 
     @PatchMapping("/tickets")
     String updateTicketStatusForShow(@RequestParam TicketDto ticketDto){
-        this.ticketService.updateTicketStatusForShow(ticketDto.getShow().getId(), ticketDto.getStatus(), false);
+        this.ticketService.updateTicketStatusForShow(ticketDto.getShowDto().getId(), ticketDto.getStatus(), false);
         return "Update successful";
     }
 
     @PatchMapping("/tickets/book")
     ResponseEntity<List<TicketDto>> bookTickets(){
         List<Ticket> tickets = this.cartService.confirmBooking();
-        List<TicketDto> ticketDtos = this.ticketDTOMapper.toTicketDto(tickets);
+        List<TicketDto> ticketDtos = this.ticketDTOMapper.toTicketDto(tickets, false);
         return new ResponseEntity<>(ticketDtos, HttpStatus.OK);
     }
 
     @PatchMapping("/tickets/cancel")
     ResponseEntity<List<TicketDto>> cancelTickets(@RequestBody List<String> ticketIds){
         List<Ticket> tickets = this.ticketService.cancelBookings(ticketIds);
-        List<TicketDto> ticketDtos = this.ticketDTOMapper.toTicketDto(tickets);
+        List<TicketDto> ticketDtos = this.ticketDTOMapper.toTicketDto(tickets, true);
         return new ResponseEntity<>(ticketDtos, HttpStatus.OK);
     }
 

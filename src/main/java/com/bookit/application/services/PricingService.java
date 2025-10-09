@@ -1,15 +1,20 @@
 package com.bookit.application.services;
 
+import com.bookit.application.entity.Item;
 import com.bookit.application.entity.ShowTimeSlot;
+import com.bookit.application.entity.Ticket;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Component
 public class PricingService {
-
+    private static final double TAX = 0.1;
     private Boolean isWeekend(DayOfWeek day) {
         return day.equals(DayOfWeek.SATURDAY) || day.equals(DayOfWeek.SUNDAY);
     }
@@ -24,24 +29,28 @@ public class PricingService {
     }
 
     private Double applyTax(Long totalPrice) {
-        return totalPrice + (0.1 * totalPrice);
+        return totalPrice + (PricingService.TAX * totalPrice);
     }
 
     public Long calculateTicketPrice(Long seatPrice, Long moviePrice, ShowTimeSlot timeSlot) {
-        //TODO: remove tax and apply component only at checkout
-        Long currentPrice = seatPrice + moviePrice;
-        Double priceAfterTax = this.applyTax(currentPrice);
+        Double currentPrice = (double)seatPrice + moviePrice;
         DayOfWeek day = timeSlot.startTime().getDayOfWeek();
         if (this.showStartsBeforeNoon(timeSlot.startTime())) {
-            priceAfterTax = priceAfterTax - (priceAfterTax * 0.05);
+            currentPrice = currentPrice - (currentPrice * 0.05);
         }
         else if(this.showStartsAfterFourPm(timeSlot.startTime())){
-            priceAfterTax = priceAfterTax + (priceAfterTax * 0.05);
+            currentPrice = currentPrice + (currentPrice * 0.05);
         }
         if(isWeekend(day)){
-            priceAfterTax = priceAfterTax + (priceAfterTax * 0.05);
+            currentPrice = currentPrice + (currentPrice * 0.05);
         }
-        return Math.round(priceAfterTax);
+        return Math.round(currentPrice);
+    }
+
+    public Double getCartTotal(List<Ticket> tickets) throws NoSuchElementException {
+        Optional<Long> totalBeforeTax = tickets.stream().map(Ticket::getPrice).reduce(Long::sum);
+        totalBeforeTax.orElseThrow();
+        return this.applyTax(totalBeforeTax.get());
     }
 
 

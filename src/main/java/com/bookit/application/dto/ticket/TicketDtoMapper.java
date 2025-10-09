@@ -11,19 +11,25 @@ import java.util.List;
 
 @Component
 public class TicketDtoMapper {
-    public TicketDto toTicketDto(Ticket ticket) throws IllegalArgumentException {
+    public TicketDto toTicketDto(Ticket ticket, Boolean statusHidden) throws IllegalArgumentException {
         ShowDto showDTO = new ShowDto();
 
         SeatDto seatDTO = new SeatDto(ticket.getSeat().getSeatNumber(),
                 ticket.getSeat().getSeatType().code());
-        String maskedStatus = TicketDtoMapper.maskActualTicketStatus(ticket);
-        return new TicketDto(showDTO, seatDTO, maskedStatus, ticket.getPrice());
+        String maskedStatus;
+        if (statusHidden) {
+            maskedStatus = null;
+        } else {
+            maskedStatus = TicketDtoMapper.maskActualTicketStatus(ticket);
+
+        }
+        return new TicketDto(showDTO, seatDTO, maskedStatus, ticket.getPrice(), ticket.getId());
     }
 
-    private static String maskActualTicketStatus(Ticket ticket){
+    private static String maskActualTicketStatus(Ticket ticket) {
         TicketStatus status = ticket.getStatus();
         String maskedStatus = null;
-        switch(status){
+        switch (status) {
             case AVAILABLE:
                 maskedStatus = MaskedTicketStatus.AVAILABLE.code();
                 break;
@@ -37,7 +43,7 @@ public class TicketDtoMapper {
         return maskedStatus;
     }
 
-    public List<TicketDto> toTicketDto(List<Ticket> tickets){
-        return tickets.stream().map(this::toTicketDto).toList();
+    public List<TicketDto> toTicketDto(List<Ticket> tickets, Boolean statusHidden) {
+        return tickets.stream().map(ticket -> this.toTicketDto(ticket, false)).toList();
     }
 }

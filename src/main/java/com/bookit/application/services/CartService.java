@@ -46,16 +46,17 @@ public class CartService {
         return this.cartDao.findById(itemId);
     }
 
-    public void checkout(){
+    public List<Item> checkout(){
         Long userId = this.userService.getCurrentUserId();
         this.cartDao.extendCartExpiry(userId);
-        List<Item> items = this.cartDao.get(userId);
-        //TODO: get price breakdown for each of the items and add the tax
-        //TODO: return the items and the price breakdown
+        return this.cartDao.get(userId);
+        //TODO: might handle coupons later? maybe idk
+//        Double cartTotal = this.pricingService.getCartTotal(items.stream().map(Item::getTicket).toList());
     }
 
     public List<Ticket> confirmBooking(){
         Long userId = this.userService.getCurrentUserId();
+        this.cartDao.extendCartExpiry(userId);
         List<Item> items = this.cartDao.get(userId);
         List<Ticket> bookedTickets = this.ticketService.bookTickets(items.stream().map(Item::getTicket).toList());
         items.forEach(item -> {

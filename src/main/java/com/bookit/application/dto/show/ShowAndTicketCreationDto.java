@@ -6,25 +6,25 @@ import org.springframework.lang.NonNull;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShowAndTicketCreationDto {
-    @JsonProperty
+    @JsonProperty("show")
     @NonNull
-    private ShowDto show;
+    private ShowDto showDto;
     private Long moviePrice;
     private String status;
 
-    public ShowAndTicketCreationDto(@NonNull ShowDto show) {
-        this.show = show;
+    public ShowAndTicketCreationDto(@NonNull ShowDto showDto) {
+        this.showDto = showDto;
     }
 
-    public ShowAndTicketCreationDto(@NonNull ShowDto show, Long moviePrice, String status) {
-        this.show = show;
+    public ShowAndTicketCreationDto(@NonNull ShowDto showDto, Long moviePrice, String status) {
+        this.showDto = showDto;
         this.moviePrice = moviePrice;
         this.status = status;
     }
 
     @NonNull
-    public ShowDto getShow() {
-        return show;
+    public ShowDto getShowDto() {
+        return showDto;
     }
 
     public Long getMoviePrice() {

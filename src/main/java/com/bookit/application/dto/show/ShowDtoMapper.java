@@ -14,9 +14,9 @@ public class ShowDtoMapper {
 
     public Show toShow(ShowDto showDto) {
         ShowTimeSlot timeSlot = new ShowTimeSlot(showDto.getStartTime(), showDto.getEndTime());
-        Movie movie = new MovieBuilder().setId(showDto.getMovie().getId()).build();
+        Movie movie = new MovieBuilder().setId(showDto.getMovieDto().getId()).build();
         Theatre theatre = new Theatre();
-        theatre.setId(showDto.getTheatre().getId());
+        theatre.setId(showDto.getTheatreDto().getId());
 
         return new Show(timeSlot,
                 theatre,

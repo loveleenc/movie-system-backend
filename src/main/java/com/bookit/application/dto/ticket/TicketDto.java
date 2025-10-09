@@ -7,27 +7,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TicketDto {
-    @JsonProperty
-    private ShowDto show;
-    @JsonProperty
-    private SeatDto seat;
+    @JsonProperty("show")
+    private ShowDto showDto;
+    @JsonProperty("seat")
+    private SeatDto seatDto;
     private String status;
     private Long price;
     private String ticketId;
 
-    public TicketDto(ShowDto show, SeatDto seat, String status, Long price) {
-        this.show = show;
-        this.seat = seat;
+    public TicketDto(ShowDto showDto, SeatDto seatDto, String status, Long price, String ticketId) {
+        this.showDto = showDto;
+        this.seatDto = seatDto;
         this.status = status;
         this.price = price;
+        this.ticketId = ticketId;
     }
 
-    public ShowDto getShow() {
-        return show;
+    public ShowDto getShowDto() {
+        return showDto;
     }
 
-    public SeatDto getSeat() {
-        return seat;
+    public SeatDto getSeatDto() {
+        return seatDto;
     }
 
     public String getStatus() {
@@ -37,4 +38,6 @@ public class TicketDto {
     public Long getPrice() {
         return price;
     }
+
+
 }

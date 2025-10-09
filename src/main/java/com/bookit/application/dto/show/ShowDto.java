@@ -13,14 +13,14 @@ public class ShowDto {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String id;
-    @JsonProperty
-    private TheatreDto theatre;
-    @JsonProperty
-    private MovieDto movie;
+    @JsonProperty("theatre")
+    private TheatreDto theatreDto;
+    @JsonProperty("movie")
+    private MovieDto movieDto;
 
-    public ShowDto(TheatreDto theatre, MovieDto movie, LocalDateTime startTime, LocalDateTime endTime, String language, String id){
-        this.theatre = theatre;
-        this.movie = movie;
+    public ShowDto(TheatreDto theatreDto, MovieDto movieDto, LocalDateTime startTime, LocalDateTime endTime, String language, String id){
+        this.theatreDto = theatreDto;
+        this.movieDto = movieDto;
         this.startTime = startTime;
         this.endTime = endTime;
         this.language = language;
@@ -34,12 +34,12 @@ public class ShowDto {
         return id;
     }
 
-    public TheatreDto getTheatre(){
-        return this.theatre;
+    public TheatreDto getTheatreDto(){
+        return this.theatreDto;
     }
 
-    public MovieDto getMovie() {
-        return movie;
+    public MovieDto getMovieDto() {
+        return movieDto;
     }
 
     public String getLanguage() {
