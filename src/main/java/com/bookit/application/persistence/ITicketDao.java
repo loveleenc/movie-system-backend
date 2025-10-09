@@ -11,5 +11,5 @@ public interface ITicketDao {
     void updateAllTicketsStatusForShow(String showId, String status);
     void bookOrCancelTickets(List<Ticket> tickets);
     Ticket findById(String id) throws DataAccessException;
-
+    Integer reserveOrReleaseTicket(Ticket ticket);
 }

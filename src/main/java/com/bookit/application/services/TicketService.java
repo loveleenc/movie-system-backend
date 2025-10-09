@@ -126,7 +126,10 @@ public class TicketService {
             }
             ticket.setStatus(TicketStatus.AVAILABLE);
             ticket.setOwnerId(null);
-            //TODO: remove ticket reservation in dao
+            Integer numberOfAffectedRows = this.ticketDAO.reserveOrReleaseTicket(ticket);
+            if(numberOfAffectedRows != 1){
+                throw new TicketBookingException(String.format("Unable to release the ticket/multiple tickets may have been affected. Total number: %d", numberOfAffectedRows));
+            }
         }
         catch(EmptyResultDataAccessException e){
             throw new ResourceNotFoundException("The ticket was not found");
@@ -137,15 +140,18 @@ public class TicketService {
             try{
                 Ticket ticket = this.ticketDAO.findById(ticketId);
                 TicketStatus ticketStatus = ticket.getStatus();
-                if(!Objects.isNull(ticket.getOwnerId())){
-                    throw new TicketBookingException("This ticket has already been booked/reserved by a user");
-                }
                 if(!ticketStatus.equals(TicketStatus.AVAILABLE)){
                     throw new TicketBookingException("This ticket is not available for booking");
                 }
+                if(!Objects.isNull(ticket.getOwnerId())){
+                    throw new TicketBookingException("This ticket has already been booked/reserved by a user");
+                }
                 ticket.setStatus(TicketStatus.RESERVED);
                 ticket.setOwnerId(userId);
-                //TODO: reserve ticket in dao
+                Integer numberOfAffectedRows = this.ticketDAO.reserveOrReleaseTicket(ticket);
+                if(numberOfAffectedRows != 1){
+                    throw new TicketBookingException(String.format("Unable to reserve the ticket/multiple tickets may have been affected. Total number: %d", numberOfAffectedRows));
+                }
                 return ticket;
             }
             catch(EmptyResultDataAccessException e){

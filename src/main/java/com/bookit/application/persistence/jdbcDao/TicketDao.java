@@ -66,6 +66,12 @@ public class TicketDao implements ITicketDao {
     }
 
     @Override
+    public Integer reserveOrReleaseTicket(Ticket ticket){
+        String sql = "UPDATE tickets SET owner = ? AND status = ?::ticketstatus WHERE id = ?::uuid";
+        return this.jdbcTemplate.update(sql, ticket.getOwnerId(), ticket.getStatus());
+    }
+
+    @Override
     public Ticket findById(String id) throws DataAccessException {
         String sql = "SELECT T.id as ticketid, T.price, T.status, T.show as showid" +
                 "S.seatnumber, S.seattype, S.id as seatid" +
