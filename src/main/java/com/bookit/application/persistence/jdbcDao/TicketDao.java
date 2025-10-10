@@ -36,7 +36,7 @@ public class TicketDao implements ITicketDao {
         String sql = "INSERT INTO tickets(seat, status, price, show) " +
                 "VALUES(?, ?::ticketstatus, ?, ?::uuid)";
         List<Object[]> parameters = tickets.stream().map(ticket -> {
-            return new Object[]{ticket.getSeat().getId(), ticket.getStatus(), ticket.getPrice(), ticket.getShow().getId()};
+            return new Object[]{ticket.getSeat().getId(), ticket.getStatus().code(), ticket.getPrice(), ticket.getShow().getId()};
         }).toList();
         int[] argTypes = new int[4];
         argTypes[0] = Types.BIGINT;
@@ -57,7 +57,7 @@ public class TicketDao implements ITicketDao {
     public void bookOrCancelTickets(List<Ticket> tickets) {
         //TODO: how to recover if only some of the tickets get booked
         String sql = "UPDATE tickets SET owner = ? AND status = ?::ticketstatus WHERE id = ?::uuid";
-        List<Object[]> parameters = tickets.stream().map(ticket -> new Object[]{ticket.getId(), ticket.getOwnerId(), ticket.getStatus()}).toList();
+        List<Object[]> parameters = tickets.stream().map(ticket -> new Object[]{ticket.getId(), ticket.getOwnerId(), ticket.getStatus().code()}).toList();
         int[] argTypes = new int[3];
         argTypes[0] = Types.VARCHAR;
         argTypes[1] = Types.BIGINT;
@@ -68,7 +68,7 @@ public class TicketDao implements ITicketDao {
     @Override
     public Integer reserveOrReleaseTicket(Ticket ticket){
         String sql = "UPDATE tickets SET owner = ? AND status = ?::ticketstatus WHERE id = ?::uuid";
-        return this.jdbcTemplate.update(sql, ticket.getOwnerId(), ticket.getStatus());
+        return this.jdbcTemplate.update(sql, ticket.getOwnerId(), ticket.getStatus().code());
     }
 
     @Override

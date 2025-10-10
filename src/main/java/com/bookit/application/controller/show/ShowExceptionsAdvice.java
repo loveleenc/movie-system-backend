@@ -1,5 +1,6 @@
 package com.bookit.application.controller.show;
 
+import com.bookit.application.services.ResourceCreationException;
 import com.bookit.application.services.ResourceNotFoundException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -37,4 +38,10 @@ public class ShowExceptionsAdvice {
         return "Incorrect data provided in the request. Please check the request details and try again";
     }
 
+    //TODO: add resource creation exception
+    @ExceptionHandler(ResourceCreationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String resourceCreationExceptionHandler(ResourceCreationException e){
+        return "Incorrect data provided in the request. Please check the request details and try again";
+    }
 }

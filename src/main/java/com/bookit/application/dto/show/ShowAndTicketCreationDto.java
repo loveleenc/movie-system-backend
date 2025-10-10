@@ -16,6 +16,8 @@ public class ShowAndTicketCreationDto {
         this.showDto = showDto;
     }
 
+    public ShowAndTicketCreationDto(){}
+
     public ShowAndTicketCreationDto(@NonNull ShowDto showDto, Long moviePrice, String status) {
         this.showDto = showDto;
         this.moviePrice = moviePrice;

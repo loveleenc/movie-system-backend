@@ -25,10 +25,7 @@ public class ShowMapper implements RowMapper<Show> {
         ShowTimeSlot timeSlot = new ShowTimeSlot(rs.getTimestamp("starttime").toLocalDateTime(),
                 rs.getTimestamp("endtime").toLocalDateTime());
         Movie movie = this.movieMapper.getMovie(rs, "movieid");
-        Theatre theatre = this.theatreMapper.mapRow(rs, rowNum);
-//                new Theatre(rs.getString("theatrename"),
-//                rs.getString("location"),
-//                rs.getLong("theatreid"));
+        Theatre theatre = this.theatreMapper.mapTheatreRow(rs, rowNum, "theatreid");
         UUID showId = UUID.fromString(rs.getString("id"));
         return new Show(timeSlot,
                 theatre,
