@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 @Service
-@Profile("test")
+@Profile("development")
 public class LocalStorageService implements StorageService {
     private final Path storageDirectory = Paths.get("storage-dir");
 

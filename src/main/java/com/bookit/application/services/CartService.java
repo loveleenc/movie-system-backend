@@ -3,6 +3,7 @@ package com.bookit.application.services;
 import com.bookit.application.entity.Item;
 import com.bookit.application.entity.Ticket;
 import com.bookit.application.persistence.ICartDao;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,17 +26,21 @@ public class CartService {
         return this.cartDao.get(userId);
     }
 
-    public void removeItem(Long itemId){
-        Item item = this.cartDao.findById(itemId);
-        if(!Objects.isNull(item)){
+    public void removeItem(Long itemId) throws ResourceNotFoundException{
+        try{
+            Item item = this.cartDao.findById(itemId);
             Long userId = this.userService.getCurrentUserId();
             if(!item.getTicket().getOwnerId().equals(userId)){
-                throw new TicketBookingException("Item cannot be removed from cart by another user");
+                throw new ResourceNotFoundException("The requested item was not found");
             }
             this.cartDao.remove(itemId);
             this.cartDao.extendCartExpiry(userId);
             this.ticketService.releaseTicket(item.getTicket());
         }
+        catch(IncorrectResultSizeDataAccessException e){
+            throw new ResourceNotFoundException("The requested item was not found");
+        }
+
     }
 
     public Item addItem(String ticketId){

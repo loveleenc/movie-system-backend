@@ -30,7 +30,7 @@ public class MovieExceptionsAdvice {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     String resourceNotFoundHandler(ResourceNotFoundException e){
-        return "Resource not found";
+        return "The requested resource was not found";
     }
 
     @ExceptionHandler(MovieException.class)
