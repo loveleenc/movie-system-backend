@@ -4,10 +4,13 @@ import com.bookit.application.entity.Movie;
 import com.bookit.application.services.MovieException;
 import com.bookit.application.services.storage.StorageException;
 import com.bookit.application.services.storage.StorageService;
+import com.bookit.application.services.storage.resource.PosterResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,17 +25,17 @@ public class MovieDtoMapper {
 
     public MovieDto toDTO(Movie movie) throws MovieException {
         try {
-            Resource resource = this.storageService.getResource(movie.getPoster());
+            PosterResource resource = this.storageService.getResource(movie.getPoster());
             return new MovieDtoBuilder()
                     .setName(movie.getName())
                     .setDuration(movie.getDuration())
-                    .setPoster(resource.getURL().toString())
+                    .setPoster(resource.getContentOrUrlAsString())
                     .setGenreList(movie.getGenreList())
                     .setLanguages(movie.getLanguages())
                     .setReleaseDate(movie.getReleaseDate())
                     .setId(movie.getId())
                     .build();
-        } catch (StorageException | IOException e) {
+        } catch (StorageException e) {
             throw new MovieException("Unable to fetch the movie", e);
         }
     }

@@ -1,14 +1,14 @@
 package com.bookit.application.services.storage;
 
+import com.bookit.application.services.storage.resource.PosterByteArrayResource;
+import com.bookit.application.services.storage.resource.PosterResource;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -67,17 +67,18 @@ public class LocalStorageService implements StorageService {
     }
 
     @Override
-    public Resource getResource(String filename) {
+    public PosterResource getResource(String filename) {
         try {
             Path file = this.storageDirectory.resolve(filename);
-            Resource resource = new UrlResource(file.toUri());
+            byte[] image = Files.readAllBytes(file);
+            PosterResource resource = new PosterByteArrayResource(image);
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             }
             else{
                 throw new StorageFileNotFoundException("Could not read the file");
             }
-        } catch (MalformedURLException e) {
+        } catch (IOException e) {
             throw new StorageFileNotFoundException("Could not read the file", e);
         }
     }

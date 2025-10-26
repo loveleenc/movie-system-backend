@@ -1,8 +1,10 @@
-package com.bookit.application.security;
+package com.bookit.application.security.config;
 
+import com.bookit.application.security.CustomUserDetailsService;
 import com.bookit.application.types.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -14,11 +16,26 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+import java.util.List;
 
+@Profile("development")
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration {
+public class SecurityConfigurationDev {
+
+    @Bean
+    UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -27,9 +44,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((authorizationManagerRequestMatcherRegistry) ->
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(HttpMethod.POST, "/register").permitAll()
-
+				.requestMatchers(HttpMethod.GET, "/movies/ongoing", "/movies/upcoming").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/movie").hasAuthority(Role.ADMIN.code())
-                                .requestMatchers(HttpMethod.GET, "/movies").hasAnyAuthority(Role.THEATRE_OWNER.code(), Role.ADMIN.code())
+//                                .requestMatchers(HttpMethod.GET, "/movies").hasAnyAuthority(Role.THEATRE_OWNER.code(), Role.ADMIN.code())
+                                .requestMatchers(HttpMethod.GET, "/movies").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/movies/**").authenticated()
 
                                 .requestMatchers(HttpMethod.POST, "/theatre").hasAuthority(Role.THEATRE_OWNER.code())
@@ -65,22 +83,4 @@ public class SecurityConfiguration {
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authenticationProvider);
     }
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsService(){
-//        UserDetails user1 = User
-//                .withUsername("user")
-//                .password(getPasswordEncoder().encode("password"))
-//                .roles("USER")
-//                .build();
-//        UserDetails user2 = User
-//                .withUsername("foo1")
-//                .password(getPasswordEncoder().encode("gonzo"))
-//                .roles("ADMIN")
-//                .authorities("VIEW_ALL_MOVIES")
-//                .build();
-//        List<UserDetails> users = new ArrayList<>();
-//        users.add(user1);
-//        users.add(user2);
-//        return new InMemoryUserDetailsManager(users);
-//    }
 }

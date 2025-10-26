@@ -1,4 +1,4 @@
-package com.bookit.application.services;
+package com.bookit.application.services.storage;
 
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
@@ -12,9 +12,8 @@ import com.azure.storage.blob.models.BlockBlobItem;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import com.azure.storage.blob.sas.BlobSasPermission;
 import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
-import com.bookit.application.services.storage.StorageException;
-import com.bookit.application.services.storage.StorageProperties;
-import com.bookit.application.services.storage.StorageService;
+import com.bookit.application.services.storage.resource.PosterResource;
+import com.bookit.application.services.storage.resource.PosterUrlResource;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -82,7 +81,7 @@ public class PosterStorageService implements StorageService {
     }
 
     @Override
-    public Resource getResource(String filename) throws StorageException{
+    public PosterResource getResource(String filename) throws StorageException{
         BlobClient blobClient = this.blobContainerClient.getBlobClient(filename);
         BlobSasPermission blobSasPermission = new BlobSasPermission().setReadPermission(true);
         OffsetDateTime expiryTime = OffsetDateTime.now().plusDays(2);
@@ -90,7 +89,7 @@ public class PosterStorageService implements StorageService {
                 blobSasPermission).setStartTime(OffsetDateTime.now());
         try{
             String blobSasToken = blobClient.generateSas(values);
-            return new UrlResource(UriComponentsBuilder.fromUriString(blobClient.getBlobUrl())
+            return new PosterUrlResource(UriComponentsBuilder.fromUriString(blobClient.getBlobUrl())
                                                             .query(blobSasToken).build().toUriString());
         }
         catch(MalformedURLException e){
