@@ -44,7 +44,7 @@ public class SecurityConfigurationDev {
                 .authorizeHttpRequests((authorizationManagerRequestMatcherRegistry) ->
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(HttpMethod.POST, "/register").permitAll()
-				                .requestMatchers(HttpMethod.GET, "/movies/ongoing", "/movies/upcoming").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/movies/ongoing", "/movies/upcoming", "/movies/filter").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/movies").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/movie/\\d+/shows").permitAll()
 
