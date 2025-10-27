@@ -32,6 +32,7 @@ public class SecurityConfiguration {
                                         .requestMatchers(HttpMethod.GET, "/movies/ongoing", "/movies/upcoming", "/movies/filter").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/movies").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/movie/\\d+/shows").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/movie/\\d+").permitAll()
 
                                         .requestMatchers(HttpMethod.POST, "/movie").hasAuthority(Role.ADMIN.code())
 
