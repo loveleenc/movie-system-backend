@@ -30,15 +30,20 @@ public class SecurityConfiguration {
                                 authorizationManagerRequestMatcherRegistry
                                         .requestMatchers(HttpMethod.POST, "/register").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/movies/ongoing", "/movies/upcoming").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/movie").hasAuthority(Role.ADMIN.code())
-                                .requestMatchers(HttpMethod.GET, "/movies").hasAnyAuthority(Role.THEATRE_OWNER.code(), Role.ADMIN.code())
                                         .requestMatchers(HttpMethod.GET, "/movies").permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/movies/**").authenticated()
+                                        .requestMatchers(HttpMethod.GET, "/movie/\\d+/shows").permitAll()
 
-                                        .requestMatchers(HttpMethod.POST, "/theatre").hasAuthority(Role.THEATRE_OWNER.code())
-                                        .requestMatchers(HttpMethod.GET, "/theatre", "/theatre/**").hasAuthority(Role.THEATRE_OWNER.code())
+                                        .requestMatchers(HttpMethod.POST, "/movie").hasAuthority(Role.ADMIN.code())
+
                                         .requestMatchers(HttpMethod.POST, "/show").hasAuthority(Role.THEATRE_OWNER.code())
                                         .requestMatchers(HttpMethod.PATCH, "/show/cancel").hasAuthority(Role.THEATRE_OWNER.code())
+
+
+                                        .requestMatchers(HttpMethod.POST, "/theatre").hasAuthority(Role.THEATRE_OWNER.code())
+                                        .requestMatchers(HttpMethod.GET, "/theatre", "/theatre/\\d+/shows").hasAuthority(Role.THEATRE_OWNER.code())
+
+                                        .requestMatchers(HttpMethod.PATCH, "/show/cancel").hasAuthority(Role.THEATRE_OWNER.code())
+
 
                                         .requestMatchers(HttpMethod.GET, "/tickets").authenticated()
                                         .requestMatchers(HttpMethod.PATCH, "/tickets").hasAuthority(Role.THEATRE_OWNER.code())
