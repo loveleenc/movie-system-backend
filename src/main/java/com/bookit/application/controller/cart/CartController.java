@@ -26,13 +26,13 @@ public class CartController {
         return new ResponseEntity<>(this.itemDtoMapper.toCartItemsDTO(items),HttpStatus.OK);
     }
 
-    @PostMapping("/cart/add")
+    @PatchMapping("/cart/add")
     public ResponseEntity<ItemDto> addItem(@RequestParam String ticketId){
         Item item = this.cartService.addItem(ticketId);
         return new ResponseEntity<>(this.itemDtoMapper.toItemDto(item), HttpStatus.CREATED);
     }
 
-    @PostMapping("/cart/remove")
+    @PatchMapping("/cart/remove")
     public ResponseEntity<String> remove(@RequestParam Long itemId){
         this.cartService.removeItem(itemId);
         return new ResponseEntity<>("Item removed successfully", HttpStatus.NO_CONTENT);

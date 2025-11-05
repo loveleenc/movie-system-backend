@@ -25,7 +25,7 @@ public class TicketDao implements ITicketDao {
     }
 
     public List<Ticket> findTicketsByShow(String showId) throws DataAccessException {
-        String sql = "SELECT T.id as ticketid, T.price, S.seatnumber, S.seattype, S.id as seatid, T.status FROM tickets T " +
+        String sql = "SELECT owner, T.id as ticketid, T.price, S.seatnumber, S.seattype, S.id as seatid, T.status FROM tickets T " +
                 "JOIN seats S on T.seat = S.id " +
                 "WHERE show = ?::uuid";
         return this.jdbcTemplate.query(sql, this.ticketSeatMapper, showId);
@@ -67,23 +67,23 @@ public class TicketDao implements ITicketDao {
 
     @Override
     public Integer reserveOrReleaseTicket(Ticket ticket){
-        String sql = "UPDATE tickets SET owner = ? AND status = ?::ticketstatus WHERE id = ?::uuid";
-        return this.jdbcTemplate.update(sql, ticket.getOwnerId(), ticket.getStatus().code());
+        String sql = "UPDATE tickets SET owner = ? , status = ?::ticketstatus WHERE id = ?::uuid";
+        return this.jdbcTemplate.update(sql, ticket.getOwnerId(), ticket.getStatus().code(), ticket.getId());
     }
 
     @Override
     public Ticket findById(String id) throws DataAccessException {
-        String sql = "SELECT T.id as ticketid, T.price, T.status, T.show as showid" +
-                "S.seatnumber, S.seattype, S.id as seatid" +
+        String sql = "SELECT T.id as ticketid, T.price, T.status, T.show as showid," +
+                "S.seatnumber, S.seattype, S.id as seatid," +
                 "SH.starttime, SH.endtime, SH.showlanguage, " +
-                "TH.theatrename, TH.location, TH.id as theatreid" +
+                "TH.theatrename, TH.location, TH.id as theatreid," +
                 "M.name " +
                 "FROM tickets T " +
                 "JOIN seats S ON T.seat = S.id " +
                 "JOIN shows SH ON T.show = SH.id " +
                 "JOIN theatre TH on SH.theatre = TH.id " +
                 "JOIN movies M ON M.id = SH.movie " +
-                "WHERE ticketid = ?::uuid";
+                "WHERE T.id = ?::uuid";
         return this.jdbcTemplate.queryForObject(sql, this.ticketMapper, id);
     }
 }

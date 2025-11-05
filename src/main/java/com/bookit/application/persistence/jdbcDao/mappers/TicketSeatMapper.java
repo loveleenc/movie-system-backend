@@ -26,7 +26,7 @@ public class TicketSeatMapper implements RowMapper<Ticket> {
                 rs.getString("status"),
                 rs.getLong("price")
         );
-        ticket.setId(rs.getString("id"));
+        ticket.setId(rs.getString("ticketid"));
         ticket.setOwnerId(rs.getLong("owner"));
         return ticket;
     }

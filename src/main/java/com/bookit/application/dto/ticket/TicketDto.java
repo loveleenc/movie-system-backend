@@ -13,6 +13,7 @@ public class TicketDto {
     private SeatDto seatDto;
     private String status;
     private Long price;
+    @JsonProperty("id")
     private String ticketId;
 
     public TicketDto(ShowDto showDto, SeatDto seatDto, String status, Long price, String ticketId) {
@@ -39,5 +40,7 @@ public class TicketDto {
         return price;
     }
 
-
+    public String getTicketId() {
+        return ticketId;
+    }
 }
