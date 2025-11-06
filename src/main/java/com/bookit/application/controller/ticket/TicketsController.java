@@ -15,19 +15,19 @@ import java.util.List;
 @RestController
 public class TicketsController {
     private TicketService ticketService;
-    private TicketDtoMapper ticketDTOMapper;
+    private TicketDtoMapper ticketDtoMapper;
     private CartService cartService;
 
-    public TicketsController(TicketService ticketService, TicketDtoMapper ticketDTOMapper, CartService cartService) {
+    public TicketsController(TicketService ticketService, TicketDtoMapper ticketDtoMapper, CartService cartService) {
         this.ticketService = ticketService;
-        this.ticketDTOMapper = ticketDTOMapper;
+        this.ticketDtoMapper = ticketDtoMapper;
         this.cartService = cartService;
     }
 
     @GetMapping("/tickets")
     List<TicketDto> getTicketsForShow(@RequestParam String showId){
         return this.ticketService.getTicketsByShow(showId)
-                .stream().map(ticket -> this.ticketDTOMapper.toTicketDto(ticket, false)).toList();
+                .stream().map(ticket -> this.ticketDtoMapper.toTicketDto(ticket, false)).toList();
     }
 
     @PatchMapping("/tickets")
@@ -39,14 +39,14 @@ public class TicketsController {
     @PatchMapping("/tickets/book")
     ResponseEntity<List<TicketDto>> bookTickets(){
         List<Ticket> tickets = this.cartService.confirmBooking();
-        List<TicketDto> ticketDtos = this.ticketDTOMapper.toTicketDto(tickets, false);
+        List<TicketDto> ticketDtos = this.ticketDtoMapper.toTicketDto(tickets, false);
         return new ResponseEntity<>(ticketDtos, HttpStatus.OK);
     }
 
     @PatchMapping("/tickets/cancel")
     ResponseEntity<List<TicketDto>> cancelTickets(@RequestBody List<String> ticketIds){
         List<Ticket> tickets = this.ticketService.cancelBookings(ticketIds);
-        List<TicketDto> ticketDtos = this.ticketDTOMapper.toTicketDto(tickets, true);
+        List<TicketDto> ticketDtos = this.ticketDtoMapper.toTicketDto(tickets, true);
         return new ResponseEntity<>(ticketDtos, HttpStatus.OK);
     }
 

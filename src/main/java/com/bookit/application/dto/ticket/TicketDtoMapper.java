@@ -11,9 +11,7 @@ import java.util.List;
 
 @Component
 public class TicketDtoMapper {
-    public TicketDto toTicketDto(Ticket ticket, Boolean statusHidden) throws IllegalArgumentException {
-        ShowDto showDTO = new ShowDto();
-
+    public TicketDto toTicketDto(Ticket ticket, Boolean statusHidden, ShowDto showDto){
         SeatDto seatDTO = new SeatDto(ticket.getSeat().getSeatNumber(),
                 ticket.getSeat().getSeatType().code());
         String maskedStatus;
@@ -23,7 +21,12 @@ public class TicketDtoMapper {
             maskedStatus = TicketDtoMapper.maskActualTicketStatus(ticket);
 
         }
-        return new TicketDto(showDTO, seatDTO, maskedStatus, ticket.getPrice(), ticket.getId());
+        return new TicketDto(showDto, seatDTO, maskedStatus, ticket.getPrice(), ticket.getId());
+    }
+
+    public TicketDto toTicketDto(Ticket ticket, Boolean statusHidden) throws IllegalArgumentException {
+        ShowDto showDTO = new ShowDto();
+        return this.toTicketDto(ticket, statusHidden, showDTO);
     }
 
     private static String maskActualTicketStatus(Ticket ticket) {

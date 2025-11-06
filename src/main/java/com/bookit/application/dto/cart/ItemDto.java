@@ -9,6 +9,8 @@ public class ItemDto {
     private Long id;
     @JsonProperty("ticket")
     private TicketDto ticketDto;
+    private String movie;
+
 
     public ItemDto(Long id, TicketDto ticketDto) {
         this.id = id;
