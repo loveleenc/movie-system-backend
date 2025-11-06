@@ -28,6 +28,7 @@ public class TicketMapper implements RowMapper<Ticket> {
         Seat seat = this.seatMapper.getSeat(rs, "seatid", null);
         Ticket ticket = new Ticket(show, seat, rs.getString("status"), rs.getLong("price"));
         ticket.setId(rs.getString("ticketid"));
+        ticket.setOwnerId(rs.getLong("ticketowner"));
         return ticket;
     }
 }

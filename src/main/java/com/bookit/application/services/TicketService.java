@@ -143,7 +143,7 @@ public class TicketService {
                 if(!ticketStatus.equals(TicketStatus.AVAILABLE)){
                     throw new TicketBookingException("This ticket is not available for booking");
                 }
-                if(!Objects.isNull(ticket.getOwnerId())){
+                if(!ticket.hasNoOwner()){
                     throw new TicketBookingException("This ticket has already been booked/reserved by a user");
                 }
                 ticket.setStatus(TicketStatus.RESERVED);

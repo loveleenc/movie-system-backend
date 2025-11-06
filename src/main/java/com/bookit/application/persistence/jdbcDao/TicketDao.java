@@ -73,7 +73,7 @@ public class TicketDao implements ITicketDao {
 
     @Override
     public Ticket findById(String id) throws DataAccessException {
-        String sql = "SELECT T.id as ticketid, T.price, T.status, T.show as showid," +
+        String sql = "SELECT T.id as ticketid, T.price, T.status, T.show as showid, T.owner as ticketowner," +
                 "S.seatnumber, S.seattype, S.id as seatid," +
                 "SH.starttime, SH.endtime, SH.showlanguage, " +
                 "TH.theatrename, TH.location, TH.id as theatreid," +

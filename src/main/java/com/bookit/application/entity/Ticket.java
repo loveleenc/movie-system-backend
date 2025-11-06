@@ -87,6 +87,10 @@ public class Ticket {
         return ownerId;
     }
 
+    public Boolean hasNoOwner(){
+        return ownerId == 0;
+    }
+
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
     }
