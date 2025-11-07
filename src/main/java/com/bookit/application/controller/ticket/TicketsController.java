@@ -1,6 +1,7 @@
 package com.bookit.application.controller.ticket;
 
 
+import com.bookit.application.dto.show.ShowDtoMapper;
 import com.bookit.application.dto.ticket.TicketDto;
 import com.bookit.application.dto.ticket.TicketDtoMapper;
 import com.bookit.application.entity.Ticket;
@@ -17,11 +18,13 @@ public class TicketsController {
     private TicketService ticketService;
     private TicketDtoMapper ticketDtoMapper;
     private CartService cartService;
+    private ShowDtoMapper showDtoMapper;
 
-    public TicketsController(TicketService ticketService, TicketDtoMapper ticketDtoMapper, CartService cartService) {
+    public TicketsController(TicketService ticketService, TicketDtoMapper ticketDtoMapper, CartService cartService, ShowDtoMapper showDtoMapper) {
         this.ticketService = ticketService;
         this.ticketDtoMapper = ticketDtoMapper;
         this.cartService = cartService;
+        this.showDtoMapper = showDtoMapper;
     }
 
     @GetMapping("/tickets")
@@ -50,6 +53,13 @@ public class TicketsController {
         return new ResponseEntity<>(ticketDtos, HttpStatus.OK);
     }
 
-
+    @GetMapping("/user/tickets")
+    public ResponseEntity<List<TicketDto>> getTicketsForUser(){
+        List<TicketDto> ticketDtos = this.ticketService.getTicketsForUser()
+                .stream().map(ticket ->
+                        this.ticketDtoMapper.toTicketDto(ticket, false, this.showDtoMapper.toDTO(ticket.getShow())))
+                .toList();
+        return new ResponseEntity<>(ticketDtos, HttpStatus.OK);
+    }
 
 }

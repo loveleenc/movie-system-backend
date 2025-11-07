@@ -12,4 +12,5 @@ public interface ITicketDao {
     void bookOrCancelTickets(List<Ticket> tickets);
     Ticket findById(String id) throws DataAccessException;
     Integer reserveOrReleaseTicket(Ticket ticket);
+    List<Ticket> findTicketsByUser(Long userId);
 }

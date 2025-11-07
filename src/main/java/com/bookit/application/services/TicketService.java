@@ -160,14 +160,13 @@ public class TicketService {
     }
 
     public List<Ticket> bookTickets(List<Ticket> tickets) throws TicketBookingException, ResourceNotFoundException{
-        tickets.forEach(ticket -> {
+        for(Ticket ticket: tickets){
             try{
                 TicketStatus ticketStatus = ticket.getStatus();
                 if(!ticketStatus.equals(TicketStatus.RESERVED)){
                     throw new TicketBookingException("This ticket has been not reserved for booking");
                 }
                 ticket.setStatus(TicketStatus.BOOKED);
-                tickets.add(ticket);
             }
             catch (NullPointerException e) {
                 throw new TicketBookingException("Retrieved tickets from data source have an invalid ticket status", e);
@@ -175,7 +174,7 @@ public class TicketService {
             catch(EmptyResultDataAccessException e){
                 throw new ResourceNotFoundException("The ticket was not found");
             }
-        });
+        }
         this.ticketDAO.bookOrCancelTickets(tickets);
         return tickets;
     }
@@ -207,5 +206,8 @@ public class TicketService {
         return tickets;
     }
 
-
+    public List<Ticket> getTicketsForUser(){
+        Long userId = this.userService.getCurrentUserId();
+        return this.ticketDAO.findTicketsByUser(userId);
+    }
 }

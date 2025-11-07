@@ -47,6 +47,6 @@ public class TicketDtoMapper {
     }
 
     public List<TicketDto> toTicketDto(List<Ticket> tickets, Boolean statusHidden) {
-        return tickets.stream().map(ticket -> this.toTicketDto(ticket, false)).toList();
+        return tickets.stream().map(ticket -> this.toTicketDto(ticket, statusHidden)).toList();
     }
 }

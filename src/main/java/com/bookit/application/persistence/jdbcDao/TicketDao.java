@@ -56,11 +56,11 @@ public class TicketDao implements ITicketDao {
     @Override
     public void bookOrCancelTickets(List<Ticket> tickets) {
         //TODO: how to recover if only some of the tickets get booked
-        String sql = "UPDATE tickets SET owner = ? AND status = ?::ticketstatus WHERE id = ?::uuid";
-        List<Object[]> parameters = tickets.stream().map(ticket -> new Object[]{ticket.getId(), ticket.getOwnerId(), ticket.getStatus().code()}).toList();
+        String sql = "UPDATE tickets SET owner = ?, status = ?::ticketstatus WHERE id = ?::uuid";
+        List<Object[]> parameters = tickets.stream().map(ticket -> new Object[]{ticket.getOwnerId(), ticket.getStatus().code(), ticket.getId()}).toList();
         int[] argTypes = new int[3];
-        argTypes[0] = Types.VARCHAR;
-        argTypes[1] = Types.BIGINT;
+        argTypes[0] = Types.BIGINT;
+        argTypes[1] = Types.VARCHAR;
         argTypes[2] = Types.VARCHAR;
         this.jdbcTemplate.batchUpdate(sql, parameters, argTypes);
     }
@@ -69,6 +69,22 @@ public class TicketDao implements ITicketDao {
     public Integer reserveOrReleaseTicket(Ticket ticket){
         String sql = "UPDATE tickets SET owner = ? , status = ?::ticketstatus WHERE id = ?::uuid";
         return this.jdbcTemplate.update(sql, ticket.getOwnerId(), ticket.getStatus().code(), ticket.getId());
+    }
+
+    @Override
+    public List<Ticket> findTicketsByUser(Long userId) {
+        String sql = "SELECT T.id as ticketid, T.price, T.status, T.show as showid, T.owner as ticketowner," +
+                "S.seatnumber, S.seattype, S.id as seatid," +
+                "SH.starttime, SH.endtime, SH.showlanguage, " +
+                "TH.theatrename, TH.location, TH.id as theatreid," +
+                "M.name " +
+                "FROM tickets T " +
+                "JOIN seats S ON T.seat = S.id " +
+                "JOIN shows SH ON T.show = SH.id " +
+                "JOIN theatre TH on SH.theatre = TH.id " +
+                "JOIN movies M ON M.id = SH.movie " +
+                "WHERE T.owner = ?";
+        return this.jdbcTemplate.query(sql, this.ticketMapper, userId);
     }
 
     @Override
