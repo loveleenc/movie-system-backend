@@ -30,7 +30,7 @@ public class TicketsController {
     @GetMapping("/tickets")
     List<TicketDto> getTicketsForShow(@RequestParam String showId){
         return this.ticketService.getTicketsByShow(showId)
-                .stream().map(ticket -> this.ticketDtoMapper.toTicketDto(ticket, false)).toList();
+                .stream().map(ticket -> this.ticketDtoMapper.toTicketDto(ticket, true)).toList();
     }
 
     @PatchMapping("/tickets")
@@ -47,7 +47,7 @@ public class TicketsController {
     }
 
     @PatchMapping("/tickets/cancel")
-    ResponseEntity<List<TicketDto>> cancelTickets(@RequestBody List<String> ticketIds){
+    ResponseEntity<List<TicketDto>> cancelTicketBookings(@RequestBody List<String> ticketIds){
         List<Ticket> tickets = this.ticketService.cancelBookings(ticketIds);
         List<TicketDto> ticketDtos = this.ticketDtoMapper.toTicketDto(tickets, true);
         return new ResponseEntity<>(ticketDtos, HttpStatus.OK);
@@ -61,5 +61,4 @@ public class TicketsController {
                 .toList();
         return new ResponseEntity<>(ticketDtos, HttpStatus.OK);
     }
-
 }

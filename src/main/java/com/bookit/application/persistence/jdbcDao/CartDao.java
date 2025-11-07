@@ -31,7 +31,16 @@ public class CartDao implements ICartDao {
     private Cart getCart(Long userId){
         String sql = "SELECT * FROM cart WHERE owner = ?";
         return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                new Cart(rs.getLong("id"), rs.getTimestamp("expiry").toLocalDateTime()), userId);
+                {
+                    LocalDateTime expiry;
+                    if(rs.getTimestamp("expiry") == null){
+                        expiry = LocalDateTime.now().plusMinutes(30);
+                    }
+                    else{
+                        expiry = rs.getTimestamp("expiry").toLocalDateTime();
+                    }
+                    return new Cart(rs.getLong("id"), expiry);
+                }, userId);
     }
 
     @Override

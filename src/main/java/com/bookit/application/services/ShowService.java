@@ -69,4 +69,10 @@ public class ShowService {
         this.ticketService.updateTicketStatusForShow(showId, TicketStatus.CANCELLED.code(), true);
     }
 
+    public Show createTicketsForExistingShow(String showId, Long moviePrice, String ticketStatus){
+        Show show = this.showDAO.findById(showId);
+        this.ticketService.createTickets(Objects.requireNonNull(moviePrice), show, Objects.requireNonNull(ticketStatus));
+        return show;
+    }
+
 }

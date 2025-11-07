@@ -82,7 +82,7 @@ public class ShowDao implements IShowDao {
     public List<Show> findShowsByMovie(Long movieId) throws DataAccessException {
         String sql = "select T.id AS theatreid, * from shows S  " +
                 "JOIN theatre T ON T.id = S.theatre  " +
-                "WHERE S.movie = ? ORDER BY T.location, S.theatre, S.showlanguage, S.starttime";
+                "WHERE S.movie = ? AND S.starttime > NOW() ORDER BY T.location, S.theatre, S.showlanguage, S.starttime";
         return this.jdbcTemplate.query(sql, this.showTheatreMapper, movieId);
     }
 

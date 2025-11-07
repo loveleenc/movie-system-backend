@@ -16,10 +16,9 @@ public class TicketDtoMapper {
                 ticket.getSeat().getSeatType().code());
         String maskedStatus;
         if (statusHidden) {
-            maskedStatus = null;
-        } else {
             maskedStatus = TicketDtoMapper.maskActualTicketStatus(ticket);
-
+        } else {
+            maskedStatus = ticket.getStatus().code();
         }
         return new TicketDto(showDto, seatDTO, maskedStatus, ticket.getPrice(), ticket.getId());
     }
