@@ -65,8 +65,8 @@ public class MovieDao implements IMovieDao {
     }
 
     public List<Movie> findOngoingMovies() throws DataAccessException {
-        String sql = "SELECT DISTINCT M.id, name, duration, image, genre, releasedate, language from movies M JOIN shows S ON M.id = S.movie WHERE M.releasedate >= ?";
-        return this.jdbcTemplate.query(sql, this.movieMapper, OffsetDateTime.now().toLocalDate());
+        String sql = "SELECT DISTINCT M.id, name, duration, image, genre, releasedate, language from movies M INNER JOIN shows S ON M.id = S.movie WHERE S.starttime >= NOW();";
+        return this.jdbcTemplate.query(sql, this.movieMapper);
     }
 
     public List<Movie> findUpcomingMovies() throws DataAccessException {
