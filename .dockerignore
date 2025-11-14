@@ -1,0 +1,9 @@
+.git
+.gitignore
+Dockerfile
+scripts
+src/test
+README.md
+LICENSE
+HELP.md
+movieSecrets.properties
