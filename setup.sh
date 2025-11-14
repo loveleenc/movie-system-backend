@@ -9,6 +9,4 @@ do
     printf "$variable=$var_name\n"
 done >> secrets/movieSecrets.properties
 
-cat /project/secrets/movieSecrets.properties
-ls -l /project/secrets
 java -jar java-app.jar
