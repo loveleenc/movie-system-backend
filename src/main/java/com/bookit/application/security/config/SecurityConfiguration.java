@@ -23,10 +23,8 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@Profile("development")
+@Profile("production")
 public class SecurityConfiguration extends SecurityConfigurationBase {
-
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
