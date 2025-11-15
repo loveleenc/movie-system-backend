@@ -20,11 +20,16 @@ import java.util.List;
 
 
 public class SecurityConfigurationBase {
+    private final String allowedOrigin;
+    public SecurityConfigurationBase(SecurityConfigProperties securityConfigProperties){
+        this.allowedOrigin = securityConfigProperties.getAllowedOrigin();
+    }
 
     @Bean
     UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
+        System.out.println("allowed origin is: " + this.allowedOrigin);
+        configuration.setAllowedOrigins(List.of(this.allowedOrigin));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
