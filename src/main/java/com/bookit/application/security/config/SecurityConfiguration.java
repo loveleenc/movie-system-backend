@@ -42,7 +42,7 @@ public class SecurityConfiguration extends SecurityConfigurationBase {
                         responseCookieBuilder.sameSite("none");
                         responseCookieBuilder.partitioned(true);
                         responseCookieBuilder.httpOnly(false);
-                        responseCookieBuilder.domain("onrender.com");   //TODO: worry about this later
+                        responseCookieBuilder.domain(".onrender.com");   //TODO: worry about this later
                     });
                     csrf.csrfTokenRepository(repository);
                     csrf.ignoringRequestMatchers("/logout");
