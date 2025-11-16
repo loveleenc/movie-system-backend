@@ -37,6 +37,7 @@ public class SecurityConfiguration extends SecurityConfigurationBase {
                     repository.setCookieCustomizer(customizer -> {
                         customizer.sameSite(org.springframework.boot.web.server.Cookie.SameSite.NONE.attributeValue());
                         customizer.secure(true);
+                        customizer.partitioned(true);
                     });
                     csrf.csrfTokenRepository(repository);
                     csrf.ignoringRequestMatchers("/logout");
