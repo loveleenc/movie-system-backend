@@ -9,10 +9,10 @@ import com.bookit.application.services.CartService;
 import com.bookit.application.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -51,16 +51,18 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) {
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginDto.getUsername(), loginDto.getPassword());
-        Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);
-        if (authenticationResponse.isAuthenticated()) {
+        try{
+            Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);
+            System.out.println("is user authenticated: " + authenticationResponse.isAuthenticated());
             SecurityContext context = SecurityContextHolder.getContextHolderStrategy().createEmptyContext();
             context.setAuthentication(authenticationResponse);
             SecurityContextHolder.getContextHolderStrategy().setContext(context);
             securityContextRepository.saveContext(context, request, response);
             return new ResponseEntity<>("Login was successful", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Incorrect username or password.", HttpStatus.UNAUTHORIZED);
-
+        catch(BadCredentialsException e){
+            return new ResponseEntity<>("Incorrect username or password.", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @GetMapping("/loginstatus")
