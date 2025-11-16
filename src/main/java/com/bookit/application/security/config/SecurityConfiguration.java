@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+import java.util.function.Consumer;
 
 @Configuration
 @EnableWebSecurity
@@ -34,10 +37,12 @@ public class SecurityConfiguration extends SecurityConfigurationBase {
                 })
                 .csrf(csrf -> {
                     CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-                    repository.setCookieCustomizer(customizer -> {
-                        customizer.sameSite(org.springframework.boot.web.server.Cookie.SameSite.NONE.attributeValue());
-                        customizer.secure(true);
-                        customizer.partitioned(true);
+                    repository.setCookieCustomizer(responseCookieBuilder -> {
+                        responseCookieBuilder.secure(true);
+                        responseCookieBuilder.sameSite("none");
+                        responseCookieBuilder.partitioned(true);
+                        responseCookieBuilder.httpOnly(false);
+                        responseCookieBuilder.domain("onrender.com");   //TODO: worry about this later
                     });
                     csrf.csrfTokenRepository(repository);
                     csrf.ignoringRequestMatchers("/logout");

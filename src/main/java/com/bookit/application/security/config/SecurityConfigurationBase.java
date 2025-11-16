@@ -28,7 +28,6 @@ public class SecurityConfigurationBase {
     @Bean
     UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        System.out.println("allowed origin is: " + this.allowedOrigin);
         configuration.setAllowedOrigins(List.of(this.allowedOrigin));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
