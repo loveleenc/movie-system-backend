@@ -33,7 +33,12 @@ public class SecurityConfiguration extends SecurityConfigurationBase {
                     securityContext.securityContextRepository(securityContextRepository());
                 })
                 .csrf(csrf -> {
-                    csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                    CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+                    repository.setCookieCustomizer(customizer -> {
+                        customizer.sameSite(org.springframework.boot.web.server.Cookie.SameSite.NONE.attributeValue());
+                        customizer.secure(true);
+                    });
+                    csrf.csrfTokenRepository(repository);
                     csrf.ignoringRequestMatchers("/logout");
                     csrf.csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler());
                 })
