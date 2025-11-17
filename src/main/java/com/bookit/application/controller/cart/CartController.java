@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController("/api/cart")
 public class CartController {
     private CartService cartService;
     private ItemDtoMapper itemDtoMapper;
@@ -20,25 +20,25 @@ public class CartController {
         this.itemDtoMapper = itemDtoMapper;
     }
 
-    @GetMapping("/cart")
+    @GetMapping("/")
     public ResponseEntity<List<ItemDto>> getCart(){
         List<Item> items = this.cartService.getCart();
         return new ResponseEntity<>(this.itemDtoMapper.toCartItemsDTO(items),HttpStatus.OK);
     }
 
-    @PatchMapping("/cart/add")
+    @PatchMapping("/add")
     public ResponseEntity<ItemDto> addItem(@RequestParam String ticketId){
         Item item = this.cartService.addItem(ticketId);
         return new ResponseEntity<>(this.itemDtoMapper.toItemDto(item), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/cart/remove")
+    @PatchMapping("/remove")
     public ResponseEntity<String> remove(@RequestParam Long itemId){
         this.cartService.removeItem(itemId);
         return new ResponseEntity<>("Item removed successfully", HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/cart/checkout")
+    @PostMapping("/checkout")
     public ResponseEntity<List<ItemDto>> checkout(){
         List<Item> items = this.cartService.checkout();
         return new ResponseEntity<>(this.itemDtoMapper.toCartItemsDTO(items),HttpStatus.OK);

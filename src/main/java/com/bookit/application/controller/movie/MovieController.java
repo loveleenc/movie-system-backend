@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@RestController
+@RestController("/api")
 public class MovieController {
     private final static String START_DATE = "1970-01-01";
     private final MovieService movieService;
