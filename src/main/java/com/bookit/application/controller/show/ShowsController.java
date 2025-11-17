@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/api")
+@RestController
+@RequestMapping("/api")
 public class ShowsController {
     private ShowService showService;
     private ShowDtoMapper showDTOMapper;

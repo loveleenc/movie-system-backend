@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/api/cart")
+@RestController
+@RequestMapping("/api/cart")
 public class CartController {
     private CartService cartService;
     private ItemDtoMapper itemDtoMapper;
