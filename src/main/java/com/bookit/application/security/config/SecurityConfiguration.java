@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
-import java.util.function.Consumer;
+
 
 @Configuration
 @EnableWebSecurity
@@ -39,20 +39,18 @@ public class SecurityConfiguration extends SecurityConfigurationBase {
                     CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
                     repository.setCookieCustomizer(responseCookieBuilder -> {
                         responseCookieBuilder.secure(true);
-                        responseCookieBuilder.sameSite("none");
-                        responseCookieBuilder.partitioned(true);
+                        responseCookieBuilder.sameSite("strict");
                         responseCookieBuilder.httpOnly(false);
-                        responseCookieBuilder.domain(".onrender.com");   //TODO: worry about this later
                     });
                     csrf.csrfTokenRepository(repository);
-                    csrf.ignoringRequestMatchers("/logout");
+                    csrf.ignoringRequestMatchers("/api/logout");
                     csrf.csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler());
                 })
 
                 .logout(logout -> {
                     logout.permitAll();
                     logout.permitAll(true);
-                    logout.logoutUrl("/logout");
+                    logout.logoutUrl("/api/logout");
                     logout.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK));
                     logout.addLogoutHandler((request, response, auth) -> {
                         try {
