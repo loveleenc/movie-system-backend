@@ -13,10 +13,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          path: main
+
+      - name: Checkout ui Repository
+        uses: actions/checkout@v4
+        with:
           repository: ${{github.actor}}/movie-system-ui
           ref: refs/heads/main
-      - name: list repo contents
-        run: ls -l
+          path: movie-system-ui
+
+      - name: list workspace contents along with repo contents
+        run: ls -l ${{github.workspace}} && ls -l ${{github.workspace}}/movie-system-ui && ls -l ${{github.workspace}}/movie-system-backend
 #      - name: Log in to Container Registry
 #        uses: docker/login-action@v3.6.0
 #        with:
