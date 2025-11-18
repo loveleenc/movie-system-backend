@@ -30,7 +30,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - working-directory: ${{github.workspace}}/movie-system-ui
+
+      - name: Install dependencies
+        working-directory: ${{github.workspace}}/movie-system-ui
+        run: npm install
+      - name: create build
+        working-directory: ${{github.workspace}}/movie-system-ui
         run: npm run build
 
 
