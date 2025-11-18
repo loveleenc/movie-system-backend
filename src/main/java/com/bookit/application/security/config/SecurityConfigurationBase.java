@@ -65,7 +65,7 @@ public class SecurityConfigurationBase {
                                 .requestMatchers(HttpMethod.PATCH, "/api/tickets/book", "/api/tickets/cancel").hasAuthority(Role.REGULAR_USER.code())
                                 .requestMatchers(HttpMethod.POST, "/api/tickets").hasAuthority(Role.ADMIN.code())
 
-                                .requestMatchers("/api/cart/**", "/api/cart/").hasAuthority(Role.REGULAR_USER.code())
+                                .requestMatchers("/api/cart/**", "/api/cart").hasAuthority(Role.REGULAR_USER.code())
 
                                 .requestMatchers(HttpMethod.GET,   "/**", "/assets/**", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
 
