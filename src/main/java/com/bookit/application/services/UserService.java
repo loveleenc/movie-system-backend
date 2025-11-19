@@ -1,23 +1,42 @@
 package com.bookit.application.services;
 
+import com.bookit.application.controller.user.AccountActivationEmailException;
 import com.bookit.application.security.CustomUserDetailsService;
 import com.bookit.application.security.UsernameOrEmailAlreadyExistsException;
 import com.bookit.application.security.entity.User;
+import com.bookit.application.services.email.EmailService;
+import com.bookit.application.services.token.TokenService;
 import com.bookit.application.types.AccountStatus;
 import com.bookit.application.types.Role;
 import com.bookit.application.utils.UserUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailParseException;
+import org.springframework.mail.MailSendException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Component
 public class UserService {
     private final CustomUserDetailsService customUserDetailsService;
+    @Value("${client.url}")
+    private String clientUrl;
+    private TokenService tokenService;
+    private EmailService emailService;
 
-    public UserService(CustomUserDetailsService customUserDetailsService){
+    public UserService(CustomUserDetailsService customUserDetailsService,
+                       TokenService tokenService,
+                       EmailService emailService){
         this.customUserDetailsService = customUserDetailsService;
+        this.tokenService = tokenService;
+        this.emailService = emailService;
     }
 
-    public User createUser(User user) throws IllegalArgumentException, UsernameOrEmailAlreadyExistsException {
+    public User createUser(User user) throws IllegalArgumentException, UsernameOrEmailAlreadyExistsException, MalformedURLException {
         if(!UserUtil.usernameCriteriaFulfilled(user.getUsername())){
             throw new IllegalArgumentException("Entered username does not match required criteria");
         }
@@ -32,19 +51,45 @@ public class UserService {
         if(roles.contains(Role.ADMIN)){
           throw new IllegalArgumentException(String.format("Cannot create a user with the role %s", Role.ADMIN.code()));
         }
+
+
         if(roles.contains(Role.THEATRE_OWNER)){
             user.setAccountStatus(AccountStatus.INACTIVE);
+            User createdUser =  this.customUserDetailsService.createUser(user);
             //TODO: send out an e-mail to notify when the account has been verified and activated
-            return this.customUserDetailsService.createUser(user);
+            return createdUser;
         } else if (roles.contains(Role.REGULAR_USER)) {
-            user.setAccountStatus(AccountStatus.INACTIVE);
-            //TODO: send out an e-mail with account activation link
-            return this.customUserDetailsService.createUser(user);
+            try{
+                user.setAccountStatus(AccountStatus.INACTIVE);
+                User createdUser =  this.customUserDetailsService.createUser(user);
+                this.sendAccountActivationEmail(createdUser);
+                return createdUser;
+            }
+            catch (MalformedURLException | MailSendException | MailParseException | MailAuthenticationException e){
+                throw new AccountActivationEmailException(String.format("Unable to send the email due to: %s", e.getMessage()));
+            }
+
         }
         return null;
     }
 
     public Long getCurrentUserId(){
         return this.customUserDetailsService.getCurrentUserId();
+    }
+
+    private void sendAccountActivationEmail(User user) throws MalformedURLException, MailSendException, MailParseException, MailAuthenticationException {
+        UrlResource accountActivationUrl = this.createAccountActivationLink(user);
+        String mailMessage = UserUtil.createAccountActivationEmailMessage(user.getUsername(), accountActivationUrl);
+        this.emailService.sendEmail(user.getEmail(), UserUtil.activationEmailSubject, mailMessage);
+    }
+
+    private UrlResource createAccountActivationLink(User user) throws MalformedURLException {
+        String token = this.tokenService.createActivationToken(user.getUsername());
+        String accountActivationUrl = UriComponentsBuilder.fromUriString(this.clientUrl)
+                .path("account")
+                .path("activate")
+                .path(token)
+                .build().toString();
+         return new UrlResource(accountActivationUrl);
     }
 }

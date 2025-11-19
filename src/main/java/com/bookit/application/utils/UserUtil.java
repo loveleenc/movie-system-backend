@@ -1,9 +1,12 @@
 package com.bookit.application.utils;
 
+import org.springframework.core.io.UrlResource;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class UserUtil {
+    public static final String activationEmailSubject  = "Account activation: welcome to Book Show!";
     static final String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}(\\.[\\w-]{2,4})?$";
     //username
     public static Boolean passwordCriteriaFulfilled(String password) {
@@ -52,4 +55,7 @@ public class UserUtil {
         return emailRegex.matches(email);
     }
 
+    public static String createAccountActivationEmailMessage(String username, UrlResource accountActivationUrl){
+        return String.format("Hello %s,\nClick the link below to activate your account-\n%s", username, accountActivationUrl.getURL().toString());
+    }
 }

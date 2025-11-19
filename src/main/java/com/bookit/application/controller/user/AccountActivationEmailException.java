@@ -1,0 +1,11 @@
+package com.bookit.application.controller.user;
+
+public class AccountActivationEmailException extends RuntimeException {
+    public AccountActivationEmailException(String message) {
+        super(message);
+    }
+
+    public AccountActivationEmailException(String message, Throwable cause){
+        super(message, cause);
+    }
+}

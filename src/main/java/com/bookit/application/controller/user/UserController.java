@@ -21,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
+
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -39,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    ResponseEntity<UserDto> createNewUser(@RequestBody UserDto userDto) {
+    ResponseEntity<UserDto> createNewUser(@RequestBody UserDto userDto) throws MalformedURLException {
         User user = this.userDtoMapper.toUser(userDto);
         User createdUser = this.userService.createUser(user);
         this.cartService.createCartForNewUser(createdUser.getId());
