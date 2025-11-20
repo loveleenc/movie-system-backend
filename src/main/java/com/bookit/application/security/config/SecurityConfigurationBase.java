@@ -72,6 +72,7 @@ public class SecurityConfigurationBase {
                                 .requestMatchers(HttpMethod.POST, "/register").permitAll()
                                 .requestMatchers("/api/login").permitAll()
                                 .requestMatchers("/api/logout").permitAll()
+                                .requestMatchers(HttpMethod.PATCH, "/api/user/activate/*").permitAll()
 
                 );
         return http;

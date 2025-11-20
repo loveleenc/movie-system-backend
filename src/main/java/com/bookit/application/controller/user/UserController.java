@@ -68,4 +68,11 @@ public class UserController {
     public ResponseEntity<String> getLoginStatus() {
         return new ResponseEntity<>("User is logged in.", HttpStatus.OK);
     }
+
+
+    @PatchMapping("/user/activate/{id}")
+    public ResponseEntity<String> activateAccount(@PathVariable String id){
+        this.userService.activateUserAccount(id);
+        return new ResponseEntity<>("User Account has been activated successfully!", HttpStatus.OK);
+    }
 }

@@ -43,7 +43,7 @@ public class SecurityConfiguration extends SecurityConfigurationBase {
                         responseCookieBuilder.httpOnly(false);
                     });
                     csrf.csrfTokenRepository(repository);
-                    csrf.ignoringRequestMatchers("/api/logout");
+                    csrf.ignoringRequestMatchers("/api/logout", "/api/user/activate/*");
                     csrf.csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler());
                 })
 
