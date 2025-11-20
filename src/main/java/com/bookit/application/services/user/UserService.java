@@ -1,9 +1,9 @@
 package com.bookit.application.services.user;
 
+import com.bookit.application.persistence.ICartDao;
 import com.bookit.application.security.CustomUserDetailsService;
 import com.bookit.application.security.UsernameOrEmailAlreadyExistsException;
 import com.bookit.application.security.entity.User;
-import com.bookit.application.services.CartService;
 import com.bookit.application.services.email.EmailService;
 import com.bookit.application.services.user.token.TokenService;
 import com.bookit.application.types.AccountStatus;
@@ -17,7 +17,6 @@ import org.springframework.mail.MailParseException;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.MalformedURLException;
@@ -30,16 +29,16 @@ public class UserService {
     private String clientUrl;
     private TokenService tokenService;
     private EmailService emailService;
-    private CartService cartService;
+    private ICartDao cartDao;
 
     public UserService(CustomUserDetailsService customUserDetailsService,
                        TokenService tokenService,
                        EmailService emailService,
-                       CartService cartService){
+                       ICartDao cartDao){
         this.customUserDetailsService = customUserDetailsService;
         this.tokenService = tokenService;
         this.emailService = emailService;
-        this.cartService = cartService;
+        this.cartDao = cartDao;
     }
 
     public User createUser(User user) throws IllegalArgumentException, UsernameOrEmailAlreadyExistsException, MalformedURLException {
@@ -54,6 +53,9 @@ public class UserService {
         }
 
         List<Role> roles = user.getRoles();
+        if(roles.isEmpty()){
+            throw new IllegalArgumentException("A new user cannot be created without any role");
+        }
         if(roles.contains(Role.ADMIN)){
           throw new IllegalArgumentException(String.format("Cannot create a user with the role %s", Role.ADMIN.code()));
         }
@@ -68,7 +70,7 @@ public class UserService {
                 throw new AccountActivationException("Unable to send the account activation email" , e);
             }
         } if (roles.contains(Role.REGULAR_USER)) {
-            this.cartService.createCartForNewUser(createdUser.getId());
+            this.cartDao.createCart(createdUser.getId());
             try{
                 if(!roles.contains(Role.THEATRE_OWNER)){
                     this.sendAccountActivationEmail(createdUser);
@@ -107,7 +109,7 @@ public class UserService {
     private UrlResource createAccountActivationLink(User user) throws MalformedURLException {
         String token = this.tokenService.createActivationToken(user.getUsername());
         String accountActivationUrl = UriComponentsBuilder.fromUriString(this.clientUrl)
-                .pathSegment("user", "activate", token)
+                .pathSegment("#", "user", "activate", token)
                 .build().toString();
          return new UrlResource(accountActivationUrl);
     }
