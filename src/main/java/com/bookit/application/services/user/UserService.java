@@ -107,7 +107,7 @@ public class UserService {
     private UrlResource createAccountActivationLink(User user) throws MalformedURLException {
         String token = this.tokenService.createActivationToken(user.getUsername());
         String accountActivationUrl = UriComponentsBuilder.fromUriString(this.clientUrl)
-                .pathSegment("api", "user", "activate", token)
+                .pathSegment("user", "activate", token)
                 .build().toString();
          return new UrlResource(accountActivationUrl);
     }
