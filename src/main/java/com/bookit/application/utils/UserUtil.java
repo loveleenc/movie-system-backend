@@ -60,6 +60,6 @@ public class UserUtil {
     }
 
     public static String createAccountActivationEmailMessage(String username){
-        return String.format("Hello %s,\nYou will be contacted soon by our team to verify and activate your account. -\n%s", username);
+        return String.format("Hello %s,\nYou will be contacted soon by our team to verify and activate your account.", username);
     }
 }
