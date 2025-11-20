@@ -24,10 +24,6 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @Profile("production")
 public class SecurityConfiguration extends SecurityConfigurationBase {
 
-    public SecurityConfiguration(SecurityConfigProperties securityConfigProperties) {
-        super(securityConfigProperties);
-    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         HttpSecurity httpSecurity = super.createFilters(http);

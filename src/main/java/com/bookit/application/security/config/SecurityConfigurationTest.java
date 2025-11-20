@@ -13,14 +13,32 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Profile("development")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurationTest extends SecurityConfigurationBase {
 
-    public SecurityConfigurationTest(SecurityConfigProperties securityConfigProperties) {
-        super(securityConfigProperties);
+    private final String allowedOrigin;
+    public SecurityConfigurationTest(SecurityConfigProperties securityConfigProperties){
+        this.allowedOrigin = securityConfigProperties.getAllowedOrigin();
+    }
+
+    @Bean
+    UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of(this.allowedOrigin));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
