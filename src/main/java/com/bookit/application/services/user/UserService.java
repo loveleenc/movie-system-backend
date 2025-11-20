@@ -1,19 +1,20 @@
-package com.bookit.application.services;
+package com.bookit.application.services.user;
 
-import com.bookit.application.controller.user.AccountActivationEmailException;
 import com.bookit.application.security.CustomUserDetailsService;
 import com.bookit.application.security.UsernameOrEmailAlreadyExistsException;
 import com.bookit.application.security.entity.User;
 import com.bookit.application.services.email.EmailService;
-import com.bookit.application.services.token.TokenService;
+import com.bookit.application.services.user.token.TokenService;
 import com.bookit.application.types.AccountStatus;
 import com.bookit.application.types.Role;
 import com.bookit.application.utils.UserUtil;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.MailParseException;
 import org.springframework.mail.MailSendException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -56,19 +57,23 @@ public class UserService {
         if(roles.contains(Role.THEATRE_OWNER)){
             user.setAccountStatus(AccountStatus.INACTIVE);
             User createdUser =  this.customUserDetailsService.createUser(user);
-            //TODO: send out an e-mail to notify when the account has been verified and activated
-            return createdUser;
-        } else if (roles.contains(Role.REGULAR_USER)) {
             try{
-                user.setAccountStatus(AccountStatus.INACTIVE);
-                User createdUser =  this.customUserDetailsService.createUser(user);
+                this.sendAccountCreationEmail(createdUser);
+                return createdUser;
+            }
+            catch (MailSendException | MailParseException | MailAuthenticationException e){
+                throw new AccountActivationException("Unable to send the account activation email" , e);
+            }
+        } else if (roles.contains(Role.REGULAR_USER)) {
+            user.setAccountStatus(AccountStatus.INACTIVE);
+            User createdUser =  this.customUserDetailsService.createUser(user);
+            try{
                 this.sendAccountActivationEmail(createdUser);
                 return createdUser;
             }
             catch (MalformedURLException | MailSendException | MailParseException | MailAuthenticationException e){
-                throw new AccountActivationEmailException(String.format("Unable to send the email due to: %s", e.getMessage()));
+                throw new AccountActivationException("Unable to send the account activation email" , e);
             }
-
         }
         return null;
     }
@@ -77,10 +82,23 @@ public class UserService {
         return this.customUserDetailsService.getCurrentUserId();
     }
 
+    public void activateUserAccount(String token) throws JwtException, UsernameNotFoundException {
+        String username = this.tokenService.getUsernameFromActivationToken(token);
+        Boolean accountActivated = this.customUserDetailsService.activateUserAccount(username);
+        if(!accountActivated){
+            throw new AccountActivationException("Unable to activate account after fetching user details");
+        }
+    }
+
+    private void sendAccountCreationEmail(User user) throws MailSendException, MailParseException, MailAuthenticationException{
+        String mailMessage = UserUtil.createAccountActivationEmailMessage(user.getUsername());
+        this.emailService.sendEmail(user.getEmail(), UserUtil.accountActivationEmailSubject, mailMessage);
+    }
+
     private void sendAccountActivationEmail(User user) throws MalformedURLException, MailSendException, MailParseException, MailAuthenticationException {
         UrlResource accountActivationUrl = this.createAccountActivationLink(user);
         String mailMessage = UserUtil.createAccountActivationEmailMessage(user.getUsername(), accountActivationUrl);
-        this.emailService.sendEmail(user.getEmail(), UserUtil.activationEmailSubject, mailMessage);
+        this.emailService.sendEmail(user.getEmail(), UserUtil.accountActivationEmailSubject, mailMessage);
     }
 
     private UrlResource createAccountActivationLink(User user) throws MalformedURLException {
@@ -92,4 +110,6 @@ public class UserService {
                 .build().toString();
          return new UrlResource(accountActivationUrl);
     }
+
+
 }

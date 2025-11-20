@@ -2,6 +2,7 @@ package com.bookit.application.security;
 
 import com.bookit.application.persistence.IUserDao;
 import com.bookit.application.security.entity.User;
+import com.bookit.application.types.AccountStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,4 +60,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         return user.getId();
     }
 
+    public Boolean activateUserAccount(String username) throws UsernameNotFoundException{
+        return this.changeUserAccountStatus(username, AccountStatus.ACTIVE);
+    }
+
+    private Boolean changeUserAccountStatus(String username, AccountStatus status){
+        User user = this.userDao.findUserByUsername(username);
+        user.setAccountStatus(status);
+        Integer numberOfUpdatedUsers = this.userDao.updateUserAccountStatus(user);
+        return numberOfUpdatedUsers == 1;
+    }
 }

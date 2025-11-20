@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UserUtil {
-    public static final String activationEmailSubject  = "Account activation: welcome to Book Show!";
+    public static final String accountActivationEmailSubject = "Account activation: welcome to Book Show!";
     static final String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}(\\.[\\w-]{2,4})?$";
     //username
     public static Boolean passwordCriteriaFulfilled(String password) {
@@ -57,5 +57,9 @@ public class UserUtil {
 
     public static String createAccountActivationEmailMessage(String username, UrlResource accountActivationUrl){
         return String.format("Hello %s,\nClick the link below to activate your account-\n%s", username, accountActivationUrl.getURL().toString());
+    }
+
+    public static String createAccountActivationEmailMessage(String username){
+        return String.format("Hello %s,\nYou will be contacted soon by our team to verify and activate your account. -\n%s", username);
     }
 }

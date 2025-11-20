@@ -44,6 +44,12 @@ public class UserDao implements IUserDao {
     }
 
     @Override
+    public Integer updateUserAccountStatus(User user) {
+        String sql = "UPDATE users SET status = ?::accountstatus WHERE id = ?";
+        return this.jdbcTemplate.update(sql, user.getAccountStatus().code(), user.getId());
+    }
+
+    @Override
     public Long createUser(User newUser) {
         String sql = "INSERT INTO users(firstname, lastname, email, password, username, roles, status) " +
                 "VALUES(?, ?, ?, ?, ?, ?::role[], ?::accountstatus) RETURNING id";

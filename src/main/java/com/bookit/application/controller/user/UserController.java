@@ -6,7 +6,7 @@ import com.bookit.application.dto.user.UserDto;
 import com.bookit.application.dto.user.UserDtoMapper;
 import com.bookit.application.security.entity.User;
 import com.bookit.application.services.CartService;
-import com.bookit.application.services.UserService;
+import com.bookit.application.services.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 

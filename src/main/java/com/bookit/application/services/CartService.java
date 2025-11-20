@@ -3,11 +3,11 @@ package com.bookit.application.services;
 import com.bookit.application.entity.Item;
 import com.bookit.application.entity.Ticket;
 import com.bookit.application.persistence.ICartDao;
+import com.bookit.application.services.user.UserService;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class CartService {

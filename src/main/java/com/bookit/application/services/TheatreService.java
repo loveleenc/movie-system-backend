@@ -3,6 +3,7 @@ package com.bookit.application.services;
 import com.bookit.application.entity.Theatre;
 import com.bookit.application.persistence.ISeatDao;
 import com.bookit.application.persistence.ITheatreDao;
+import com.bookit.application.services.user.UserService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

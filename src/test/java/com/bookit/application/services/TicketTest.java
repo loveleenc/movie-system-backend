@@ -3,6 +3,7 @@ package com.bookit.application.services;
 import com.bookit.application.entity.*;
 import com.bookit.application.persistence.ISeatDao;
 import com.bookit.application.persistence.ITicketDao;
+import com.bookit.application.services.user.UserService;
 import com.bookit.application.types.TicketStatus;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;

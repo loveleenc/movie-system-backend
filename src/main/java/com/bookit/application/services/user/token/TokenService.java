@@ -1,10 +1,11 @@
-package com.bookit.application.services.token;
+package com.bookit.application.services.user.token;
 
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -14,21 +15,32 @@ import java.util.Date;
 
 @Service
 public class TokenService {
-    @Value("${account.activation}")
-    private String activationSecret;
+    private SecretKey activationSecretKey;
+
+    public TokenService(){
+        this.activationSecretKey = Jwts.SIG.HS256.key().build();
+    }
 
     private Date accountActivationLinkExpiry(){
         return Date.from(LocalDate.now().plusDays(5).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     public String createActivationToken(String username){
-        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(activationSecret));
-
         return Jwts.builder()
                 .subject(username)
                 .expiration(accountActivationLinkExpiry())
-                .signWith(key)
+                .signWith(activationSecretKey)
                 .compact();
     }
+
+    public String getUsernameFromActivationToken(String token) throws JwtException {
+        Claims claims = Jwts.parser()
+                .verifyWith(activationSecretKey)
+                .build()
+                .parseSignedClaims(token).getPayload();
+        return claims.getSubject();
+    }
+
+
 
 }

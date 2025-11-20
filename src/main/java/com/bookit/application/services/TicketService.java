@@ -5,6 +5,7 @@ import com.bookit.application.entity.Show;
 import com.bookit.application.entity.Ticket;
 import com.bookit.application.persistence.ISeatDao;
 import com.bookit.application.persistence.ITicketDao;
+import com.bookit.application.services.user.UserService;
 import com.bookit.application.types.SeatCategory;
 import com.bookit.application.types.TicketStatus;
 import org.springframework.dao.EmptyResultDataAccessException;

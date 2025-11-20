@@ -16,4 +16,5 @@ public interface IUserDao{
 
     Integer findUserCountByUsernameOrEmail(String username, String email);
 
+    Integer updateUserAccountStatus(User user);
 }
