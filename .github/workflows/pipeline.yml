@@ -21,6 +21,7 @@ jobs:
           repository: ${{ github.actor }}/movie-system-ui
           ref: refs/heads/main
           path: movie-system-ui
+          token: ${{secrets.UI_REPO_READ_TOKEN}}
       - name: Get Node.js
         uses: actions/setup-node@v4
         with:
