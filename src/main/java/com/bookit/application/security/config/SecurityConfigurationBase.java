@@ -69,7 +69,7 @@ public class SecurityConfigurationBase {
 
                                 .requestMatchers(HttpMethod.GET,   "/**", "/assets/**", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
 
-                                .requestMatchers(HttpMethod.POST, "/register").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
                                 .requestMatchers("/api/login").permitAll()
                                 .requestMatchers("/api/logout").permitAll()
                                 .requestMatchers(HttpMethod.PATCH, "/api/user/activate/*").permitAll()

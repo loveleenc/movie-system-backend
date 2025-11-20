@@ -27,14 +27,12 @@ import java.net.MalformedURLException;
 public class UserController {
     private UserService userService;
     private UserDtoMapper userDtoMapper;
-    private CartService cartService;
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
 
-    public UserController(UserService userService, UserDtoMapper userDtoMapper, CartService cartService, AuthenticationManager authenticationManager, SecurityContextRepository securityContextRepository) {
+    public UserController(UserService userService, UserDtoMapper userDtoMapper, AuthenticationManager authenticationManager, SecurityContextRepository securityContextRepository) {
         this.userService = userService;
         this.userDtoMapper = userDtoMapper;
-        this.cartService = cartService;
         this.authenticationManager = authenticationManager;
         this.securityContextRepository = securityContextRepository;
     }
@@ -43,7 +41,6 @@ public class UserController {
     ResponseEntity<UserDto> createNewUser(@RequestBody UserDto userDto) throws MalformedURLException {
         User user = this.userDtoMapper.toUser(userDto);
         User createdUser = this.userService.createUser(user);
-        this.cartService.createCartForNewUser(createdUser.getId());
         return new ResponseEntity<>(this.userDtoMapper.toUserDto(createdUser), HttpStatus.CREATED);
     }
 

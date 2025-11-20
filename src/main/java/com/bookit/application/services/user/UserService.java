@@ -3,6 +3,7 @@ package com.bookit.application.services.user;
 import com.bookit.application.security.CustomUserDetailsService;
 import com.bookit.application.security.UsernameOrEmailAlreadyExistsException;
 import com.bookit.application.security.entity.User;
+import com.bookit.application.services.CartService;
 import com.bookit.application.services.email.EmailService;
 import com.bookit.application.services.user.token.TokenService;
 import com.bookit.application.types.AccountStatus;
@@ -16,6 +17,7 @@ import org.springframework.mail.MailParseException;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.MalformedURLException;
@@ -28,13 +30,16 @@ public class UserService {
     private String clientUrl;
     private TokenService tokenService;
     private EmailService emailService;
+    private CartService cartService;
 
     public UserService(CustomUserDetailsService customUserDetailsService,
                        TokenService tokenService,
-                       EmailService emailService){
+                       EmailService emailService,
+                       CartService cartService){
         this.customUserDetailsService = customUserDetailsService;
         this.tokenService = tokenService;
         this.emailService = emailService;
+        this.cartService = cartService;
     }
 
     public User createUser(User user) throws IllegalArgumentException, UsernameOrEmailAlreadyExistsException, MalformedURLException {
@@ -53,29 +58,27 @@ public class UserService {
           throw new IllegalArgumentException(String.format("Cannot create a user with the role %s", Role.ADMIN.code()));
         }
 
-
+        user.setAccountStatus(AccountStatus.INACTIVE);
+        User createdUser =  this.customUserDetailsService.createUser(user);
         if(roles.contains(Role.THEATRE_OWNER)){
-            user.setAccountStatus(AccountStatus.INACTIVE);
-            User createdUser =  this.customUserDetailsService.createUser(user);
             try{
                 this.sendAccountCreationEmail(createdUser);
-                return createdUser;
             }
             catch (MailSendException | MailParseException | MailAuthenticationException e){
                 throw new AccountActivationException("Unable to send the account activation email" , e);
             }
-        } else if (roles.contains(Role.REGULAR_USER)) {
-            user.setAccountStatus(AccountStatus.INACTIVE);
-            User createdUser =  this.customUserDetailsService.createUser(user);
+        } if (roles.contains(Role.REGULAR_USER)) {
+            this.cartService.createCartForNewUser(createdUser.getId());
             try{
-                this.sendAccountActivationEmail(createdUser);
-                return createdUser;
+                if(!roles.contains(Role.THEATRE_OWNER)){
+                    this.sendAccountActivationEmail(createdUser);
+                }
             }
             catch (MalformedURLException | MailSendException | MailParseException | MailAuthenticationException e){
                 throw new AccountActivationException("Unable to send the account activation email" , e);
             }
         }
-        return null;
+        return createdUser;
     }
 
     public Long getCurrentUserId(){
@@ -104,9 +107,7 @@ public class UserService {
     private UrlResource createAccountActivationLink(User user) throws MalformedURLException {
         String token = this.tokenService.createActivationToken(user.getUsername());
         String accountActivationUrl = UriComponentsBuilder.fromUriString(this.clientUrl)
-                .path("account")
-                .path("activate")
-                .path(token)
+                .pathSegment("api", "user", "activate", token)
                 .build().toString();
          return new UrlResource(accountActivationUrl);
     }
