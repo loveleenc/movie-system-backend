@@ -21,6 +21,7 @@ jobs:
           distribution: 'corretto'
           architecture: x64
       - name: Run tests
+        working-directory: ${{github.workspace}}/main-test
         run: mvn test
 
   deploy:
