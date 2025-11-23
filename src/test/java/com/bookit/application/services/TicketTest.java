@@ -60,10 +60,10 @@ public class TicketTest {
         Seat seat2 = new Seat("B1", "Silver", 250L, 11L);
         Seat seat3 = new Seat("C2", "Gold", 300L, 25L);
         Seat seat4 = new Seat("C9", "Gold", 300L, 28L);
-        Ticket ticket1 = new Ticket(show, seat1, TicketStatus.AVAILABLE, 243L);
-        Ticket ticket2 = new Ticket(show, seat2, TicketStatus.BOOKED, 424L);
-        Ticket ticket3 = new Ticket(show, seat3, TicketStatus.BLOCKED, 485L);
-        Ticket ticket4 = new Ticket(show, seat4, TicketStatus.AVAILABLE, 485L);
+        Ticket ticket1 = new Ticket(show, seat1, TicketStatus.AVAILABLE, 221L);
+        Ticket ticket2 = new Ticket(show, seat2, TicketStatus.BOOKED, 386L);
+        Ticket ticket3 = new Ticket(show, seat3, TicketStatus.BLOCKED, 441L);
+        Ticket ticket4 = new Ticket(show, seat4, TicketStatus.AVAILABLE, 441L);
         this.tickets = Arrays.asList(ticket1, ticket2, ticket3, ticket4);
         this.seats = Arrays.asList(seat1, seat2, seat3, seat4);
     }

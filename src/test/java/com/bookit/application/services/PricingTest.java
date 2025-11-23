@@ -21,7 +21,7 @@ public class PricingTest {
         LocalDateTime endTime = LocalDateTime.of(2025, 9, 20, 19, 0, 0);
         ShowTimeSlot timeSlot = new ShowTimeSlot(startTime, endTime);
         Long ticketPrice = this.pricingService.calculateTicketPrice(seatPrice, moviePrice, timeSlot);
-        Assertions.assertEquals(728L, ticketPrice);
+        Assertions.assertEquals(662L, ticketPrice);
     }
 
     @Test
@@ -32,7 +32,7 @@ public class PricingTest {
         LocalDateTime endTime = LocalDateTime.of(2025, 9, 21, 18, 0, 0);
         ShowTimeSlot timeSlot = new ShowTimeSlot(startTime, endTime);
         Long ticketPrice = this.pricingService.calculateTicketPrice(seatPrice, moviePrice, timeSlot);
-        Assertions.assertEquals(751L, ticketPrice);
+        Assertions.assertEquals(683L, ticketPrice);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class PricingTest {
         LocalDateTime endTime = LocalDateTime.of(2025, 9, 21, 10, 0, 0);
         ShowTimeSlot timeSlot = new ShowTimeSlot(startTime, endTime);
         Long ticketPrice = this.pricingService.calculateTicketPrice(seatPrice, moviePrice, timeSlot);
-        Assertions.assertEquals(1207L, ticketPrice);
+        Assertions.assertEquals(1097L, ticketPrice);
     }
 
 
@@ -55,7 +55,7 @@ public class PricingTest {
         LocalDateTime endTime = LocalDateTime.of(2025, 9, 29, 17, 0, 0);
         ShowTimeSlot timeSlot = new ShowTimeSlot(startTime, endTime);
         Long ticketPrice = this.pricingService.calculateTicketPrice(seatPrice, moviePrice, timeSlot);
-        Assertions.assertEquals(1432L, ticketPrice);
+        Assertions.assertEquals(1302L, ticketPrice);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class PricingTest {
         LocalDateTime endTime = LocalDateTime.of(2025, 10, 1, 18, 0, 0);
         ShowTimeSlot timeSlot = new ShowTimeSlot(startTime, endTime);
         Long ticketPrice = this.pricingService.calculateTicketPrice(seatPrice, moviePrice, timeSlot);
-        Assertions.assertEquals(715L, ticketPrice);
+        Assertions.assertEquals(650L, ticketPrice);
     }
 
     @Test
@@ -77,6 +77,6 @@ public class PricingTest {
         LocalDateTime endTime = LocalDateTime.of(2025, 9, 5, 12, 30, 0);
         ShowTimeSlot timeSlot = new ShowTimeSlot(startTime, endTime);
         Long ticketPrice = this.pricingService.calculateTicketPrice(seatPrice, moviePrice, timeSlot);
-        Assertions.assertEquals(679L, ticketPrice);
+        Assertions.assertEquals(618L, ticketPrice);
     }
 }

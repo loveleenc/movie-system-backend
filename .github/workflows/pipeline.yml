@@ -8,7 +8,23 @@ on:
     branches: ["main"]
 
 jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: main-test
+      - name: Set up JDK 17 for tests
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+          architecture: x64
+      - name: Run tests
+        run: mvn test
+
   deploy:
+    needs: [test]
     runs-on: ubuntu-22.04
     strategy:
       matrix:
