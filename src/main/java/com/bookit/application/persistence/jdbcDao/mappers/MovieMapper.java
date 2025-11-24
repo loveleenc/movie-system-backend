@@ -1,6 +1,7 @@
 package com.bookit.application.persistence.jdbcDao.mappers;
 
 import com.bookit.application.entity.Movie;
+import com.bookit.application.entity.MovieBuilder;
 import com.bookit.application.types.MovieGenre;
 import com.bookit.application.types.MovieLanguage;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,6 +17,10 @@ public class MovieMapper implements RowMapper<Movie> {
     @Override
     public Movie mapRow(ResultSet rs, int rowNum) throws SQLException {
         return this.getMovie(rs, "id");
+    }
+
+    public Movie getMovieName(ResultSet rs, String nameColumnAlias) throws SQLException{
+        return new MovieBuilder().setName(rs.getString("moviename")).build();
     }
 
     public Movie getMovie(ResultSet rs, String idColumnName) throws SQLException{

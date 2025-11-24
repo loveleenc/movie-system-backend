@@ -4,6 +4,7 @@ import com.bookit.application.entity.Show;
 import com.bookit.application.entity.ShowTimeSlot;
 import com.bookit.application.persistence.IShowDao;
 import com.bookit.application.persistence.jdbcDao.mappers.ShowMapper;
+import com.bookit.application.persistence.jdbcDao.mappers.ShowMovieMapper;
 import com.bookit.application.persistence.jdbcDao.mappers.ShowTheatreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -24,9 +25,12 @@ public class ShowDao implements IShowDao {
     private JdbcTemplate jdbcTemplate;
     private ShowMapper showMapper;
     private ShowTheatreMapper showTheatreMapper;
-    public ShowDao(ShowMapper showMapper, ShowTheatreMapper showTheatreMapper) {
+    private ShowMovieMapper showMovieMapper;
+    public ShowDao(ShowMapper showMapper, ShowTheatreMapper showTheatreMapper,
+                   ShowMovieMapper showMovieMapper) {
         this.showMapper = showMapper;
         this.showTheatreMapper = showTheatreMapper;
+        this.showMovieMapper = showMovieMapper;
     }
 
     @Override
@@ -67,8 +71,14 @@ public class ShowDao implements IShowDao {
     }
 
     public List<Show> findShowsByTheatre(Integer theatreId) throws DataAccessException{
-        String sql = "SELECT * FROM shows WHERE theatre = ?";
-        return this.jdbcTemplate.query(sql, this.showMapper, theatreId);
+        String sql = "SELECT DISTINCT " +
+                "M.name as moviename, " +
+                "S.starttime,  S.endtime, S.id as showid, S.showlanguage " +
+                "FROM shows S " +
+                "JOIN tickets T ON T.show = S.id " +
+                "JOIN movies M ON S.movie = M.id " +
+                "WHERE S.theatre = ? AND S.starttime > NOW() AND T.status != 'cancelled'::ticketstatus ORDER BY S.starttime";
+        return this.jdbcTemplate.query(sql, this.showMovieMapper, theatreId);
     }
 
     @Override

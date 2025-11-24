@@ -7,6 +7,7 @@ import com.bookit.application.persistence.jdbcDao.mappers.TheatreMapper;
 import com.bookit.application.services.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -35,7 +36,7 @@ public class TheatreDao implements ITheatreDao {
                     this.theatreMapper,
                     id, userId);
         }
-        catch(IncorrectResultSizeDataAccessException e){
+        catch(EmptyResultDataAccessException e){
             throw new ResourceNotFoundException(String.format("A single result was not returned when searching for theatre by id. Actual result size: %s", e.getActualSize()),
                     e);
         }

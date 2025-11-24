@@ -59,5 +59,13 @@ public class ShowDtoMapper {
         return shows.stream().map(this::toShowTheatreDTO).collect(Collectors.toList());
     }
 
+    public ShowDto toShowMovieDTO(Show show){
+        MovieDto movieDTO = new MovieDtoBuilder().setName(show.getMovie().getName()).build();
 
+        return new ShowDto(null, movieDTO, show.getStartTime(), show.getEndTime(), show.getLanguage(), show.getId().toString());
+    }
+
+    public List<ShowDto> toShowMovieDTO(List<Show> shows) {
+        return shows.stream().map(this::toShowMovieDTO).collect(Collectors.toList());
+    }
 }

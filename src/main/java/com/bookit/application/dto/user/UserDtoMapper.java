@@ -19,6 +19,10 @@ public class UserDtoMapper {
         );
     }
 
+    public static UserInfoDto getRoleDto(List<Role> roles, String name){
+        return new UserInfoDto(roles.stream().map(Role::code).toList(), name);
+    }
+
     private static List<Role> getRoles(List<String> roles) throws IllegalArgumentException{
         return roles.stream().map(role -> {
             Role roleEnum = Role.getRoleEnum(role);

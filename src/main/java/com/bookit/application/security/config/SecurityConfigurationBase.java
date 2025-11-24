@@ -40,7 +40,7 @@ public class SecurityConfigurationBase {
                                 .requestMatchers(HttpMethod.PATCH, "/api/show/cancel").hasAuthority(Role.THEATRE_OWNER.code())
 
                                 .requestMatchers(HttpMethod.POST, "/api/theatre").hasAuthority(Role.THEATRE_OWNER.code())
-                                .requestMatchers(HttpMethod.GET, "/api/theatre", "/api/theatre/\\d+/shows").hasAuthority(Role.THEATRE_OWNER.code())
+                                .requestMatchers(HttpMethod.GET, "/api/theatre", "/api/theatre/*/shows").hasAuthority(Role.THEATRE_OWNER.code())
 
                                 .requestMatchers(HttpMethod.PATCH, "/api/show/cancel").hasAuthority(Role.THEATRE_OWNER.code())
 

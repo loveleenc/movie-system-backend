@@ -118,7 +118,7 @@ public class CartDao implements ICartDao {
 //    CREATE PROCEDURE update_all_carts()
 //    LANGUAGE plpgsql AS $$
 //    BEGIN
-//    UPDATE tickets SET status = 'available' WHERE tickets.id IN (SELECT id FROM get_tickets_to_release());
+//    UPDATE tickets SET status = 'available', owner = null WHERE tickets.id IN (SELECT id FROM get_tickets_to_release());
 //    DELETE FROM cartdetails USING cart WHERE cartdetails.cartid = cart.id AND cart.expiry <= now();
 //    END;
 //    $$;
