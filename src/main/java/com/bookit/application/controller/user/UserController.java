@@ -66,7 +66,6 @@ public class UserController {
 
     @GetMapping("/loginstatus")
     public ResponseEntity<String> getLoginStatus() {
-        this.userService.getCurrentUserId();
         return new ResponseEntity<>("User is logged in", HttpStatus.OK);
     }
 
