@@ -69,21 +69,10 @@
 ```
 docker build -t <repository_name>/<image_name>:<tag> .
 ```
-- Gather the environment variables as defined in src/main/resources/application.properties
-- Create a docker container and launch using: 
+- Gather the environment variables as defined in src/main/resources/application.properties into an .env file
+- Launch docker container using: 
 ```
-docker run 
--e "DB_URL=<connection_string>" 
--e "AZURE_BLOB_STORAGE_URL=<blob_storage_url>" 
--e "AZURE_STORAGE_CONNECTION_STRING=<azure_connection_string>" 
--e "AZURE_BLOB_CONTAINER_NAME=<azure_container_name>" 
--e "SPRING_PROFILE=<development/production>" 
--e "ALLOWED_ORIGIN=<UI_origin_for_dev_environment>" 
---rm -p 8080:8080 <repository_name>/<image_name>:<tag>
-```
-- Or you can use an .env file- 
-```
-docker run --env-file ./env.list --rm -p 8080:8080 <repository_name>/<image_name>:<tag>
+docker run --env-file <path_to_env_file> --rm -p 8080:8080 <repository_name>/<image_name>:<tag>
 ```
 
 ### To run tests
