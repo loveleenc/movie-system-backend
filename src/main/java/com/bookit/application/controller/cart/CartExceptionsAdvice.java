@@ -29,8 +29,7 @@ public class CartExceptionsAdvice {
     String resourceNotFoundHandler(ResourceNotFoundException e){
         return "The requested resource was not found";
     }
-    //TicketBookingException
-//    ResourceNotFoundException
+
 
 
 }

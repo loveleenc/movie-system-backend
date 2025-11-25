@@ -33,10 +33,6 @@ public class MovieController {
         this.showService = showService;
         this.showDTOMapper = showDTOMapper;
     }
-//    @GetMapping("/")
-//    public String listUploadedFiles(Model model) {
-//        return "uploadForm";
-//    }
 
     @GetMapping("/movies")
     List<MovieDto> getAllMovies(){

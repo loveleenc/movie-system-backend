@@ -8,7 +8,7 @@ import java.util.List;
 public class UserUtil {
     public static final String accountActivationEmailSubject = "Account activation: welcome to Book Show!";
     static final String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}(\\.[\\w-]{2,4})?$";
-    //username
+
     public static Boolean passwordCriteriaFulfilled(String password) {
         Boolean containsUppercaseCharacter = false;
         Boolean containsLowercaseCharacter = false;
