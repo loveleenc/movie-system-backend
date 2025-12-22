@@ -79,49 +79,49 @@ public class TicketTest {
     @Test
     public void test_whenUpdatingAllTicketsForShowWithInvalidTicketStatusConditions_andStatusChecksAreEnabled() {
         when(ticketService.getTicketsByShow(show.getId().toString())).thenReturn(tickets);
-        Boolean overrideStatusChangeValidation = false;
+        Boolean statusChangeValidationEnabled = false;
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), "RANDOMSTATUS11", overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), "RANDOMSTATUS11", statusChangeValidationEnabled));
 
         tickets.get(0).setStatus(TicketStatus.USED.code());
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.AVAILABLE.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.AVAILABLE.code(), statusChangeValidationEnabled));
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BLOCKED.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BLOCKED.code(), statusChangeValidationEnabled));
 
         tickets.get(0).setStatus(TicketStatus.CANCELLED.code());
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.AVAILABLE.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.AVAILABLE.code(), statusChangeValidationEnabled));
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BLOCKED.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BLOCKED.code(), statusChangeValidationEnabled));
 
         tickets.get(0).setStatus(TicketStatus.BOOKED.code());
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.AVAILABLE.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.AVAILABLE.code(), statusChangeValidationEnabled));
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BLOCKED.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BLOCKED.code(), statusChangeValidationEnabled));
 
         tickets.get(0).setStatus(TicketStatus.AVAILABLE.code());
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.CANCELLED.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.CANCELLED.code(), statusChangeValidationEnabled));
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.USED.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.USED.code(), statusChangeValidationEnabled));
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BOOKED.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BOOKED.code(), statusChangeValidationEnabled));
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.AVAILABLE.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.AVAILABLE.code(), statusChangeValidationEnabled));
 
         tickets.get(0).setStatus(TicketStatus.BLOCKED.code());
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.CANCELLED.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.CANCELLED.code(), statusChangeValidationEnabled));
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.USED.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.USED.code(), statusChangeValidationEnabled));
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BOOKED.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BOOKED.code(), statusChangeValidationEnabled));
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BLOCKED.code(), overrideStatusChangeValidation));
+                () -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.BLOCKED.code(), statusChangeValidationEnabled));
         tickets.forEach(ticket -> ticket.setStatus(TicketStatus.BLOCKED.code()));
-        Assertions.assertDoesNotThrow(() -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.AVAILABLE.code(), overrideStatusChangeValidation));
+        Assertions.assertDoesNotThrow(() -> ticketService.updateTicketStatusForShow(show.getId().toString(), TicketStatus.AVAILABLE.code(), statusChangeValidationEnabled));
     }
 
     @Test

@@ -11,6 +11,7 @@ import java.util.List;
 
 @Service
 public class CartService {
+    private static final Integer MAX_CART_CAPACITY = 10;
     private ICartDao cartDao;
     private UserService userService;
     private TicketService ticketService;
@@ -45,7 +46,7 @@ public class CartService {
 
     public Item addItem(String ticketId){
         Long userId = this.userService.getCurrentUserId();
-        if(this.cartDao.getItemCount(userId).equals(10)){
+        if(this.cartDao.getItemCount(userId).equals(MAX_CART_CAPACITY)){
             throw new TicketBookingException("Cannot add more than 10 items to the cart");
         }
         Ticket ticket = this.ticketService.reserveTicket(ticketId, userId);

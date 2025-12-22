@@ -5,11 +5,13 @@ import org.springframework.core.io.UrlResource;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserUtil {
+public class UserAccountCreationHelper {
     public static final String accountActivationEmailSubject = "Account activation: welcome to Book Show!";
-    static final String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}(\\.[\\w-]{2,4})?$";
+    static final String emailRegex = "^([\\w-]|(?<!\\.)\\.)+[a-zA-Z0-9]@[a-zA-Z0-9]([a-zA-Z0-9\\-]+)((\\.([a-zA-Z]){2,9}){0,2})$";
 
-    public static Boolean passwordCriteriaFulfilled(String password) {
+    public UserAccountCreationHelper(){}
+
+    public Boolean passwordCriteriaFulfilled(String password) {
         Boolean containsUppercaseCharacter = false;
         Boolean containsLowercaseCharacter = false;
         Boolean containsDigit = false;
@@ -36,7 +38,7 @@ public class UserUtil {
         return containsUppercaseCharacter && containsLowercaseCharacter && containsDigit && containsSpecialCharacter;
     }
 
-    public static Boolean usernameCriteriaFulfilled(String username) {
+    public Boolean usernameCriteriaFulfilled(String username) {
         Boolean lengthIsInRange = username.length() >= 8 && username.length() < 15;
         if (!lengthIsInRange) {
             return false;
@@ -51,15 +53,15 @@ public class UserUtil {
         return true;
     }
 
-    public static Boolean emailIsValid(String email){
+    public Boolean emailIsValid(String email){
         return emailRegex.matches(email);
     }
 
-    public static String createAccountActivationEmailMessage(String username, UrlResource accountActivationUrl){
+    public String createAccountActivationEmailMessage(String username, UrlResource accountActivationUrl){
         return String.format("Hello %s,\nClick the link below to activate your account-\n%s", username, accountActivationUrl.getURL().toString());
     }
 
-    public static String createAccountActivationEmailMessage(String username){
+    public String createAccountActivationEmailMessage(String username){
         return String.format("Hello %s,\nYou will be contacted soon by our team to verify and activate your account.", username);
     }
 }

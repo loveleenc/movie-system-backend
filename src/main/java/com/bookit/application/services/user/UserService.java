@@ -8,8 +8,9 @@ import com.bookit.application.services.email.EmailService;
 import com.bookit.application.services.user.token.TokenService;
 import com.bookit.application.types.AccountStatus;
 import com.bookit.application.types.Role;
-import com.bookit.application.utils.UserUtil;
+import com.bookit.application.utils.UserAccountCreationHelper;
 import io.jsonwebtoken.JwtException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.mail.MailAuthenticationException;
@@ -30,25 +31,28 @@ public class UserService {
     private TokenService tokenService;
     private EmailService emailService;
     private ICartDao cartDao;
+    private UserAccountCreationHelper userAccountCreationHelper;
 
     public UserService(CustomUserDetailsService customUserDetailsService,
                        TokenService tokenService,
                        EmailService emailService,
-                       ICartDao cartDao){
+                       ICartDao cartDao,
+                       UserAccountCreationHelper userAccountCreationHelper){
         this.customUserDetailsService = customUserDetailsService;
         this.tokenService = tokenService;
         this.emailService = emailService;
         this.cartDao = cartDao;
+        this.userAccountCreationHelper = userAccountCreationHelper;
     }
 
-    public User createUser(User user) throws IllegalArgumentException, UsernameOrEmailAlreadyExistsException, MalformedURLException {
-        if(!UserUtil.usernameCriteriaFulfilled(user.getUsername())){
+    public User createUser(User user) throws IllegalArgumentException, UsernameOrEmailAlreadyExistsException {
+      if(!userAccountCreationHelper.usernameCriteriaFulfilled(user.getUsername())){
             throw new IllegalArgumentException("Entered username does not match required criteria");
         }
-        if(!UserUtil.passwordCriteriaFulfilled(user.getPassword())){
+        if(!userAccountCreationHelper.passwordCriteriaFulfilled(user.getPassword())){
             throw new IllegalArgumentException("Entered password does not match required criteria");
         }
-        if(UserUtil.emailIsValid(user.getEmail())){
+        if(!userAccountCreationHelper.emailIsValid(user.getEmail())){
             throw new IllegalArgumentException("Entered e-mail does not match required format");
         }
 
@@ -96,14 +100,14 @@ public class UserService {
     }
 
     private void sendAccountCreationEmail(User user) throws MailSendException, MailParseException, MailAuthenticationException{
-        String mailMessage = UserUtil.createAccountActivationEmailMessage(user.getUsername());
-        this.emailService.sendEmail(user.getEmail(), UserUtil.accountActivationEmailSubject, mailMessage);
+        String mailMessage = userAccountCreationHelper.createAccountActivationEmailMessage(user.getUsername());
+        this.emailService.sendEmail(user.getEmail(), UserAccountCreationHelper.accountActivationEmailSubject, mailMessage);
     }
 
     private void sendAccountActivationEmail(User user) throws MalformedURLException, MailSendException, MailParseException, MailAuthenticationException {
         UrlResource accountActivationUrl = this.createAccountActivationLink(user);
-        String mailMessage = UserUtil.createAccountActivationEmailMessage(user.getUsername(), accountActivationUrl);
-        this.emailService.sendEmail(user.getEmail(), UserUtil.accountActivationEmailSubject, mailMessage);
+        String mailMessage = userAccountCreationHelper.createAccountActivationEmailMessage(user.getUsername(), accountActivationUrl);
+        this.emailService.sendEmail(user.getEmail(), UserAccountCreationHelper.accountActivationEmailSubject, mailMessage);
     }
 
     private UrlResource createAccountActivationLink(User user) throws MalformedURLException {
