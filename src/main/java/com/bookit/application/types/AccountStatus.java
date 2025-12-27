@@ -15,6 +15,7 @@ public enum AccountStatus {
         return code;
     }
 
+
     public static AccountStatus getAccountStatusEnum(String possibleStatus){
         for(AccountStatus status: AccountStatus.values()){
             if(status.code().equals(possibleStatus)){

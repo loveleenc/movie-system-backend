@@ -1,6 +1,8 @@
 package com.bookit.application.types;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public enum MovieLanguage {
@@ -31,11 +33,6 @@ public enum MovieLanguage {
     }
 
     public static boolean isMovieLanguageEnum(String possibleEnum){
-        for(MovieLanguage language: MovieLanguage.values()){
-            if(language.code().equals(possibleEnum)){
-                return true;
-            }
-        }
-        return false;
+      return Arrays.stream(MovieLanguage.values()).anyMatch(language -> language.code().equals(possibleEnum));
     }
 }

@@ -1,5 +1,7 @@
 package com.bookit.application.types;
 
+import java.util.Arrays;
+
 public enum TicketStatus {
     AVAILABLE("available"),
     BOOKED("booked"),
@@ -19,7 +21,7 @@ public enum TicketStatus {
     }
 
     public static boolean isTicketStatusEnum(String possibleStatus){
-        return TicketStatus.getTicketStatusEnum(possibleStatus) != null;
+        return Arrays.stream(TicketStatus.values()).anyMatch(status -> status.code().equals(possibleStatus));
     }
 
     public static TicketStatus getTicketStatusEnum(String possibleStatus){
