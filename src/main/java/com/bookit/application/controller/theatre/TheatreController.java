@@ -19,17 +19,11 @@ import java.util.List;
 public class TheatreController {
     private TheatreService theatreService;
     private TheatreDtoMapper theatreDtoMapper;
-    private final ShowService showService;
-    private final ShowDtoMapper showDTOMapper;
 
     public TheatreController(TheatreService theatreService,
-                             TheatreDtoMapper theatreDtoMapper,
-                             ShowService showService,
-                             ShowDtoMapper showDTOMapper) {
+                             TheatreDtoMapper theatreDtoMapper) {
         this.theatreService = theatreService;
         this.theatreDtoMapper = theatreDtoMapper;
-        this.showService = showService;
-        this.showDTOMapper = showDTOMapper;
     }
 
     @GetMapping("/theatre")
@@ -44,11 +38,4 @@ public class TheatreController {
         Theatre createdTheatre = this.theatreService.create(theatre);
         return new ResponseEntity<>(this.theatreDtoMapper.toTheatreDto(createdTheatre), HttpStatus.CREATED);
     }
-
-    @GetMapping("/theatre/{id}/shows")
-    ResponseEntity<List<ShowDto>> getShowsByTheatre(@PathVariable Integer id) {
-        List<Show> shows = this.showService.getShowsByTheatre(id);
-        return new ResponseEntity<>(this.showDTOMapper.toShowMovieDTO(shows), HttpStatus.OK);
-    }
-
 }

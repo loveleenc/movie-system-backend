@@ -52,4 +52,10 @@ public class ShowsController {
       List<ShowDto> shows = this.showService.getShowsByMovie(id).stream().map(this.showDTOMapper::toShowTheatreDTO).toList();
       return new ResponseEntity<>(shows, HttpStatus.OK);
     }
+
+    @GetMapping("/theatre/{id}/shows")
+    ResponseEntity<List<ShowDto>> getShowsByTheatre(@PathVariable Integer id) {
+      List<Show> shows = this.showService.getShowsByTheatre(id);
+      return new ResponseEntity<>(this.showDTOMapper.toShowMovieDTO(shows), HttpStatus.OK);
+    }
 }
