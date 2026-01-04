@@ -1,4 +1,4 @@
-package com.bookit.application.services.user;
+package com.bookit.application.security.user;
 
 public class AccountActivationException extends RuntimeException {
     public AccountActivationException(String message) {

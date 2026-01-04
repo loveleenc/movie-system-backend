@@ -1,4 +1,4 @@
-package com.bookit.application.controller.user;
+package com.bookit.application.security;
 
 
 import com.bookit.application.dto.user.LoginDto;

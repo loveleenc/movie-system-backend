@@ -1,4 +1,4 @@
-package com.bookit.application.services.user.token;
+package com.bookit.application.security.user.token;
 
 
 import io.jsonwebtoken.Claims;

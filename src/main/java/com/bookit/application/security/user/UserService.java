@@ -1,16 +1,15 @@
-package com.bookit.application.services.user;
+package com.bookit.application.security.user;
 
 import com.bookit.application.persistence.ICartDao;
 import com.bookit.application.security.CustomUserDetailsService;
 import com.bookit.application.security.UsernameOrEmailAlreadyExistsException;
 import com.bookit.application.security.entity.User;
 import com.bookit.application.services.email.EmailService;
-import com.bookit.application.services.user.token.TokenService;
+import com.bookit.application.security.user.token.TokenService;
 import com.bookit.application.types.AccountStatus;
 import com.bookit.application.types.Role;
 import com.bookit.application.utils.UserAccountCreationHelper;
 import io.jsonwebtoken.JwtException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.mail.MailAuthenticationException;
