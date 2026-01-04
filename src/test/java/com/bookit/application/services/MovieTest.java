@@ -2,11 +2,11 @@ package com.bookit.application.services;
 
 import com.bookit.application.moviecatalog.entity.Movie;
 import com.bookit.application.moviecatalog.entity.MovieBuilder;
-import com.bookit.application.moviecatalog.service.MovieService;
+import com.bookit.application.moviecatalog.MovieService;
 import com.bookit.application.moviecatalog.db.IMovieDao;
-import com.bookit.application.moviecatalog.service.MovieServiceDto;
-import com.bookit.application.moviecatalog.service.MovieServiceDtoBuilder;
-import com.bookit.application.moviecatalog.service.MovieServiceDtoMapper;
+import com.bookit.application.moviecatalog.dto.inbound.service.MovieServiceDto;
+import com.bookit.application.moviecatalog.dto.inbound.service.MovieServiceDtoBuilder;
+import com.bookit.application.moviecatalog.dto.inbound.service.MovieServiceDtoMapper;
 import com.bookit.application.moviecatalog.storage.StorageService;
 import com.bookit.application.moviecatalog.storage.resource.PosterResource;
 import org.junit.jupiter.api.Assertions;
