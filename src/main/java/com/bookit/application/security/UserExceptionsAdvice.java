@@ -2,7 +2,7 @@ package com.bookit.application.controller.user;
 
 import com.bookit.application.security.UsernameOrEmailAlreadyExistsException;
 import com.bookit.application.services.email.EmailProperties;
-import com.bookit.application.services.user.AccountActivationException;
+import com.bookit.application.security.user.AccountActivationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -6,7 +6,7 @@ import com.bookit.application.dto.user.UserInfoDto;
 import com.bookit.application.dto.user.UserDto;
 import com.bookit.application.dto.user.UserDtoMapper;
 import com.bookit.application.security.entity.User;
-import com.bookit.application.services.user.UserService;
+import com.bookit.application.security.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
