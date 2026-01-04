@@ -1,9 +1,8 @@
 package com.bookit.application.controller.cart;
 
-import com.bookit.application.services.ResourceNotFoundException;
+import com.bookit.application.common.ResourceNotFoundException;
 import com.bookit.application.services.TicketBookingException;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

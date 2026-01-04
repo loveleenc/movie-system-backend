@@ -1,7 +1,7 @@
 package com.bookit.application.controller.ticket;
 
 
-import com.bookit.application.services.ResourceNotFoundException;
+import com.bookit.application.common.ResourceNotFoundException;
 import com.bookit.application.services.TicketBookingException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;

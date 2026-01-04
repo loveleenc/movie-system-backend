@@ -1,7 +1,7 @@
 package com.bookit.application.persistence;
 
 import com.bookit.application.entity.Theatre;
-import com.bookit.application.services.ResourceNotFoundException;
+import com.bookit.application.common.ResourceNotFoundException;
 
 import java.util.List;
 

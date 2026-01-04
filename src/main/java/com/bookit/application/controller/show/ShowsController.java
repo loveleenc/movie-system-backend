@@ -46,4 +46,10 @@ public class ShowsController {
         Show show = this.showService.createTicketsForExistingShow(ticketCreationDto.getShowId(), ticketCreationDto.getMoviePrice(), ticketCreationDto.getStatus());
         return new ResponseEntity<>(this.showDTOMapper.toDTO(show), HttpStatus.CREATED);
     }
+
+    @GetMapping("/movie/{id}/shows")
+    ResponseEntity<List<ShowDto>> getShowsByMovie(@PathVariable Long id){
+      List<ShowDto> shows = this.showService.getShowsByMovie(id).stream().map(this.showDTOMapper::toShowTheatreDTO).toList();
+      return new ResponseEntity<>(shows, HttpStatus.OK);
+    }
 }
