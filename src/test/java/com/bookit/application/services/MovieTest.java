@@ -1,10 +1,14 @@
 package com.bookit.application.services;
 
-import com.bookit.application.entity.Movie;
-import com.bookit.application.entity.MovieBuilder;
-import com.bookit.application.persistence.IMovieDao;
-import com.bookit.application.services.storage.LocalStorageService;
-import com.bookit.application.services.storage.StorageService;
+import com.bookit.application.moviecatalog.entity.Movie;
+import com.bookit.application.moviecatalog.entity.MovieBuilder;
+import com.bookit.application.moviecatalog.service.MovieService;
+import com.bookit.application.moviecatalog.db.IMovieDao;
+import com.bookit.application.moviecatalog.service.MovieServiceDto;
+import com.bookit.application.moviecatalog.service.MovieServiceDtoBuilder;
+import com.bookit.application.moviecatalog.service.MovieServiceDtoMapper;
+import com.bookit.application.moviecatalog.storage.StorageService;
+import com.bookit.application.moviecatalog.storage.resource.PosterResource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,13 +16,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -27,13 +31,17 @@ public class MovieTest {
     MovieService movieService;
     private IMovieDao movieDao;
     private StorageService storageService;
+    private MovieServiceDtoMapper movieServiceDtoMapper;
     private List<Movie> movies;
+    private PosterResource posterResource;
 
     @BeforeEach
     public void before() {
+        this.posterResource = mock(PosterResource.class);
         this.movieDao = mock(IMovieDao.class);
         this.storageService = mock(StorageService.class);
-        this.movieService = new MovieService(this.movieDao, this.storageService);
+        this.movieServiceDtoMapper = new MovieServiceDtoMapper(this.storageService);
+        this.movieService = new MovieService(this.movieDao, this.storageService, this.movieServiceDtoMapper);
         this.movies = new ArrayList<>();
         List<String> genre = Arrays.asList("Action", "Adventure");
         List<String> languages = Arrays.asList("English", "Tamil", "Hindi");
@@ -97,7 +105,7 @@ public class MovieTest {
     public void test_whenNoPosterFileProvidedDuringMovieCreation_thenNullPointerExceptionIsThrown() {
         List<String> genre = Arrays.asList("Action", "Adventure");
         List<String> languages = Arrays.asList("English", "Tamil", "Hindi");
-        Movie movie = new MovieBuilder()
+        MovieServiceDto movie = new MovieServiceDtoBuilder()
                 .setName("Batman")
                 .setPoster("batman.png")
                 .setDuration(81)
@@ -111,6 +119,9 @@ public class MovieTest {
 
     @Test
     public void doSomething(){
+        String posterResourcePath = "path-aaa.png";
+        when(this.storageService.getResource(any(String.class))).thenReturn(this.posterResource);
+        when(this.posterResource.getContentOrUrlAsString()).thenReturn(posterResourcePath);
         when(this.movieDao.findAll()).thenReturn(this.movies);
         Assertions.assertEquals(movies.size(), this.movieService.getMovies().size());
     }
@@ -134,7 +145,14 @@ public class MovieTest {
                 .setLanguages(List.of("English"))
                 .setReleaseDate(LocalDate.of(1986, 7, 25))
                 .build();
-
+        MovieServiceDto movieServiceDto = new MovieServiceDtoBuilder()
+          .setName("Maximum Overdrive")
+          .setPoster("")
+          .setDuration(98)
+          .setGenreList(List.of("Action", "Horror", "Sci-Fi"))
+          .setLanguages(List.of("English"))
+          .setReleaseDate(LocalDate.of(1986, 7, 25))
+          .build();
         Movie returnedMovie = new MovieBuilder()
                 .setName("Maximum Overdrive")
                 .setPoster(posterName)
@@ -144,11 +162,15 @@ public class MovieTest {
                 .setReleaseDate(LocalDate.of(1986, 7, 25))
                 .setId(2L)
                 .build();
-        when(this.movieDao.create(movie)).thenReturn(2L);
+
+        String posterResourcePath = "path-" + posterName;
+        when(this.movieDao.create(any(Movie.class))).thenReturn(2L);
         when(this.movieDao.findById(2L)).thenReturn(returnedMovie);
-        Movie createdMovie = this.movieService.addMovie(movie, poster);
+        when(this.storageService.getResource(any(String.class))).thenReturn(this.posterResource);
+        when(this.posterResource.getContentOrUrlAsString()).thenReturn(posterResourcePath);
+        MovieServiceDto createdMovie = this.movieService.addMovie(movieServiceDto, poster);
         Assertions.assertEquals(movie.getName(), createdMovie.getName());
-        Assertions.assertEquals(posterName, createdMovie.getPoster());
+        Assertions.assertEquals(posterResourcePath, createdMovie.getPoster());
         Assertions.assertEquals(2L, createdMovie.getId());
         Assertions.assertEquals(movie.getDuration(), createdMovie.getDuration());
         //Etc etc for the remaining props
