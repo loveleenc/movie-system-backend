@@ -1,10 +1,9 @@
 package com.bookit.application.moviecatalog;
 
 
-import com.bookit.application.moviecatalog.dto.MovieDto;
-import com.bookit.application.moviecatalog.dto.MovieDtoMapper;
-import com.bookit.application.moviecatalog.service.MovieService;
-import com.bookit.application.moviecatalog.service.MovieServiceDto;
+import com.bookit.application.moviecatalog.dto.inbound.api.MovieDto;
+import com.bookit.application.moviecatalog.dto.inbound.api.MovieDtoMapper;
+import com.bookit.application.moviecatalog.dto.inbound.service.MovieServiceDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

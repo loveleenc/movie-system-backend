@@ -1,4 +1,4 @@
-package com.bookit.application.moviecatalog.service;
+package com.bookit.application.moviecatalog.dto.inbound.service;
 
 
 import java.time.LocalDate;

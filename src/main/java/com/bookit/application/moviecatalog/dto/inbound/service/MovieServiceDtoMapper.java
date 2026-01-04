@@ -1,4 +1,4 @@
-package com.bookit.application.moviecatalog.service;
+package com.bookit.application.moviecatalog.dto.inbound.service;
 
 import com.bookit.application.moviecatalog.MovieException;
 import com.bookit.application.moviecatalog.entity.Movie;

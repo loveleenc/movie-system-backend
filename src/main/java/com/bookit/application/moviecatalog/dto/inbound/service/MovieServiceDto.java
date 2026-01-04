@@ -1,4 +1,4 @@
-package com.bookit.application.moviecatalog.service;
+package com.bookit.application.moviecatalog.dto.inbound.service;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;

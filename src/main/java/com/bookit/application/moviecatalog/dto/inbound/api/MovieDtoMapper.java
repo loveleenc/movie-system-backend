@@ -1,8 +1,8 @@
-package com.bookit.application.moviecatalog.dto;
+package com.bookit.application.moviecatalog.dto.inbound.api;
 
 import com.bookit.application.moviecatalog.MovieException;
-import com.bookit.application.moviecatalog.service.MovieServiceDto;
-import com.bookit.application.moviecatalog.service.MovieServiceDtoBuilder;
+import com.bookit.application.moviecatalog.dto.inbound.service.MovieServiceDto;
+import com.bookit.application.moviecatalog.dto.inbound.service.MovieServiceDtoBuilder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
