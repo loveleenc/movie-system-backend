@@ -1,6 +1,6 @@
-package com.bookit.application.persistence;
+package com.bookit.application.theatremanagement.db;
 
-import com.bookit.application.entity.Theatre;
+import com.bookit.application.theatremanagement.entity.Theatre;
 import com.bookit.application.common.ResourceNotFoundException;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.bookit.application.dto.seat;
+package com.bookit.application.theatremanagement.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

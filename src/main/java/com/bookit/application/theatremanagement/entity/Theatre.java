@@ -1,4 +1,4 @@
-package com.bookit.application.entity;
+package com.bookit.application.theatremanagement.entity;
 
 import com.bookit.application.types.SeatCategory;
 

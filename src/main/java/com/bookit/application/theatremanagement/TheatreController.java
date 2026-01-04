@@ -1,13 +1,8 @@
-package com.bookit.application.controller.theatre;
+package com.bookit.application.theatremanagement;
 
-import com.bookit.application.dto.show.ShowDto;
-import com.bookit.application.dto.show.ShowDtoMapper;
-import com.bookit.application.dto.theatre.TheatreDto;
-import com.bookit.application.dto.theatre.TheatreDtoMapper;
-import com.bookit.application.entity.Show;
-import com.bookit.application.entity.Theatre;
-import com.bookit.application.services.ShowService;
-import com.bookit.application.services.TheatreService;
+import com.bookit.application.theatremanagement.dto.TheatreDto;
+import com.bookit.application.theatremanagement.dto.TheatreDtoMapper;
+import com.bookit.application.theatremanagement.entity.Theatre;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,24 +13,19 @@ import java.util.List;
 @RequestMapping("/api")
 public class TheatreController {
     private TheatreService theatreService;
-    private TheatreDtoMapper theatreDtoMapper;
 
-    public TheatreController(TheatreService theatreService,
-                             TheatreDtoMapper theatreDtoMapper) {
+    public TheatreController(TheatreService theatreService) {
         this.theatreService = theatreService;
-        this.theatreDtoMapper = theatreDtoMapper;
     }
 
     @GetMapping("/theatre")
     public ResponseEntity<List<TheatreDto>> getTheatres() {
-        List<Theatre> theatres = this.theatreService.getTheatres();
-        return new ResponseEntity<>(this.theatreDtoMapper.toTheatreDto(theatres), HttpStatus.OK);
+        return new ResponseEntity<>(this.theatreService.getTheatres(), HttpStatus.OK);
     }
 
     @PostMapping("/theatre")
     public ResponseEntity<TheatreDto> createTheatre(@RequestBody TheatreDto theatreDto) throws IllegalAccessException {
-        Theatre theatre = this.theatreDtoMapper.toTheatre(theatreDto);
-        Theatre createdTheatre = this.theatreService.create(theatre);
-        return new ResponseEntity<>(this.theatreDtoMapper.toTheatreDto(createdTheatre), HttpStatus.CREATED);
+        TheatreDto createdTheatre = this.theatreService.create(theatreDto);
+        return new ResponseEntity<>(createdTheatre, HttpStatus.CREATED);
     }
 }

@@ -1,6 +1,5 @@
-package com.bookit.application.dto.theatre;
+package com.bookit.application.theatremanagement.dto;
 
-import com.bookit.application.dto.seat.TheatreRowDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

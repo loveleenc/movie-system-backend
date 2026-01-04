@@ -1,6 +1,6 @@
-package com.bookit.application.persistence.jdbcDao.mappers;
+package com.bookit.application.theatremanagement.db;
 
-import com.bookit.application.entity.Theatre;
+import com.bookit.application.theatremanagement.entity.Theatre;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;

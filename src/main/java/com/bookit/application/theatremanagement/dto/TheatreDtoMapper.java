@@ -1,7 +1,7 @@
-package com.bookit.application.dto.theatre;
+package com.bookit.application.theatremanagement.dto;
 
-import com.bookit.application.entity.Theatre;
-import com.bookit.application.utils.TheatreUtil;
+import com.bookit.application.theatremanagement.entity.Theatre;
+import com.bookit.application.theatremanagement.utils.TheatreUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class TheatreDtoMapper {
     }
 
     public Theatre toTheatre(TheatreDto theatreDto){
-        Theatre theatre = new Theatre(theatreDto.getName(),
+      Theatre theatre = new Theatre(theatreDto.getName(),
                 theatreDto.getLocation(),
                 1);
         theatre.setSeats(TheatreUtil.createSeats(theatreDto));

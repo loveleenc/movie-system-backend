@@ -1,9 +1,7 @@
-package com.bookit.application.persistence.jdbcDao;
+package com.bookit.application.theatremanagement.db;
 
 
-import com.bookit.application.entity.Theatre;
-import com.bookit.application.persistence.ITheatreDao;
-import com.bookit.application.persistence.jdbcDao.mappers.TheatreMapper;
+import com.bookit.application.theatremanagement.entity.Theatre;
 import com.bookit.application.common.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

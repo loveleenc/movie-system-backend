@@ -1,6 +1,6 @@
-package com.bookit.application.persistence;
+package com.bookit.application.theatremanagement.db;
 
-import com.bookit.application.entity.Seat;
+import com.bookit.application.theatremanagement.entity.Seat;
 import com.bookit.application.types.SeatCategory;
 
 import java.util.List;

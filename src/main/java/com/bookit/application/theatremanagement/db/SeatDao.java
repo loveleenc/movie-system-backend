@@ -1,7 +1,6 @@
-package com.bookit.application.persistence.jdbcDao;
+package com.bookit.application.theatremanagement.db;
 
-import com.bookit.application.entity.Seat;
-import com.bookit.application.persistence.ISeatDao;
+import com.bookit.application.theatremanagement.entity.Seat;
 import com.bookit.application.types.SeatCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

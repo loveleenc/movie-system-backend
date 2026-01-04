@@ -1,4 +1,4 @@
-package com.bookit.application.controller.theatre;
+package com.bookit.application.theatremanagement;
 
 import com.bookit.application.common.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
