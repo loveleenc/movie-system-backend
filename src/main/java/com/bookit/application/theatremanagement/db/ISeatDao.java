@@ -1,7 +1,7 @@
 package com.bookit.application.theatremanagement.db;
 
 import com.bookit.application.theatremanagement.entity.Seat;
-import com.bookit.application.types.SeatCategory;
+import com.bookit.application.theatremanagement.entity.SeatCategory;
 
 import java.util.List;
 import java.util.Map;

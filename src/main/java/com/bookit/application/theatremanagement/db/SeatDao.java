@@ -1,7 +1,7 @@
 package com.bookit.application.theatremanagement.db;
 
 import com.bookit.application.theatremanagement.entity.Seat;
-import com.bookit.application.types.SeatCategory;
+import com.bookit.application.theatremanagement.entity.SeatCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

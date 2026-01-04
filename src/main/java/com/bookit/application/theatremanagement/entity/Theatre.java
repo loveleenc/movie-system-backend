@@ -1,6 +1,5 @@
 package com.bookit.application.theatremanagement.entity;
 
-import com.bookit.application.types.SeatCategory;
 
 import java.util.*;
 import java.util.stream.Collectors;
