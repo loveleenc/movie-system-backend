@@ -1,5 +1,7 @@
 package com.bookit.application.services;
 
+import com.bookit.application.common.ResourceCreationException;
+import com.bookit.application.common.ResourceNotFoundException;
 import com.bookit.application.entity.Seat;
 import com.bookit.application.entity.Show;
 import com.bookit.application.entity.Ticket;

@@ -1,5 +1,6 @@
 package com.bookit.application.services;
 
+import com.bookit.application.common.ResourceNotFoundException;
 import com.bookit.application.entity.Item;
 import com.bookit.application.entity.Ticket;
 import com.bookit.application.persistence.ICartDao;
@@ -27,7 +28,7 @@ public class CartService {
         return this.cartDao.get(userId);
     }
 
-    public void removeItem(Long itemId) throws ResourceNotFoundException{
+    public void removeItem(Long itemId) throws ResourceNotFoundException {
         try{
             Item item = this.cartDao.findById(itemId);
             Long userId = this.userService.getCurrentUserId();

@@ -1,5 +1,6 @@
 package com.bookit.application.services;
 
+import com.bookit.application.common.ResourceNotFoundException;
 import com.bookit.application.entity.Theatre;
 import com.bookit.application.persistence.ISeatDao;
 import com.bookit.application.persistence.ITheatreDao;
@@ -24,7 +25,7 @@ public class TheatreService {
         return this.theatreDao.findAll(this.userService.getCurrentUserId());
     }
 
-    public Theatre getTheatre(Integer id) throws ResourceNotFoundException{
+    public Theatre getTheatre(Integer id) throws ResourceNotFoundException {
         return this.theatreDao.findById(id, this.userService.getCurrentUserId());
     }
 
