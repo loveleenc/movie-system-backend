@@ -1,4 +1,4 @@
-package com.bookit.application.utils;
+package com.bookit.application.security.user;
 
 import org.springframework.core.io.UrlResource;
 
