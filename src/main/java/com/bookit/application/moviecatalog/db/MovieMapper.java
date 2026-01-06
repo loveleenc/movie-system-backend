@@ -2,8 +2,8 @@ package com.bookit.application.moviecatalog.db;
 
 import com.bookit.application.moviecatalog.entity.Movie;
 import com.bookit.application.moviecatalog.entity.MovieBuilder;
-import com.bookit.application.types.MovieGenre;
-import com.bookit.application.types.MovieLanguage;
+import com.bookit.application.moviecatalog.entity.types.MovieGenre;
+import com.bookit.application.moviecatalog.entity.types.MovieLanguage;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

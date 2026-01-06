@@ -1,4 +1,4 @@
-package com.bookit.application.types;
+package com.bookit.application.moviecatalog.entity.types;
 
 import java.util.List;
 import java.util.stream.Stream;
