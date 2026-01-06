@@ -1,8 +1,8 @@
 package com.bookit.application.theatremanagement.user;
 
 import com.bookit.application.security.user.UserService;
-import com.bookit.application.services.comms.Request;
-import com.bookit.application.services.comms.Response;
+import com.bookit.application.theatremanagement.comms.Request;
+import com.bookit.application.theatremanagement.comms.Response;
 import org.springframework.stereotype.Component;
 
 @Component

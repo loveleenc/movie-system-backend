@@ -1,8 +1,8 @@
 package com.bookit.application.showscheduling.user;
 
 import com.bookit.application.security.user.UserService;
-import com.bookit.application.services.comms.Request;
-import com.bookit.application.services.comms.Response;
+import com.bookit.application.showscheduling.comms.Request;
+import com.bookit.application.showscheduling.comms.Response;
 import org.springframework.stereotype.Component;
 
 @Component
