@@ -1,6 +1,6 @@
 package com.bookit.application.security;
 
-import com.bookit.application.services.email.EmailProperties;
+import com.bookit.application.security.email.EmailProperties;
 import com.bookit.application.security.user.AccountActivationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

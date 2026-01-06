@@ -4,7 +4,7 @@ import com.bookit.application.persistence.ICartDao;
 import com.bookit.application.security.CustomUserDetailsService;
 import com.bookit.application.security.UsernameOrEmailAlreadyExistsException;
 import com.bookit.application.security.entity.User;
-import com.bookit.application.services.email.EmailService;
+import com.bookit.application.security.email.EmailService;
 import com.bookit.application.security.user.token.TokenService;
 import com.bookit.application.security.entity.types.AccountStatus;
 import com.bookit.application.security.entity.types.Role;
