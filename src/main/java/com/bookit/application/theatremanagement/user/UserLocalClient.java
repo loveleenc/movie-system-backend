@@ -6,10 +6,10 @@ import com.bookit.application.services.comms.Response;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserLocalGateway implements UserGateway {
+public class UserLocalClient implements UserClient {
   private UserService userService;
 
-  public UserLocalGateway(UserService userService) {
+  public UserLocalClient(UserService userService) {
     this.userService = userService;
   }
 
