@@ -1,4 +1,4 @@
-package com.bookit.application.services.email;
+package com.bookit.application.security.email;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,7 +1,6 @@
-package com.bookit.application.services.email;
+package com.bookit.application.security.email;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;

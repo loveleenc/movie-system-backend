@@ -1,4 +1,4 @@
-package com.bookit.application.services.email;
+package com.bookit.application.security.email;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailAuthenticationException;
