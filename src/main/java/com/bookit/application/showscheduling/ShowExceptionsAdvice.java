@@ -1,4 +1,4 @@
-package com.bookit.application.controller.show;
+package com.bookit.application.showscheduling;
 
 import com.bookit.application.common.ResourceCreationException;
 import com.bookit.application.common.ResourceNotFoundException;

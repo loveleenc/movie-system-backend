@@ -1,12 +1,8 @@
-package com.bookit.application.controller.show;
+package com.bookit.application.showscheduling;
 
-import com.bookit.application.dto.show.ShowAndTicketCreationDto;
-import com.bookit.application.dto.show.ShowDto;
-import com.bookit.application.dto.show.ShowDtoMapper;
 import com.bookit.application.dto.ticket.TicketCreationDto;
-import com.bookit.application.dto.ticket.TicketDto;
-import com.bookit.application.entity.Show;
-import com.bookit.application.services.ShowService;
+import com.bookit.application.showscheduling.dto.inbound.api.*;
+import com.bookit.application.showscheduling.entity.Show;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,14 +44,14 @@ public class ShowsController {
     }
 
     @GetMapping("/movie/{id}/shows")
-    ResponseEntity<List<ShowDto>> getShowsByMovie(@PathVariable Long id){
-      List<ShowDto> shows = this.showService.getShowsByMovie(id).stream().map(this.showDTOMapper::toShowTheatreDTO).toList();
+    ResponseEntity<List<ShowTheatreDto>> getShowsByMovie(@PathVariable Long id){
+      List<ShowTheatreDto> shows = this.showService.getShowsByMovie(id).stream().map(this.showDTOMapper::toShowTheatreDTO).toList();
       return new ResponseEntity<>(shows, HttpStatus.OK);
     }
 
     @GetMapping("/theatre/{id}/shows")
-    ResponseEntity<List<ShowDto>> getShowsByTheatre(@PathVariable Integer id) {
+    ResponseEntity<List<ShowMovieNameDto>> getShowsByTheatre(@PathVariable Integer id) {
       List<Show> shows = this.showService.getShowsByTheatre(id);
-      return new ResponseEntity<>(this.showDTOMapper.toShowMovieDTO(shows), HttpStatus.OK);
+      return new ResponseEntity<>(this.showDTOMapper.toShowMovieNameDto(shows), HttpStatus.OK);
     }
 }

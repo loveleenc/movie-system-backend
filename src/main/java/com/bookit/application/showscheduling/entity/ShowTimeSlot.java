@@ -1,4 +1,4 @@
-package com.bookit.application.entity;
+package com.bookit.application.showscheduling.entity;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

@@ -1,8 +1,13 @@
-package com.bookit.application.services;
+package com.bookit.application.showscheduling;
 
-import com.bookit.application.entity.*;
-import com.bookit.application.persistence.IMovieDao;
-import com.bookit.application.persistence.IShowDao;
+import com.bookit.application.common.ResourceCreationException;
+import com.bookit.application.common.ResourceNotFoundException;
+import com.bookit.application.showscheduling.entity.Movie;
+import com.bookit.application.services.TicketService;
+import com.bookit.application.showscheduling.entity.Show;
+import com.bookit.application.showscheduling.entity.ShowTimeSlot;
+import com.bookit.application.showscheduling.movie.MovieClient;
+import com.bookit.application.showscheduling.user.UserClient;
 import com.bookit.application.types.TicketStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -13,24 +18,28 @@ import java.util.Objects;
 @Component
 public class ShowService {
     private IShowDao showDAO;
-    private IMovieDao movieDAO;
     private TicketService ticketService;
-    private TheatreService theatreService;
+    private UserClient userClient;
+    private MovieClient movieClient;
 
-    public ShowService(IShowDao showDAO, IMovieDao movieDAO, TicketService ticketService, TheatreService theatreService) {
+
+    public ShowService(IShowDao showDAO,
+                       TicketService ticketService,
+                       UserClient userClient,
+                      MovieClient movieClient) {
         this.showDAO = showDAO;
-        this.movieDAO = movieDAO;
         this.ticketService = ticketService;
-        this.theatreService = theatreService;
+        this.userClient = userClient;
+        this.movieClient = movieClient;
     }
 
     public List<Show> getShowsByMovie(@NonNull Long movieId) {
         return this.showDAO.findShowsByMovie(movieId);
     }
 
-    public List<Show> getShowsByTheatre(@NonNull Integer theatreId) throws ResourceNotFoundException{
-        Theatre theatre = this.theatreService.getTheatre(theatreId);
-        return this.showDAO.findShowsByTheatre(theatreId);
+    public List<Show> getShowsByTheatre(@NonNull Integer theatreId) throws ResourceNotFoundException {
+        Long userId = this.userClient.getCurrentUserId();
+        return this.showDAO.findShowsByTheatre(theatreId, userId);
     }
     
     public Show createShowAndTickets(Show show, Long moviePrice, String ticketStatus) throws NullPointerException, ResourceCreationException {
@@ -41,7 +50,7 @@ public class ShowService {
 
     private Show createShow(Show show) throws ResourceCreationException {
         Long movieId = show.getMovieId();
-        Movie movie = this.movieDAO.findById(movieId);
+        Movie movie = this.movieClient.getMovieById(movieId);
         Integer theatreId = show.getTheatreId();
 
         if (!movie.getLanguages().contains(show.getLanguage())) {
@@ -62,7 +71,9 @@ public class ShowService {
         }
 
         String id = this.showDAO.create(show);
-        return this.showDAO.findById(id);
+        Show createdShow = this.showDAO.findById(id);
+        createdShow.setMovie(movie);
+        return createdShow;
     }
 
     public void cancelShow(String showId) {

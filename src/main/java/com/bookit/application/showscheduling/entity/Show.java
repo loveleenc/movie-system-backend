@@ -1,4 +1,5 @@
-package com.bookit.application.entity;
+package com.bookit.application.showscheduling.entity;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -8,16 +9,17 @@ public class Show {
     private Movie movie;
     private String language;
     private UUID id;
+    private String movieName;
+    private Integer theatreId;
 
 
-    public Show(ShowTimeSlot timeSlot, Theatre theatre, Movie movie, String language, UUID id) {
-        this.timeSlot = timeSlot;
-        this.theatre = theatre;
-        this.movie = movie;
-        this.language = language;
-        this.id = id;
-    }
-
+  public Show(ShowTimeSlot timeSlot, Theatre theatre, Movie movie, String language, UUID id) {
+    this.timeSlot = timeSlot;
+    this.theatre = theatre;
+    this.movie = movie;
+    this.language = language;
+    this.id = id;
+  }
     public Show(){}
 
     public Movie getMovie() {
@@ -72,4 +74,7 @@ public class Show {
         this.id = id;
     }
 
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
 }

@@ -1,8 +1,8 @@
-package com.bookit.application.persistence.jdbcDao.mappers;
+package com.bookit.application.showscheduling.db;
 
-import com.bookit.application.entity.Show;
-import com.bookit.application.entity.Theatre;
-import com.bookit.application.entity.ShowTimeSlot;
+import com.bookit.application.showscheduling.entity.Show;
+import com.bookit.application.showscheduling.entity.ShowTimeSlot;
+import com.bookit.application.showscheduling.entity.Theatre;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +20,7 @@ public class ShowTheatreMapper implements RowMapper<Show> {
                 rs.getString("location"),
                 rs.getInt("theatreid"));
         UUID showId = UUID.fromString(rs.getString("id"));
+
         return new Show(timeSlot,
                 theatre,
                 null,

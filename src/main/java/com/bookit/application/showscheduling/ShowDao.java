@@ -1,11 +1,10 @@
-package com.bookit.application.persistence.jdbcDao;
+package com.bookit.application.showscheduling;
 
-import com.bookit.application.entity.Show;
-import com.bookit.application.entity.ShowTimeSlot;
-import com.bookit.application.persistence.IShowDao;
-import com.bookit.application.persistence.jdbcDao.mappers.ShowMapper;
-import com.bookit.application.persistence.jdbcDao.mappers.ShowMovieMapper;
-import com.bookit.application.persistence.jdbcDao.mappers.ShowTheatreMapper;
+import com.bookit.application.showscheduling.db.ShowMapper;
+import com.bookit.application.showscheduling.db.ShowMovieMapper;
+import com.bookit.application.showscheduling.db.ShowTheatreMapper;
+import com.bookit.application.showscheduling.entity.Show;
+import com.bookit.application.showscheduling.entity.ShowTimeSlot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -70,15 +69,16 @@ public class ShowDao implements IShowDao {
         };
     }
 
-    public List<Show> findShowsByTheatre(Integer theatreId) throws DataAccessException{
-        String sql = "SELECT DISTINCT " +
-                "M.name as moviename, " +
-                "S.starttime,  S.endtime, S.id as showid, S.showlanguage " +
-                "FROM shows S " +
-                "JOIN tickets T ON T.show = S.id " +
-                "JOIN movies M ON S.movie = M.id " +
-                "WHERE S.theatre = ? AND S.starttime > NOW() AND T.status != 'cancelled'::ticketstatus ORDER BY S.starttime";
-        return this.jdbcTemplate.query(sql, this.showMovieMapper, theatreId);
+    public List<Show> findShowsByTheatre(Integer theatreId, Long userId) throws DataAccessException{
+      String sql = "SELECT DISTINCT " +
+                    "M.name as moviename, " +
+                   "S.starttime,  S.endtime, S.id as showid, S.showlanguage " +
+                    "FROM shows S " +
+                    "JOIN tickets T ON T.show = S.id " +
+                    "JOIN movies M ON S.movie = M.id " +
+                    "JOIN theatre T ON T.id = S.theatre " +
+                   "WHERE S.theatre = ? AND S.starttime > NOW() AND T.status != 'cancelled'::ticketstatus AND T.owner = ? ORDER BY S.starttime";
+        return this.jdbcTemplate.query(sql, this.showMovieMapper, theatreId, userId);
     }
 
     @Override

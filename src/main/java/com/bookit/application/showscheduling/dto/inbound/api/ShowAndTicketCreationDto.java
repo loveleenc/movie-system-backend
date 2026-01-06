@@ -1,4 +1,4 @@
-package com.bookit.application.dto.show;
+package com.bookit.application.showscheduling.dto.inbound.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

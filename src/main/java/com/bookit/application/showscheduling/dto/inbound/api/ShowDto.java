@@ -1,7 +1,5 @@
-package com.bookit.application.dto.show;
+package com.bookit.application.showscheduling.dto.inbound.api;
 
-import com.bookit.application.dto.movie.MovieDto;
-import com.bookit.application.dto.theatre.TheatreDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
