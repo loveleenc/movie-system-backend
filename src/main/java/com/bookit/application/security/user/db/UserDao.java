@@ -1,9 +1,7 @@
-package com.bookit.application.persistence.jdbcDao;
+package com.bookit.application.security.user.db;
 
-import com.bookit.application.persistence.IUserDao;
-import com.bookit.application.persistence.jdbcDao.mappers.UserMapper;
 import com.bookit.application.security.entity.User;
-import com.bookit.application.types.Role;
+import com.bookit.application.security.entity.types.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

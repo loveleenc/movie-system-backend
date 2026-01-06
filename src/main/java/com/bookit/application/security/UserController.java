@@ -1,10 +1,10 @@
 package com.bookit.application.security;
 
 
-import com.bookit.application.dto.user.LoginDto;
-import com.bookit.application.dto.user.UserInfoDto;
-import com.bookit.application.dto.user.UserDto;
-import com.bookit.application.dto.user.UserDtoMapper;
+import com.bookit.application.security.dto.LoginDto;
+import com.bookit.application.security.dto.UserInfoDto;
+import com.bookit.application.security.dto.UserDto;
+import com.bookit.application.security.dto.UserDtoMapper;
 import com.bookit.application.security.entity.User;
 import com.bookit.application.security.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;

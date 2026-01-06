@@ -1,8 +1,8 @@
 package com.bookit.application.security;
 
-import com.bookit.application.persistence.IUserDao;
+import com.bookit.application.security.user.db.IUserDao;
 import com.bookit.application.security.entity.User;
-import com.bookit.application.types.AccountStatus;
+import com.bookit.application.security.entity.types.AccountStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

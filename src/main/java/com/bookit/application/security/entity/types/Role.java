@@ -1,4 +1,4 @@
-package com.bookit.application.types;
+package com.bookit.application.security.entity.types;
 
 public enum Role {
     REGULAR_USER("regularUser"),

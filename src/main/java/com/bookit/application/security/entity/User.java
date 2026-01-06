@@ -1,12 +1,12 @@
 package com.bookit.application.security.entity;
 
 
-import com.bookit.application.types.AccountStatus;
+import com.bookit.application.security.entity.types.AccountStatus;
+import com.bookit.application.security.entity.types.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.bookit.application.types.Role;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package com.bookit.application.dto.user;
+package com.bookit.application.security.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.lang.NonNull;

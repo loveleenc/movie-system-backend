@@ -1,7 +1,7 @@
-package com.bookit.application.dto.user;
+package com.bookit.application.security.dto;
 
 import com.bookit.application.security.entity.User;
-import com.bookit.application.types.Role;
+import com.bookit.application.security.entity.types.Role;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
