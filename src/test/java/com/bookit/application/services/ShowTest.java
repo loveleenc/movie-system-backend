@@ -1,11 +1,16 @@
 package com.bookit.application.services;
 
-import com.bookit.application.entity.*;
-import com.bookit.application.persistence.IMovieDao;
-import com.bookit.application.persistence.IShowDao;
-import com.bookit.application.types.MovieGenre;
-import com.bookit.application.types.MovieLanguage;
-import com.bookit.application.types.TicketStatus;
+import com.bookit.application.common.ResourceCreationException;
+import com.bookit.application.showscheduling.entity.Movie;
+import com.bookit.application.showscheduling.booking.BookingClient;
+import com.bookit.application.showscheduling.db.IShowDao;
+import com.bookit.application.showscheduling.entity.Show;
+import com.bookit.application.showscheduling.ShowService;
+import com.bookit.application.showscheduling.entity.ShowTimeSlot;
+import com.bookit.application.showscheduling.movie.MovieClient;
+import com.bookit.application.showscheduling.user.UserClient;
+import com.bookit.application.showscheduling.entity.Theatre;
+import com.bookit.application.showscheduling.entity.types.TicketStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,30 +31,28 @@ public class ShowTest {
     static List<String> languages;
     static ShowService showService;
     static IShowDao showDao;
-    static IMovieDao movieDao;
-    static TicketService ticketService;
-    static TheatreService theatreService;
+    static MovieClient movieClient;
+    static BookingClient bookingClient;
+    static UserClient userClient;
     private Show show;
 
     @BeforeAll
     public static void beforeAll(){
         theatre = new Theatre("ABC Inox Theatre", "Antarctica", 1);
-        genre = Arrays.asList(MovieGenre.ACTION.code(), MovieGenre.ADVENTURE.code());
-        languages = Arrays.asList(MovieLanguage.ENGLISH.code(), MovieLanguage.TAMIL.code(), MovieLanguage.HINDI.code());
-        movie = new MovieBuilder()
-                .setName("Inception")
-                .setPoster("inception.png")
-                .setDuration(148)
-                .setGenreList(genre)
-                .setLanguages(languages)
-                .setReleaseDate(LocalDate.of(2010, 7, 16))
-                .setId(2L)
-                .build();
+        genre = Arrays.asList("Action", "Adventure");
+        languages = Arrays.asList("English", "Tamil", "Hindi");
+         movie = new Movie("Inception",
+                148,
+                "inception.png",
+                genre,
+                LocalDate.of(2010, 7, 16),
+                languages,
+                2L);
         showDao = mock(IShowDao.class);
-        movieDao = mock(IMovieDao.class);
-        ticketService = mock(TicketService.class);
-        theatreService = mock(TheatreService.class);
-        showService = new ShowService(showDao, movieDao, ticketService, theatreService);
+        userClient = mock(UserClient.class);
+        movieClient = mock(MovieClient.class);
+        bookingClient = mock(BookingClient.class);
+        showService = new ShowService(showDao, userClient, movieClient, bookingClient);
     }
 
     @BeforeEach
@@ -67,11 +70,11 @@ public class ShowTest {
 
     @Test
     public void test_showCreationFailsWhenShowLanguageIsDifferentFromAvailableMovieLanguages(){
-        this.show.setLanguage(MovieLanguage.BENGALI.code());
+        this.show.setLanguage("Bengali");
         Long moviePrice = 100L;
         String status = TicketStatus.AVAILABLE.code();
-        when(movieDao.findById(movie.getId())).thenReturn(movie);
-        Assertions.assertThrows(ResourceCreationException.class, () ->showService.createShowAndTickets(this.show, moviePrice, status));
+        when(movieClient.getMovieById(movie.getId())).thenReturn(movie);
+        Assertions.assertThrows(ResourceCreationException.class, () -> showService.createShowAndTickets(this.show, moviePrice, status));
     }
 
     @Test
@@ -83,7 +86,7 @@ public class ShowTest {
         LocalDateTime endTime = dateBeforeMovieRelease.atTime(17, 0, 0).plusMinutes(movie.getDuration());
         ShowTimeSlot timeSlot = new ShowTimeSlot(startTime, endTime);
         this.show.setTimeSlot(timeSlot);
-        when(movieDao.findById(movie.getId())).thenReturn(movie);
+        when(movieClient.getMovieById(movie.getId())).thenReturn(movie);
         Assertions.assertThrows(ResourceCreationException.class, () ->showService.createShowAndTickets(this.show, moviePrice, status));
     }
 
@@ -94,7 +97,7 @@ public class ShowTest {
         LocalDateTime endTime = show.getStartTime().plusMinutes(movie.getDuration()).minusMinutes(1);
         ShowTimeSlot timeSlot = new ShowTimeSlot(show.getStartTime(), endTime);
         this.show.setTimeSlot(timeSlot);
-        when(movieDao.findById(movie.getId())).thenReturn(movie);
+        when(movieClient.getMovieById(movie.getId())).thenReturn(movie);
         Assertions.assertThrows(ResourceCreationException.class, () ->showService.createShowAndTickets(this.show, moviePrice, status));
     }
 
@@ -102,7 +105,7 @@ public class ShowTest {
     public void test_showCreationFailsWhenShowTimeslotOverlapsWithExistingShowTimeslot(){
         Long moviePrice = 100L;
         String status = TicketStatus.AVAILABLE.code();
-        when(movieDao.findById(movie.getId())).thenReturn(movie);
+        when(movieClient.getMovieById(movie.getId())).thenReturn(movie);
 
         ShowTimeSlot timeSlotOverlapWithStartTime = new ShowTimeSlot(show.getStartTime().minusMinutes(30), show.getStartTime().plusMinutes(40));
         when(showDao.getBookedSlotsByTheatreId(theatre.getId())).thenReturn(List.of(timeSlotOverlapWithStartTime));
@@ -120,7 +123,7 @@ public class ShowTest {
     public void test_createShowSuccessfully(){
         Long moviePrice = 100L;
         String status = TicketStatus.AVAILABLE.code();
-        when(movieDao.findById(movie.getId())).thenReturn(movie);
+        when(movieClient.getMovieById(movie.getId())).thenReturn(movie);
 
         LocalDateTime startTime = show.getEndTime().plusMinutes(0);
         LocalDateTime endTime = startTime.plusMinutes(movie.getDuration());
@@ -140,7 +143,7 @@ public class ShowTest {
 
         Assertions.assertEquals(this.show.getTheatre().getName(), returnedShow.getTheatre().getName());
         Assertions.assertEquals(this.show.getLanguage(), returnedShow.getLanguage());
-        Assertions.assertEquals(this.show.getMovie().getId(), returnedShow.getMovie().getId());
+        Assertions.assertEquals(this.show.getMovieId(), returnedShow.getMovieId());
         Assertions.assertEquals(this.show.getStartTime(), returnedShow.getStartTime());
         Assertions.assertEquals(this.show.getEndTime(), returnedShow.getEndTime());
         Assertions.assertEquals(this.show.getTheatreId(), returnedShow.getTheatreId());
@@ -150,7 +153,7 @@ public class ShowTest {
     public void test_creatingShowFailsWhenMoviePriceOrTicketStatusIsNull(){
         Long moviePrice = 100L;
         String status = TicketStatus.AVAILABLE.code();
-        when(movieDao.findById(movie.getId())).thenReturn(movie);
+        when(movieClient.getMovieById(movie.getId())).thenReturn(movie);
         when(showDao.getBookedSlotsByTheatreId(theatre.getId())).thenReturn(List.of());
         UUID showId = UUID.randomUUID();
 

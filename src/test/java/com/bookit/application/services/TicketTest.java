@@ -1,10 +1,19 @@
 package com.bookit.application.services;
 
-import com.bookit.application.entity.*;
-import com.bookit.application.persistence.ISeatDao;
-import com.bookit.application.persistence.ITicketDao;
-import com.bookit.application.services.user.UserService;
-import com.bookit.application.types.TicketStatus;
+import com.bookit.application.booking.TicketService;
+import com.bookit.application.booking.entity.Seat;
+import com.bookit.application.booking.entity.Ticket;
+import com.bookit.application.booking.user.UserClient;
+import com.bookit.application.common.ResourceCreationException;
+import com.bookit.application.common.ResourceNotFoundException;
+import com.bookit.application.booking.entity.Movie;
+import com.bookit.application.booking.db.ISeatDao;
+import com.bookit.application.booking.db.ITicketDao;
+import com.bookit.application.booking.PricingService;
+import com.bookit.application.booking.entity.Show;
+import com.bookit.application.booking.entity.ShowTimeSlot;
+import com.bookit.application.booking.entity.Theatre;
+import com.bookit.application.booking.entity.types.TicketStatus;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 
@@ -24,7 +33,7 @@ public class TicketTest {
     private ISeatDao seatDao;
     private ITicketDao ticketDao;
     private TicketService ticketService;
-    private UserService userService;
+    private UserClient userClient;
     private static PricingService pricingService = new PricingService();
 
 
@@ -34,14 +43,14 @@ public class TicketTest {
         Theatre theatre = new Theatre("ABC Inox Theatre", "Antarctica", 1);
         List<String> genre = Arrays.asList("Action", "Adventure");
         List<String> languages = Arrays.asList("English", "Tamil", "Hindi");
-        Movie movie = new MovieBuilder()
-                .setName("Inception")
-                .setPoster("inception.png")
-                .setDuration(148)
-                .setGenreList(genre)
-                .setLanguages(languages)
-                .setReleaseDate(LocalDate.of(2010, 7, 16))
-                .build();
+        Movie movie = new Movie(
+                "Inception",
+                148,
+                "inception.png",
+                genre,
+                LocalDate.of(2010, 7, 16),
+                languages,
+                null);
         LocalDateTime startTime = LocalDateTime.of(2025, 9, 20, 17, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2025, 9, 20, 19, 30, 0);
         ShowTimeSlot timeSlot = new ShowTimeSlot(startTime, endTime);
@@ -54,8 +63,8 @@ public class TicketTest {
     public void before() {
         this.seatDao = mock(ISeatDao.class);
         this.ticketDao = mock(ITicketDao.class);
-        this.userService = mock(UserService.class);
-        this.ticketService = new TicketService(seatDao, pricingService, ticketDao, userService);
+        this.userClient = mock(UserClient.class);
+        this.ticketService = new TicketService(seatDao, pricingService, ticketDao, userClient);
         Seat seat1 = new Seat("A1", "Bronze", 100L, 1L);
         Seat seat2 = new Seat("B1", "Silver", 250L, 11L);
         Seat seat3 = new Seat("C2", "Gold", 300L, 25L);
@@ -170,7 +179,7 @@ public class TicketTest {
     public void test_ticketCreationForShowFailsWhenNoSeatsAreFoundForTheatre() {
         Long moviePrice = 100L;
         String status = TicketStatus.AVAILABLE.code();
-        when(seatDao.getSeatPricesByTheatre(show.getTheatreId())).thenReturn(new ArrayList<>());
+        when(seatDao.getSeatPricesByTheatre(show.getTheatre().getId())).thenReturn(new ArrayList<>());
         Assertions.assertThrows(ResourceCreationException.class, () -> ticketService.createTickets(moviePrice, show, status));
     }
 
@@ -179,7 +188,7 @@ public class TicketTest {
     public void test_ticketCreationForShowFailsWhenTicketsAlreadyExist() {
         Long moviePrice = 100L;
         String status = TicketStatus.AVAILABLE.code();
-        when(seatDao.getSeatPricesByTheatre(show.getTheatreId())).thenReturn(seats);
+        when(seatDao.getSeatPricesByTheatre(show.getTheatre().getId())).thenReturn(seats);
         when(ticketDao.findTicketsByShow(show.getId().toString())).thenReturn(tickets);
         Assertions.assertThrows(ResourceCreationException.class, () -> ticketService.createTickets(moviePrice, show, status));
     }
@@ -188,7 +197,7 @@ public class TicketTest {
     public void test_createAvailableTicketsForAShowSuccessfully() {
         Long moviePrice = 100L;
         String availableStatus = TicketStatus.AVAILABLE.code();
-        when(seatDao.getSeatPricesByTheatre(show.getTheatreId())).thenReturn(seats);
+        when(seatDao.getSeatPricesByTheatre(show.getTheatre().getId())).thenReturn(seats);
         when(ticketDao.findTicketsByShow(show.getId().toString())).thenReturn(new ArrayList<>());
         ticketService.createTickets(moviePrice, show, availableStatus);
         ArgumentCaptor<List<Ticket>> argumentCaptor = ArgumentCaptor.forClass(List.class);
@@ -213,7 +222,7 @@ public class TicketTest {
     public void test_createBlockedTicketsForAShowSuccessfully() {
         Long moviePrice = 100L;
         String statusBlocked = TicketStatus.BLOCKED.code();
-        when(seatDao.getSeatPricesByTheatre(show.getTheatreId())).thenReturn(seats);
+        when(seatDao.getSeatPricesByTheatre(show.getTheatre().getId())).thenReturn(seats);
         when(ticketDao.findTicketsByShow(show.getId().toString())).thenReturn(new ArrayList<>());
         ticketService.createTickets(moviePrice, show, statusBlocked);
         ArgumentCaptor<List<Ticket>> argumentCaptor = ArgumentCaptor.forClass(List.class);

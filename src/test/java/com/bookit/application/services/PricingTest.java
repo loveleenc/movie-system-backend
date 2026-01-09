@@ -1,6 +1,7 @@
 package com.bookit.application.services;
 
-import com.bookit.application.entity.ShowTimeSlot;
+import com.bookit.application.booking.PricingService;
+import com.bookit.application.booking.entity.ShowTimeSlot;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

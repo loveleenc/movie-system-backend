@@ -1,9 +1,19 @@
 package com.bookit.application.services;
 
-import com.bookit.application.entity.*;
-import com.bookit.application.persistence.ICartDao;
-import com.bookit.application.services.user.UserService;
-import com.bookit.application.types.TicketStatus;
+import com.bookit.application.booking.CartService;
+import com.bookit.application.booking.TicketBookingException;
+import com.bookit.application.booking.TicketService;
+import com.bookit.application.booking.entity.Item;
+import com.bookit.application.booking.entity.Seat;
+import com.bookit.application.booking.entity.Ticket;
+import com.bookit.application.booking.user.UserClient;
+import com.bookit.application.common.ResourceNotFoundException;
+import com.bookit.application.booking.entity.Movie;
+import com.bookit.application.booking.db.ICartDao;
+import com.bookit.application.booking.entity.Show;
+import com.bookit.application.booking.entity.ShowTimeSlot;
+import com.bookit.application.booking.entity.Theatre;
+import com.bookit.application.booking.entity.types.TicketStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +31,7 @@ import static org.mockito.Mockito.*;
 public class CartTest {
     private static Item item;
     private CartService cartService;
-    private UserService userService;
+    private UserClient userClient;
     private TicketService ticketService;
     private ICartDao cartDao;
 
@@ -31,14 +41,15 @@ public class CartTest {
         Theatre theatre = new Theatre("ABC Inox Theatre", "Antarctica", 1);
         List<String> genre = Arrays.asList("Action", "Adventure");
         List<String> languages = Arrays.asList("English", "Tamil", "Hindi");
-        Movie movie = new MovieBuilder()
-                .setName("Inception")
-                .setPoster("inception.png")
-                .setDuration(148)
-                .setGenreList(genre)
-                .setLanguages(languages)
-                .setReleaseDate(LocalDate.of(2010, 7, 16))
-                .build();
+        Movie movie = new
+                Movie("Inception", 
+                148, 
+                "inception.png", 
+                genre,
+                LocalDate.of(2010, 7, 16),
+                languages, 
+                null);
+        
         LocalDateTime startTime = LocalDateTime.of(2025, 9, 20, 17, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2025, 9, 20, 19, 30, 0);
         ShowTimeSlot timeSlot = new ShowTimeSlot(startTime, endTime);
@@ -52,15 +63,15 @@ public class CartTest {
     @BeforeEach
     public void before() {
         this.cartDao = mock(ICartDao.class);
-        this.userService = mock(UserService.class);
+        this.userClient = mock(UserClient.class);
         this.ticketService = mock(TicketService.class);
-        this.cartService = new CartService(cartDao, userService, ticketService);
+        this.cartService = new CartService(cartDao, ticketService, userClient);
     }
 
     @Test
     public void test_whenUserTriesToRemoveATicketNotInTheirCart_thenResourceNotFoundExceptionThrown() {
         when(cartDao.findById(item.getId())).thenReturn(item);
-        when(userService.getCurrentUserId()).thenReturn(item.getTicket().getOwnerId() + 1);
+        when(userClient.getCurrentUserId()).thenReturn(item.getTicket().getOwnerId() + 1);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> cartService.removeItem(item.getId()));
     }
 
@@ -72,36 +83,36 @@ public class CartTest {
 
     @Test
     public void test_whenAddItemToCart_andCartSizeIs10_thenThrowTicketBookingException() {
-        when(userService.getCurrentUserId()).thenReturn(item.getTicket().getOwnerId());
-        when(cartDao.getItemCount(userService.getCurrentUserId())).thenReturn(10);
+        when(userClient.getCurrentUserId()).thenReturn(item.getTicket().getOwnerId());
+        when(cartDao.getItemCount(userClient.getCurrentUserId())).thenReturn(10);
         Assertions.assertThrows(TicketBookingException.class, () -> cartService.addItem(item.getTicket().getId()));
     }
 
     @Test
     public void test_whenAddItemToCart_thenTicketIsReserved_andItemAddedToCart() {
-        when(userService.getCurrentUserId()).thenReturn(item.getTicket().getOwnerId());
-        when(cartDao.getItemCount(userService.getCurrentUserId())).thenReturn(4);
-        when(ticketService.reserveTicket(item.getTicket().getId(), userService.getCurrentUserId())).thenReturn(item.getTicket());
+        when(userClient.getCurrentUserId()).thenReturn(item.getTicket().getOwnerId());
+        when(cartDao.getItemCount(userClient.getCurrentUserId())).thenReturn(4);
+        when(ticketService.reserveTicket(item.getTicket().getId(), userClient.getCurrentUserId())).thenReturn(item.getTicket());
         this.cartService.addItem(item.getTicket().getId());
-        verify(ticketService, times(1)).reserveTicket(item.getTicket().getId(), userService.getCurrentUserId());
-        verify(cartDao, times(1)).extendCartExpiry(userService.getCurrentUserId());
-        verify(cartDao, times(1)).add(item.getTicket(), userService.getCurrentUserId());
+        verify(ticketService, times(1)).reserveTicket(item.getTicket().getId(), userClient.getCurrentUserId());
+        verify(cartDao, times(1)).extendCartExpiry(userClient.getCurrentUserId());
+        verify(cartDao, times(1)).add(item.getTicket(), userClient.getCurrentUserId());
     }
 
     @Test
     public void test_duringCheckout_thenCartExpiryExtended() {
-        when(userService.getCurrentUserId()).thenReturn(item.getTicket().getOwnerId());
+        when(userClient.getCurrentUserId()).thenReturn(item.getTicket().getOwnerId());
         this.cartService.checkout();
-        verify(cartDao, times(1)).extendCartExpiry(userService.getCurrentUserId());
+        verify(cartDao, times(1)).extendCartExpiry(userClient.getCurrentUserId());
     }
 
     @Test
     public void test_whenBookingTickets_thenCartExpiryExtended_andTicketsBooked_cartIsEmptied() {
-        when(userService.getCurrentUserId()).thenReturn(item.getTicket().getOwnerId());
-        when(cartDao.get(userService.getCurrentUserId())).thenReturn(List.of(item));
+        when(userClient.getCurrentUserId()).thenReturn(item.getTicket().getOwnerId());
+        when(cartDao.get(userClient.getCurrentUserId())).thenReturn(List.of(item));
         when(ticketService.bookTickets(List.of(item.getTicket()))).thenReturn(List.of(item.getTicket()));
         List<Ticket> tickets = this.cartService.confirmBooking();
-        verify(cartDao, times(1)).extendCartExpiry(userService.getCurrentUserId());
+        verify(cartDao, times(1)).extendCartExpiry(userClient.getCurrentUserId());
         verify(ticketService, times(1)).bookTickets(List.of(item.getTicket()));
         verify(cartDao, times(1)).remove(item.getId());
         Assertions.assertEquals(1, tickets.size());
