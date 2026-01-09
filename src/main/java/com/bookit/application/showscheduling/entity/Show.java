@@ -9,8 +9,6 @@ public class Show {
     private Movie movie;
     private String language;
     private UUID id;
-    private String movieName;
-    private Integer theatreId;
 
 
   public Show(ShowTimeSlot timeSlot, Theatre theatre, Movie movie, String language, UUID id) {

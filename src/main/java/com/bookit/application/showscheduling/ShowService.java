@@ -2,13 +2,14 @@ package com.bookit.application.showscheduling;
 
 import com.bookit.application.common.ResourceCreationException;
 import com.bookit.application.common.ResourceNotFoundException;
+import com.bookit.application.showscheduling.booking.BookingClient;
+import com.bookit.application.showscheduling.db.IShowDao;
 import com.bookit.application.showscheduling.entity.Movie;
-import com.bookit.application.services.TicketService;
 import com.bookit.application.showscheduling.entity.Show;
 import com.bookit.application.showscheduling.entity.ShowTimeSlot;
 import com.bookit.application.showscheduling.movie.MovieClient;
 import com.bookit.application.showscheduling.user.UserClient;
-import com.bookit.application.types.TicketStatus;
+import com.bookit.application.showscheduling.entity.types.TicketStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -18,19 +19,19 @@ import java.util.Objects;
 @Component
 public class ShowService {
     private IShowDao showDAO;
-    private TicketService ticketService;
     private UserClient userClient;
     private MovieClient movieClient;
+    private BookingClient bookingClient;
 
 
     public ShowService(IShowDao showDAO,
-                       TicketService ticketService,
                        UserClient userClient,
-                      MovieClient movieClient) {
+                      MovieClient movieClient,
+                       BookingClient bookingClient) {
         this.showDAO = showDAO;
-        this.ticketService = ticketService;
         this.userClient = userClient;
         this.movieClient = movieClient;
+        this.bookingClient = bookingClient;
     }
 
     public List<Show> getShowsByMovie(@NonNull Long movieId) {
@@ -44,7 +45,7 @@ public class ShowService {
     
     public Show createShowAndTickets(Show show, Long moviePrice, String ticketStatus) throws NullPointerException, ResourceCreationException {
         Show createdShow = this.createShow(show);
-        this.ticketService.createTickets(Objects.requireNonNull(moviePrice), createdShow, Objects.requireNonNull(ticketStatus));
+        this.bookingClient.createTickets(Objects.requireNonNull(moviePrice), createdShow, Objects.requireNonNull(ticketStatus));
         return createdShow;
     }
 
@@ -77,12 +78,12 @@ public class ShowService {
     }
 
     public void cancelShow(String showId) {
-        this.ticketService.updateTicketStatusForShow(showId, TicketStatus.CANCELLED.code(), true);
+        this.bookingClient.updateTicketStatusForShow(showId, TicketStatus.CANCELLED.code(), true);
     }
 
     public Show createTicketsForExistingShow(String showId, Long moviePrice, String ticketStatus){
         Show show = this.showDAO.findById(showId);
-        this.ticketService.createTickets(Objects.requireNonNull(moviePrice), show, Objects.requireNonNull(ticketStatus));
+        this.bookingClient.createTickets(Objects.requireNonNull(moviePrice), show, Objects.requireNonNull(ticketStatus));
         return show;
     }
 

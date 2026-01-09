@@ -5,11 +5,11 @@ import com.bookit.application.moviecatalog.MovieService;
 import com.bookit.application.moviecatalog.dto.inbound.service.MovieServiceDto;
 import com.bookit.application.showscheduling.comms.Request;
 import com.bookit.application.showscheduling.comms.Response;
-import com.bookit.application.showscheduling.dto.outbound.MovieDto;
 import com.bookit.application.showscheduling.entity.Movie;
 import com.bookit.application.showscheduling.movie.MovieClient;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class MovieLocalClient implements MovieClient {
   private MovieService movieService;
 

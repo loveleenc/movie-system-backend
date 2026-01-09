@@ -1,6 +1,6 @@
 package com.bookit.application.showscheduling;
 
-import com.bookit.application.dto.ticket.TicketCreationDto;
+import com.bookit.application.booking.dto.inbound.api.ticket.TicketCreationDto;
 import com.bookit.application.showscheduling.dto.inbound.api.*;
 import com.bookit.application.showscheduling.entity.Show;
 import org.springframework.http.HttpStatus;
