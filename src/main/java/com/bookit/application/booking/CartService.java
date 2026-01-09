@@ -1,10 +1,10 @@
 package com.bookit.application.booking;
 
+import com.bookit.application.booking.user.UserClient;
 import com.bookit.application.common.ResourceNotFoundException;
 import com.bookit.application.booking.entity.Item;
 import com.bookit.application.booking.entity.Ticket;
 import com.bookit.application.booking.db.ICartDao;
-import com.bookit.application.security.user.UserService;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -14,24 +14,24 @@ import java.util.List;
 public class CartService {
     private static final Integer MAX_CART_CAPACITY = 10;
     private ICartDao cartDao;
-    private UserService userService;
     private TicketService ticketService;
+    private UserClient userClient;
 
-    public CartService(ICartDao cartDao, UserService userService, TicketService ticketService) {
+    public CartService(ICartDao cartDao, TicketService ticketService, UserClient userClient) {
         this.cartDao = cartDao;
-        this.userService = userService;
         this.ticketService = ticketService;
+        this.userClient = userClient;
     }
 
     public List<Item> getCart(){
-        Long userId = this.userService.getCurrentUserId();
+        Long userId = this.userClient.getCurrentUserId();
         return this.cartDao.get(userId);
     }
 
     public void removeItem(Long itemId) throws ResourceNotFoundException {
         try{
             Item item = this.cartDao.findById(itemId);
-            Long userId = this.userService.getCurrentUserId();
+            Long userId = this.userClient.getCurrentUserId();
             if(!item.getTicket().getOwnerId().equals(userId)){
                 throw new ResourceNotFoundException("The requested item was not found");
             }
@@ -46,7 +46,7 @@ public class CartService {
     }
 
     public Item addItem(String ticketId){
-        Long userId = this.userService.getCurrentUserId();
+        Long userId = this.userClient.getCurrentUserId();
         if(this.cartDao.getItemCount(userId).equals(MAX_CART_CAPACITY)){
             throw new TicketBookingException("Cannot add more than 10 items to the cart");
         }
@@ -57,7 +57,7 @@ public class CartService {
     }
 
     public List<Item> checkout(){
-        Long userId = this.userService.getCurrentUserId();
+        Long userId = this.userClient.getCurrentUserId();
         this.cartDao.extendCartExpiry(userId);
         return this.cartDao.get(userId);
         //TODO: might handle coupons later? maybe idk
@@ -65,7 +65,7 @@ public class CartService {
     }
 
     public List<Ticket> confirmBooking(){
-        Long userId = this.userService.getCurrentUserId();
+        Long userId = this.userClient.getCurrentUserId();
         this.cartDao.extendCartExpiry(userId);
         List<Item> items = this.cartDao.get(userId);
         List<Ticket> bookedTickets = this.ticketService.bookTickets(items.stream().map(Item::getTicket).toList());
