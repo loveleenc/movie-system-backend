@@ -2,7 +2,6 @@ package com.bookit.application.moviecatalog.db;
 
 import com.bookit.application.common.ResourceNotFoundException;
 import com.bookit.application.moviecatalog.entity.Movie;
-import com.bookit.application.common.persistence.Crud;
 
 import java.time.LocalDate;
 import java.util.List;

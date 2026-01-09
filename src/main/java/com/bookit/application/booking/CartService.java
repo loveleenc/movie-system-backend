@@ -74,4 +74,8 @@ public class CartService {
         });
         return bookedTickets;
     }
+
+    public void createCart(Long userId){
+        this.cartDao.createCart(userId);
+    }
 }

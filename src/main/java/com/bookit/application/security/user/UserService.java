@@ -1,13 +1,13 @@
 package com.bookit.application.security.user;
 
-import com.bookit.application.persistence.ICartDao;
 import com.bookit.application.security.CustomUserDetailsService;
 import com.bookit.application.security.UsernameOrEmailAlreadyExistsException;
-import com.bookit.application.security.entity.User;
 import com.bookit.application.security.email.EmailService;
-import com.bookit.application.security.user.token.TokenService;
+import com.bookit.application.security.entity.User;
 import com.bookit.application.security.entity.types.AccountStatus;
 import com.bookit.application.security.entity.types.Role;
+import com.bookit.application.security.user.booking.BookingClient;
+import com.bookit.application.security.user.token.TokenService;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
@@ -28,76 +28,75 @@ public class UserService {
     private String clientUrl;
     private TokenService tokenService;
     private EmailService emailService;
-    private ICartDao cartDao;
     private UserAccountCreationHelper userAccountCreationHelper;
+    private BookingClient bookingClient;
 
     public UserService(CustomUserDetailsService customUserDetailsService,
                        TokenService tokenService,
                        EmailService emailService,
-                       ICartDao cartDao,
-                       UserAccountCreationHelper userAccountCreationHelper){
+                       UserAccountCreationHelper userAccountCreationHelper,
+                       BookingClient bookingClient) {
         this.customUserDetailsService = customUserDetailsService;
         this.tokenService = tokenService;
         this.emailService = emailService;
-        this.cartDao = cartDao;
         this.userAccountCreationHelper = userAccountCreationHelper;
+        this.bookingClient = bookingClient;
     }
 
     public User createUser(User user) throws IllegalArgumentException, UsernameOrEmailAlreadyExistsException {
-      if(!userAccountCreationHelper.usernameCriteriaFulfilled(user.getUsername())){
+        if (!userAccountCreationHelper.usernameCriteriaFulfilled(user.getUsername())) {
             throw new IllegalArgumentException("Entered username does not match required criteria");
         }
-        if(!userAccountCreationHelper.passwordCriteriaFulfilled(user.getPassword())){
+        if (!userAccountCreationHelper.passwordCriteriaFulfilled(user.getPassword())) {
             throw new IllegalArgumentException("Entered password does not match required criteria");
         }
-        if(!userAccountCreationHelper.emailIsValid(user.getEmail())){
+        if (!userAccountCreationHelper.emailIsValid(user.getEmail())) {
             throw new IllegalArgumentException("Entered e-mail does not match required format");
         }
 
         List<Role> roles = user.getRoles();
-        if(roles.isEmpty()){
+        if (roles.isEmpty()) {
             throw new IllegalArgumentException("A new user cannot be created without any role");
         }
-        if(roles.contains(Role.ADMIN)){
-          throw new IllegalArgumentException(String.format("Cannot create a user with the role %s", Role.ADMIN.code()));
+        if (roles.contains(Role.ADMIN)) {
+            throw new IllegalArgumentException(String.format("Cannot create a user with the role %s", Role.ADMIN.code()));
         }
 
         user.setAccountStatus(AccountStatus.INACTIVE);
-        User createdUser =  this.customUserDetailsService.createUser(user);
-        if(roles.contains(Role.THEATRE_OWNER)){
-            try{
+        User createdUser = this.customUserDetailsService.createUser(user);
+        if (roles.contains(Role.THEATRE_OWNER)) {
+            try {
                 this.sendAccountCreationEmail(createdUser);
+            } catch (MailSendException | MailParseException | MailAuthenticationException e) {
+                throw new AccountActivationException("Unable to send the account activation email", e);
             }
-            catch (MailSendException | MailParseException | MailAuthenticationException e){
-                throw new AccountActivationException("Unable to send the account activation email" , e);
-            }
-        } if (roles.contains(Role.REGULAR_USER)) {
-            this.cartDao.createCart(createdUser.getId());
-            try{
-                if(!roles.contains(Role.THEATRE_OWNER)){
+        }
+        if (roles.contains(Role.REGULAR_USER)) {
+            this.bookingClient.createCart(createdUser.getId());
+            try {
+                if (!roles.contains(Role.THEATRE_OWNER)) {
                     this.sendAccountActivationEmail(createdUser);
                 }
-            }
-            catch (MalformedURLException | MailSendException | MailParseException | MailAuthenticationException e){
-                throw new AccountActivationException("Unable to send the account activation email" , e);
+            } catch (MalformedURLException | MailSendException | MailParseException | MailAuthenticationException e) {
+                throw new AccountActivationException("Unable to send the account activation email", e);
             }
         }
         return createdUser;
     }
 
-    public Long getCurrentUserId(){
+    public Long getCurrentUserId() {
         return this.customUserDetailsService.getCurrentUserId();
     }
 
     public void activateUserAccount(String token) throws JwtException, UsernameNotFoundException {
         String username = this.tokenService.getUsernameFromActivationToken(token);
         Boolean accountActivated = this.customUserDetailsService.activateUserAccount(username);
-        if(!accountActivated){
+        if (!accountActivated) {
             throw new AccountActivationException("Unable to activate account after fetching user details");
         }
     }
 
-    private void sendAccountCreationEmail(User user) throws MailSendException, MailParseException, MailAuthenticationException{
+    private void sendAccountCreationEmail(User user) throws MailSendException, MailParseException, MailAuthenticationException {
         String mailMessage = userAccountCreationHelper.createAccountActivationEmailMessage(user.getUsername());
         this.emailService.sendEmail(user.getEmail(), UserAccountCreationHelper.accountActivationEmailSubject, mailMessage);
     }
@@ -113,7 +112,7 @@ public class UserService {
         String accountActivationUrl = UriComponentsBuilder.fromUriString(this.clientUrl)
                 .pathSegment("#", "user", "activate", token)
                 .build().toString();
-         return new UrlResource(accountActivationUrl);
+        return new UrlResource(accountActivationUrl);
     }
 
 
