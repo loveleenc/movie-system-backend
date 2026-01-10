@@ -10,7 +10,7 @@ import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Component("bookingSeatDao")
 public class SeatDao implements ISeatDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;

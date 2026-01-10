@@ -9,7 +9,7 @@ import com.bookit.application.showscheduling.entity.Movie;
 import com.bookit.application.showscheduling.movie.MovieClient;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("showsMovieLocalClient")
 public class MovieLocalClient implements MovieClient {
   private MovieService movieService;
 

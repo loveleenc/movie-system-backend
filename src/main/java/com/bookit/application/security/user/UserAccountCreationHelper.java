@@ -1,10 +1,12 @@
 package com.bookit.application.security.user;
 
 import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Component
 public class UserAccountCreationHelper {
     public static final String accountActivationEmailSubject = "Account activation: welcome to Book Show!";
     static final String emailRegex = "^([\\w-]|(?<!\\.)\\.)+[a-zA-Z0-9]@[a-zA-Z0-9]([a-zA-Z0-9\\-]+)((\\.([a-zA-Z]){2,9}){0,2})$";

@@ -9,6 +9,7 @@ import com.bookit.application.showscheduling.booking.BookingClient;
 import com.bookit.application.showscheduling.comms.Request;
 import com.bookit.application.showscheduling.comms.Response;
 import com.bookit.application.showscheduling.entity.Show;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
@@ -39,7 +40,7 @@ class ShowMapper {
     }
 }
 
-
+@Component("showsBookingLocalClient")
 public class BookingLocalClient implements BookingClient {
     private TicketService ticketService;
 

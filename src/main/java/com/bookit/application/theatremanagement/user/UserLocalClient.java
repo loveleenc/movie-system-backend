@@ -5,7 +5,7 @@ import com.bookit.application.theatremanagement.comms.Request;
 import com.bookit.application.theatremanagement.comms.Response;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("theatreUserLocalClient")
 public class UserLocalClient implements UserClient {
   private UserService userService;
 

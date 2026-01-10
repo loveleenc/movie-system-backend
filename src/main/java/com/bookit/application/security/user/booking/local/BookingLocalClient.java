@@ -1,16 +1,17 @@
 package com.bookit.application.security.user.booking.local;
 
-import com.bookit.application.booking.CartService;
+import com.bookit.application.booking.db.ICartDao;
 import com.bookit.application.security.user.booking.BookingClient;
 import com.bookit.application.security.user.comms.Request;
 import com.bookit.application.security.user.comms.Response;
+import org.springframework.stereotype.Component;
 
-
+@Component("securityUserLocalClient")
 public class BookingLocalClient implements BookingClient {
-    private CartService cartService;
+    private ICartDao cartDao;
 
-    public BookingLocalClient(CartService cartService) {
-        this.cartService = cartService;
+    public BookingLocalClient(ICartDao cartDao) {
+        this.cartDao = cartDao;
     }
 
     @Override
@@ -25,6 +26,6 @@ public class BookingLocalClient implements BookingClient {
 
     @Override
     public void createCart(Long userId) {
-        this.cartService.createCart(userId);
+        this.cartDao.createCart(userId);
     }
 }

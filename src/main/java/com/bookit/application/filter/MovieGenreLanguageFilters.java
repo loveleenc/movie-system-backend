@@ -1,7 +1,7 @@
 package com.bookit.application.filter;
 
-import com.bookit.application.types.MovieGenre;
-import com.bookit.application.types.MovieLanguage;
+import com.bookit.application.moviecatalog.entity.types.MovieGenre;
+import com.bookit.application.moviecatalog.entity.types.MovieLanguage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
