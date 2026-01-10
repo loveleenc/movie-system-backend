@@ -1,7 +1,5 @@
 package com.bookit.application.moviecatalog;
 
-import com.bookit.application.common.ResourceCreationException;
-import com.bookit.application.common.ResourceNotFoundException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

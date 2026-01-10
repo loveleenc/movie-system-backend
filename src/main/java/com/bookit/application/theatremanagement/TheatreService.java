@@ -1,6 +1,5 @@
 package com.bookit.application.theatremanagement;
 
-import com.bookit.application.common.ResourceNotFoundException;
 import com.bookit.application.theatremanagement.dto.TheatreDto;
 import com.bookit.application.theatremanagement.dto.TheatreDtoMapper;
 import com.bookit.application.theatremanagement.entity.Theatre;

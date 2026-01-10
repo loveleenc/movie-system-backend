@@ -1,7 +1,6 @@
 package com.bookit.application.moviecatalog;
 
 
-import com.bookit.application.common.ResourceCreationException;
 import com.bookit.application.moviecatalog.db.IMovieDao;
 import com.bookit.application.moviecatalog.dto.inbound.service.MovieServiceDto;
 import com.bookit.application.moviecatalog.dto.inbound.service.MovieServiceDtoMapper;

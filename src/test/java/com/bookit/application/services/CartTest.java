@@ -7,7 +7,7 @@ import com.bookit.application.booking.entity.Item;
 import com.bookit.application.booking.entity.Seat;
 import com.bookit.application.booking.entity.Ticket;
 import com.bookit.application.booking.user.UserClient;
-import com.bookit.application.common.ResourceNotFoundException;
+import com.bookit.application.booking.ResourceNotFoundException;
 import com.bookit.application.booking.entity.Movie;
 import com.bookit.application.booking.db.ICartDao;
 import com.bookit.application.booking.entity.Show;

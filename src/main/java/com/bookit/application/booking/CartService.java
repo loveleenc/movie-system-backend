@@ -1,7 +1,6 @@
 package com.bookit.application.booking;
 
 import com.bookit.application.booking.user.UserClient;
-import com.bookit.application.common.ResourceNotFoundException;
 import com.bookit.application.booking.entity.Item;
 import com.bookit.application.booking.entity.Ticket;
 import com.bookit.application.booking.db.ICartDao;

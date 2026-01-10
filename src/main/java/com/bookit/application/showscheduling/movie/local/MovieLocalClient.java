@@ -1,6 +1,6 @@
 package com.bookit.application.showscheduling.movie.local;
 
-import com.bookit.application.common.ResourceNotFoundException;
+import com.bookit.application.showscheduling.ResourceNotFoundException;
 import com.bookit.application.moviecatalog.MovieService;
 import com.bookit.application.moviecatalog.dto.inbound.service.MovieServiceDto;
 import com.bookit.application.showscheduling.comms.Request;

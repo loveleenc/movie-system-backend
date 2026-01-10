@@ -1,7 +1,7 @@
 package com.bookit.application.moviecatalog.db;
 
 import com.bookit.application.moviecatalog.entity.Movie;
-import com.bookit.application.common.ResourceNotFoundException;
+import com.bookit.application.moviecatalog.ResourceNotFoundException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,4 +1,4 @@
-package com.bookit.application.common;
+package com.bookit.application.booking;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

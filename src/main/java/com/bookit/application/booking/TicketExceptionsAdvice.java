@@ -1,7 +1,6 @@
 package com.bookit.application.booking;
 
 
-import com.bookit.application.common.ResourceNotFoundException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

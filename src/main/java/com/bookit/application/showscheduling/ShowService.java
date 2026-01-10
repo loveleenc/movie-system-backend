@@ -1,7 +1,5 @@
 package com.bookit.application.showscheduling;
 
-import com.bookit.application.common.ResourceCreationException;
-import com.bookit.application.common.ResourceNotFoundException;
 import com.bookit.application.showscheduling.booking.BookingClient;
 import com.bookit.application.showscheduling.db.IShowDao;
 import com.bookit.application.showscheduling.entity.Movie;

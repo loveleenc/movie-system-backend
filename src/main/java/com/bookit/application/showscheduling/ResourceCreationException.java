@@ -1,4 +1,4 @@
-package com.bookit.application.common;
+package com.bookit.application.showscheduling;
 
 public class ResourceCreationException extends RuntimeException {
     public ResourceCreationException(String message) {

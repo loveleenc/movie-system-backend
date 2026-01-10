@@ -1,6 +1,6 @@
 package com.bookit.application.moviecatalog.db;
 
-import com.bookit.application.common.ResourceNotFoundException;
+import com.bookit.application.moviecatalog.ResourceNotFoundException;
 import com.bookit.application.moviecatalog.entity.Movie;
 
 import java.time.LocalDate;

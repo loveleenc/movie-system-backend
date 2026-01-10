@@ -8,8 +8,6 @@ import com.bookit.application.booking.entity.Ticket;
 import com.bookit.application.booking.entity.types.SeatCategory;
 import com.bookit.application.booking.entity.types.TicketStatus;
 import com.bookit.application.booking.user.UserClient;
-import com.bookit.application.common.ResourceCreationException;
-import com.bookit.application.common.ResourceNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
