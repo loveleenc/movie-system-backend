@@ -7,7 +7,6 @@ import com.bookit.application.showscheduling.entity.Theatre;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class ShowDtoMapper {
@@ -51,7 +50,7 @@ public class ShowDtoMapper {
     }
 
     public List<ShowDto> toDTO(List<Show> shows) {
-        return shows.stream().map(this::toDTO).collect(Collectors.toList());
+        return shows.stream().map(this::toDTO).toList();
     }
 
     public ShowTheatreDto toShowTheatreDTO(Show show) {
@@ -61,7 +60,7 @@ public class ShowDtoMapper {
     }
 
     public List<ShowTheatreDto> showTheatreDTO(List<Show> shows) {
-        return shows.stream().map(this::toShowTheatreDTO).collect(Collectors.toList());
+        return shows.stream().map(this::toShowTheatreDTO).toList();
     }
 
     public ShowMovieNameDto toShowMovieNameDto(Show show) {
@@ -73,6 +72,6 @@ public class ShowDtoMapper {
     }
 
     public List<ShowMovieNameDto> toShowMovieNameDto(List<Show> shows) {
-        return shows.stream().map(this::toShowMovieNameDto).collect(Collectors.toList());
+        return shows.stream().map(this::toShowMovieNameDto).toList();
     }
 }

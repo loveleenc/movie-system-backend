@@ -48,7 +48,7 @@ public class ShowDao implements IShowDao {
             ps.setLong(1, show.getTheatreId());
             ps.setTimestamp(2, Timestamp.valueOf(show.getStartTime()));
             ps.setTimestamp(3, Timestamp.valueOf(show.getEndTime()));
-            ps.setLong(4, show.getMovieId());
+            ps.setLong(4, show.getMovie().getId());
             ps.setString(5, show.getLanguage());
             return ps;
         }, keyHolder);

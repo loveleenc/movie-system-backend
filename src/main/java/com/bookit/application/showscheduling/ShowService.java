@@ -48,7 +48,7 @@ public class ShowService {
     }
 
     private Show createShow(Show show) throws ResourceCreationException {
-        Long movieId = show.getMovieId();
+        Long movieId = show.getMovie().getId();
         Movie movie = this.movieClient.getMovieById(movieId);
         Integer theatreId = show.getTheatreId();
 

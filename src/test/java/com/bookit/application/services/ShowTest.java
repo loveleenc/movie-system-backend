@@ -143,7 +143,7 @@ public class ShowTest {
 
         Assertions.assertEquals(this.show.getTheatre().getName(), returnedShow.getTheatre().getName());
         Assertions.assertEquals(this.show.getLanguage(), returnedShow.getLanguage());
-        Assertions.assertEquals(this.show.getMovieId(), returnedShow.getMovieId());
+        Assertions.assertEquals(this.show.getMovie().getId(), returnedShow.getMovie().getId());
         Assertions.assertEquals(this.show.getStartTime(), returnedShow.getStartTime());
         Assertions.assertEquals(this.show.getEndTime(), returnedShow.getEndTime());
         Assertions.assertEquals(this.show.getTheatreId(), returnedShow.getTheatreId());

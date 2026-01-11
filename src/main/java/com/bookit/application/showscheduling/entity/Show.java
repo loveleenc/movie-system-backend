@@ -1,5 +1,6 @@
 package com.bookit.application.showscheduling.entity;
 
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -26,10 +27,6 @@ public class Show {
 
     public Theatre getTheatre() {
         return theatre;
-    }
-
-    public Long getMovieId() {
-        return this.movie.getId();
     }
 
     public Integer getTheatreId() {
