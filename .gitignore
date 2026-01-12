@@ -58,4 +58,4 @@ build/
 .vscode/
 
 storage-dir/
-src/main/resources/static
+**/src/main/resources/static
