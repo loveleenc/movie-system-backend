@@ -11,6 +11,7 @@
     <groupId>com.bookit</groupId>
     <artifactId>application</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+<!--    <packaging>pom</packaging>-->
     <name>application</name>
     <description>Demo project for Spring Boot</description>
     <url/>
@@ -20,6 +21,7 @@
     <developers>
         <developer/>
     </developers>
+
     <scm>
         <connection/>
         <developerConnection/>
@@ -94,35 +96,16 @@
             <version>20250517</version>
         </dependency>
         <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-storage-blob</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-security-keyvault-secrets</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-identity</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.7</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.bookit</groupId>
+            <artifactId>catalog</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.azure</groupId>
-                <artifactId>azure-sdk-bom</artifactId>
-                <version>1.2.36</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <build>
         <plugins>
             <plugin>

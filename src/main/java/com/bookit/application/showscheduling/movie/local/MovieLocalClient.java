@@ -1,15 +1,17 @@
 package com.bookit.application.showscheduling.movie.local;
 
 import com.bookit.application.showscheduling.ResourceNotFoundException;
-import com.bookit.application.moviecatalog.MovieService;
-import com.bookit.application.moviecatalog.dto.inbound.service.MovieServiceDto;
+import com.bookit.catalog.movie.MovieService;
+import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
 import com.bookit.application.showscheduling.comms.Request;
 import com.bookit.application.showscheduling.comms.Response;
 import com.bookit.application.showscheduling.entity.Movie;
 import com.bookit.application.showscheduling.movie.MovieClient;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 @Component("showsMovieLocalClient")
+@ComponentScan(basePackages = {"com.bookit.catalog.movie"})
 public class MovieLocalClient implements MovieClient {
   private MovieService movieService;
 

@@ -1,0 +1,23 @@
+package com.bookit.catalog.movie.db;
+
+import com.bookit.catalog.movie.ResourceNotFoundException;
+import com.bookit.catalog.movie.entity.Movie;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public interface IMovieDao extends Crud<Movie, Long> {
+
+    List<Movie> findOngoingMovies();
+
+    List<Movie> findUpcomingMovies();
+
+    List<Movie> filterMovies(List<String> genre, List<String> languages, LocalDate releasedOnOrAfter);
+
+    void deleteMovie(Movie movie);
+
+    @Override
+    Movie findById(Long id) throws ResourceNotFoundException;
+//    @Override
+//    List<Movie> findAll();
+}
