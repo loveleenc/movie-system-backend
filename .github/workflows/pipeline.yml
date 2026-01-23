@@ -3,7 +3,7 @@ run-name: Test and deploy on github actions
 
 on:
   push:
-    branches: ["main"]
+    branches: ["dev"]
   pull_request:
     branches: ["main"]
 
