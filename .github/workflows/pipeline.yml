@@ -32,49 +32,69 @@ jobs:
         node-version: [ '22.x' ]
     if: contains(github.event.head_commit.message, '[deploy]')
     steps:
-      - name: Checkout ui repository
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.actor }}/movie-system-ui
-          ref: refs/heads/main
-          path: movie-system-ui
-          token: ${{secrets.UI_REPO_READ_TOKEN}}
-      - name: Get Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
+#      - name: Checkout ui repository
+#        uses: actions/checkout@v4
+#        with:
+#          repository: ${{ github.actor }}/movie-system-ui
+#          ref: refs/heads/main
+#          path: movie-system-ui
+#          token: ${{secrets.UI_REPO_READ_TOKEN}}
+#
+#
+#      - name: Get Node.js
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: ${{ matrix.node-version }}
+#
+#      - name: Install ui project dependencies
+#        working-directory: ${{github.workspace}}/movie-system-ui
+#        run: npm install
+#      - name: Create ui build
+#        working-directory: ${{github.workspace}}/movie-system-ui
+#        run: npm run build
 
-      - name: Install ui project dependencies
-        working-directory: ${{github.workspace}}/movie-system-ui
-        run: npm install
-      - name: Create ui build
-        working-directory: ${{github.workspace}}/movie-system-ui
-        run: npm run build
 
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           path: main
 
-      - name: Copy ui build to static resources backend project dir
-        run: cp -a ${{github.workspace}}/movie-system-ui/dist/. ${{github.workspace}}/main/application/src/main/resources/static/
+      - name: fetch frontend artifact name
+        id: foo
+        run: echo info=`cat ${{github.workspace}}/main/.github/workflows/data.json` >> $GITHUB_OUTPUT
 
-      - name: Log in to Container Registry
-        uses: docker/login-action@v3.6.0
+      - name: Fetch frontend artifacts
+        uses: actions/download-artifact@v4
         with:
-          registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.DOCKER_IMAGE_PUSH}}
+          name: ${{ fromJSON(steps.foo.outputs.info).frontend}}_build
+          github-token: ${{secrets.UI_REPO_READ_TOKEN}}
+          repository: ${{ github.actor }}/movie-system-ui
+          path: ${{github.workspace}}/main/application/src/main/resources/static
 
-      - name: Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5.9.0
-        with:
-          images: ghcr.io/movie-system-backend
+      - name: extract ui files
+        working-directory: ${{github.workspace}}/main/application/src/main/resources/static
+        run: unzip ${{ fromJSON(steps.foo.outputs.info).frontend}}_build.zip && rm ${{ fromJSON(steps.foo.outputs.info).frontend}}_build.zip
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v6.18.0
-        with:
-          context: ${{github.workspace}}/main
-          push: true
-          tags: ghcr.io/${{github.actor}}/movie-system-backend:latest
+#      - name: Copy ui build to static resources backend project dir
+#        working-directory: ${{github.workspace}}/main
+#        run: cp -a ${{github.workspace}}/movie-system-ui/dist/. ${{github.workspace}}/main/application/src/main/resources/static/
+
+#      - name: Log in to Container Registry
+#        uses: docker/login-action@v3.6.0
+#        with:
+#          registry: ghcr.io
+#          username: ${{github.actor}}
+#          password: ${{secrets.DOCKER_IMAGE_PUSH}}
+#
+#      - name: Docker metadata
+#        id: meta
+#        uses: docker/metadata-action@v5.9.0
+#        with:
+#          images: ghcr.io/movie-system-backend
+#
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@v6.18.0
+#        with:
+#          context: ${{github.workspace}}/main
+#          push: true
+#          tags: ghcr.io/${{github.actor}}/movie-system-backend:latest
