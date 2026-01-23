@@ -71,7 +71,7 @@ jobs:
           repository: ${{ github.actor }}/movie-system-ui
           path: ${{github.workspace}}/main/application/src/main/resources/static
 
-      - name: extract ui files
+      - name: extract ui files to resources
         working-directory: ${{github.workspace}}/main/application/src/main/resources/static
         run: unzip ${{ fromJSON(steps.foo.outputs.info).frontend}}_build.zip && rm ${{ fromJSON(steps.foo.outputs.info).frontend}}_build.zip
 
