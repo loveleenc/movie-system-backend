@@ -32,7 +32,6 @@ jobs:
         node-version: [ '22.x' ]
     if: contains(github.event.head_commit.message, '[deploy]')
     steps:
-
 #      - name: Checkout ui repository
 #        uses: actions/checkout@v4
 #        with:
@@ -53,8 +52,6 @@ jobs:
 #      - name: Create ui build
 #        working-directory: ${{github.workspace}}/movie-system-ui
 #        run: npm run build
-
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -68,7 +65,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ fromJSON(steps.foo.outputs.info).frontend}}_build
-          github-token: ${{secrets.UI_REPO_READ_TOKEN}}
+          github-token: ${{secrets.UI_REPO_ACTIONS_READ_TOKEN}}
           repository: ${{ github.actor }}/movie-system-ui
           path: ${{github.workspace}}/main/application/src/main/resources/static
 
@@ -79,7 +76,7 @@ jobs:
 #      - name: Copy ui build to static resources backend project dir
 #        working-directory: ${{github.workspace}}/main
 #        run: cp -a ${{github.workspace}}/movie-system-ui/dist/. ${{github.workspace}}/main/application/src/main/resources/static/
-
+#
 #      - name: Log in to Container Registry
 #        uses: docker/login-action@v3.6.0
 #        with:
