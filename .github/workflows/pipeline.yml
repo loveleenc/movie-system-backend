@@ -57,7 +57,7 @@ jobs:
           path: main
 
       - name: Copy ui build to static resources backend project dir
-        run: cp -a ${{github.workspace}}/movie-system-ui/dist/. ${{github.workspace}}/main/src/main/resources/static/
+        run: cp -a ${{github.workspace}}/movie-system-ui/dist/. ${{github.workspace}}/main/application/src/main/resources/static/
 
       - name: Log in to Container Registry
         uses: docker/login-action@v3.6.0
