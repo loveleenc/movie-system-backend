@@ -64,7 +64,8 @@ jobs:
       - name: Fetch frontend artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ fromJSON(steps.foo.outputs.info).frontend}}_build
+#          name: ${{ fromJSON(steps.foo.outputs.info).frontend}}_build
+          run-id: 21287628126
           github-token: ${{secrets.UI_REPO_ACTIONS_READ_TOKEN}}
           repository: ${{ github.actor }}/movie-system-ui
           path: ${{github.workspace}}/main/application/src/main/resources/static
