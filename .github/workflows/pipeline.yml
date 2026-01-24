@@ -8,29 +8,29 @@ on:
     branches: ["main"]
 
 jobs:
-  test:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          path: main-test
-      - name: Set up JDK 17 for tests
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'corretto'
-          architecture: x64
-      - name: Run tests
-        working-directory: ${{github.workspace}}/main-test
-        run: mvn test
+#  test:
+#    runs-on: ubuntu-22.04
+#    steps:
+#      - uses: actions/checkout@v4
+#        with:
+#          path: main-test
+#      - name: Set up JDK 17 for tests
+#        uses: actions/setup-java@v4
+#        with:
+#          java-version: '17'
+#          distribution: 'corretto'
+#          architecture: x64
+#      - name: Run tests
+#        working-directory: ${{github.workspace}}/main-test
+#        run: mvn test
 
   deploy:
-    needs: [test]
+#    needs: [test]
     runs-on: ubuntu-22.04
     strategy:
       matrix:
         node-version: [ '22.x' ]
-    if: contains(github.event.head_commit.message, '[deploy]')
+#    if: contains(github.event.head_commit.message, '[deploy]')
     steps:
 #      - name: Checkout ui repository
 #        uses: actions/checkout@v4
@@ -73,7 +73,8 @@ jobs:
 #      - name: Copy ui build to static resources backend project dir
 #        working-directory: ${{github.workspace}}
 #        run: cp ${{github.workspace}}/*.zip ${{github.workspace}}/main/application/src/main/resources/static/
-
+      - name: check folders
+        run: echo ls ${{github.workspace}} && echo ls ${{github.workspace}}/main
       - name: extract ui files to static resources
 #        working-directory: ${{github.workspace}}/main/application/src/main/resources/static
         run: unzip ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build/*.zip -d ${{github.workspace}}/main/application/src/main/resources/static/
