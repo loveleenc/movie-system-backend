@@ -3,55 +3,34 @@ run-name: Test and deploy on github actions
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["temp"]
   pull_request:
     branches: ["main"]
 
 jobs:
-#  test:
-#    runs-on: ubuntu-22.04
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          path: main-test
-#      - name: Set up JDK 17 for tests
-#        uses: actions/setup-java@v4
-#        with:
-#          java-version: '17'
-#          distribution: 'corretto'
-#          architecture: x64
-#      - name: Run tests
-#        working-directory: ${{github.workspace}}/main-test
-#        run: mvn test
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: main-test
+      - name: Set up JDK 17 for tests
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+          architecture: x64
+      - name: Run tests
+        working-directory: ${{github.workspace}}/main-test
+        run: mvn test
 
   build:
-#    needs: [test]
+    needs: [test]
     runs-on: ubuntu-22.04
     strategy:
       matrix:
         node-version: [ '22.x' ]
-#    if: contains(github.event.head_commit.message, '[deploy]')
     steps:
-#      - name: Checkout ui repository
-#        uses: actions/checkout@v4
-#        with:
-#          repository: ${{ github.actor }}/movie-system-ui
-#          ref: refs/heads/main
-#          path: movie-system-ui
-#          token: ${{secrets.UI_REPO_READ_TOKEN}}
-#
-#
-#      - name: Get Node.js
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: ${{ matrix.node-version }}
-#
-#      - name: Install ui project dependencies
-#        working-directory: ${{github.workspace}}/movie-system-ui
-#        run: npm install
-#      - name: Create ui build
-#        working-directory: ${{github.workspace}}/movie-system-ui
-#        run: npm run build
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -64,8 +43,7 @@ jobs:
       - name: Fetch frontend artifacts
         uses: actions/download-artifact@v4
         with:
-#          name: ${{ fromJSON(steps.foo.outputs.info).frontend}}_build
-          run-id: 21287628126
+          run-id: ${{ fromJSON(steps.foo.outputs.info).runId}}
           github-token: ${{secrets.UI_REPO_ACTIONS_READ_TOKEN}}
           repository: ${{ github.actor }}/movie-system-ui
           path: ${{github.workspace}}
@@ -89,33 +67,3 @@ jobs:
         with:
           name: movie-app
           path: '${{ github.workspace }}/main/application/target/*.jar'
-
-#      - name: check folders
-#        run: ls ${{github.workspace}} && ls ${{github.workspace}}/main && ls ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build
-#      - name: check resources folder
-#        run: ls ${{github.workspace}}/main/application/src/main/resources/static/
-#      - name: extract ui files to static resources
-##        working-directory: ${{github.workspace}}/main/application/src/main/resources/static
-#        run: unzip ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build/*.zip -d ${{github.workspace}}/main/application/src/main/resources/static/
-
-
-#
-#      - name: Log in to Container Registry
-#        uses: docker/login-action@v3.6.0
-#        with:
-#          registry: ghcr.io
-#          username: ${{github.actor}}
-#          password: ${{secrets.DOCKER_IMAGE_PUSH}}
-#
-#      - name: Docker metadata
-#        id: meta
-#        uses: docker/metadata-action@v5.9.0
-#        with:
-#          images: ghcr.io/movie-system-backend
-#
-#      - name: Build and push Docker image
-#        uses: docker/build-push-action@v6.18.0
-#        with:
-#          context: ${{github.workspace}}/main
-#          push: true
-#          tags: ghcr.io/${{github.actor}}/movie-system-backend:latest
