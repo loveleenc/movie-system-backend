@@ -74,7 +74,7 @@ jobs:
 #        working-directory: ${{github.workspace}}
 #        run: cp ${{github.workspace}}/*.zip ${{github.workspace}}/main/application/src/main/resources/static/
       - name: check folders
-        run: echo ls ${{github.workspace}} && echo ls ${{github.workspace}}/main
+        run: ls ${{github.workspace}} && ls ${{github.workspace}}/main
       - name: extract ui files to static resources
 #        working-directory: ${{github.workspace}}/main/application/src/main/resources/static
         run: unzip ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build/*.zip -d ${{github.workspace}}/main/application/src/main/resources/static/
