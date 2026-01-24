@@ -68,16 +68,21 @@ jobs:
           run-id: 21287628126
           github-token: ${{secrets.UI_REPO_ACTIONS_READ_TOKEN}}
           repository: ${{ github.actor }}/movie-system-ui
-          path: ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build
+          path: ${{github.workspace}}
 
-#      - name: Copy ui build to static resources backend project dir
-#        working-directory: ${{github.workspace}}
-#        run: cp ${{github.workspace}}/*.zip ${{github.workspace}}/main/application/src/main/resources/static/
+#
       - name: check folders
-        run: ls ${{github.workspace}} && ls ${{github.workspace}}/main && ls ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build/${{ fromJSON(steps.foo.outputs.info).frontend}}_build
-      - name: extract ui files to static resources
-#        working-directory: ${{github.workspace}}/main/application/src/main/resources/static
-        run: unzip ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build/*.zip -d ${{github.workspace}}/main/application/src/main/resources/static/
+        run: ls ${{github.workspace}} && ls ${{github.workspace}}/main && ls ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build
+
+      - name: Copy ui artifacts to static resources backend project dir
+#        working-directory: ${{github.workspace}}
+        run: cp -r ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build/* ${{github.workspace}}/main/application/src/main/resources/static/
+
+      - name: check resources folder
+        run: ls ${{github.workspace}}/main/application/src/main/resources/static/
+#      - name: extract ui files to static resources
+##        working-directory: ${{github.workspace}}/main/application/src/main/resources/static
+#        run: unzip ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build/*.zip -d ${{github.workspace}}/main/application/src/main/resources/static/
 
 
 #
