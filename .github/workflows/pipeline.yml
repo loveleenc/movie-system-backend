@@ -68,15 +68,17 @@ jobs:
           run-id: 21287628126
           github-token: ${{secrets.UI_REPO_ACTIONS_READ_TOKEN}}
           repository: ${{ github.actor }}/movie-system-ui
-          path: ${{github.workspace}}/main/application/src/main/resources/static
-
-      - name: extract ui files to resources
-        working-directory: ${{github.workspace}}/main/application/src/main/resources/static
-        run: unzip ${{ fromJSON(steps.foo.outputs.info).frontend}}_build.zip && rm ${{ fromJSON(steps.foo.outputs.info).frontend}}_build.zip
+          path: ${{github.workspace}}
 
 #      - name: Copy ui build to static resources backend project dir
-#        working-directory: ${{github.workspace}}/main
-#        run: cp -a ${{github.workspace}}/movie-system-ui/dist/. ${{github.workspace}}/main/application/src/main/resources/static/
+#        working-directory: ${{github.workspace}}
+#        run: cp ${{github.workspace}}/*.zip ${{github.workspace}}/main/application/src/main/resources/static/
+
+      - name: extract ui files to static resources
+#        working-directory: ${{github.workspace}}/main/application/src/main/resources/static
+        run: unzip ${{github.workspace}}/*.zip -d ${{github.workspace}}/main/application/src/main/resources/static/
+
+
 #
 #      - name: Log in to Container Registry
 #        uses: docker/login-action@v3.6.0
