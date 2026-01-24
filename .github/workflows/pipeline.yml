@@ -60,6 +60,7 @@ jobs:
           architecture: x64
 
       - name: Build with Maven
+        working-directory: ${{github.workspace}}/main
         run: mvn clean install -Dmaven.test.skip=true
 
       - name: Upload artifact
