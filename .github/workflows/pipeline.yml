@@ -68,7 +68,7 @@ jobs:
           run-id: 21287628126
           github-token: ${{secrets.UI_REPO_ACTIONS_READ_TOKEN}}
           repository: ${{ github.actor }}/movie-system-ui
-          path: ${{github.workspace}}
+          path: ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build
 
 #      - name: Copy ui build to static resources backend project dir
 #        working-directory: ${{github.workspace}}
@@ -76,7 +76,7 @@ jobs:
 
       - name: extract ui files to static resources
 #        working-directory: ${{github.workspace}}/main/application/src/main/resources/static
-        run: unzip ${{github.workspace}}/*.zip -d ${{github.workspace}}/main/application/src/main/resources/static/
+        run: unzip ${{github.workspace}}/${{ fromJSON(steps.foo.outputs.info).frontend}}_build/*.zip -d ${{github.workspace}}/main/application/src/main/resources/static/
 
 
 #
