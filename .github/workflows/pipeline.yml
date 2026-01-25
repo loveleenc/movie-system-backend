@@ -70,6 +70,7 @@ jobs:
           path: '${{ github.workspace }}/main/application/target/*.jar'
 
   deploy:
+    if: github.ref == 'refs/heads/main'
     needs: [build]
     runs-on: ubuntu-22.04
     steps:
