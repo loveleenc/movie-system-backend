@@ -58,10 +58,23 @@ jobs:
 ##          images: ghcr.io/movie-system-backend
 ##
 
-      - name: Build and upload Docker image
+      - name: Build and upload container image
         uses: docker/build-push-action@v6.18.0
         with:
           context: ${{github.workspace}}/main/catalog
           push: true
           tags: ghcr.io/${{github.actor}}/catalog:${{ github.sha }}
 
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Deploy image to Azure
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          containerAppName: movie-catalog
+          resourceGroup: movie-apps
+          imageToDeploy: ghcr.io/${ github.actor }}/catalog:${{ github.sha }}
+          registryServer: ghcr.io
+          registryUsername: ${{ github.actor }}
+          registryPassword: ${{ secrets.READ_PACKAGES }}
