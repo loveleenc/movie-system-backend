@@ -63,5 +63,5 @@ jobs:
         with:
           context: ${{github.workspace}}/main/catalog
           push: true
-          tags: app/catalog:${{ github.sha }}
+          tags: ghcr.io/${{github.actor}}/catalog:${{ github.sha }}
 
