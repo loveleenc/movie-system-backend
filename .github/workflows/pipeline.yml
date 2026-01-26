@@ -1,5 +1,5 @@
 name: movie-backend-workflow
-run-name: Test and deploy on github actions
+run-name: Test and deploy on cloud
 
 on:
   push:
@@ -61,7 +61,7 @@ jobs:
 
       - name: Build with Maven
         working-directory: ${{github.workspace}}/main
-        run: mvn clean install -Dmaven.test.skip=true
+        run: mvn clean package -Dmaven.test.skip=true
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
