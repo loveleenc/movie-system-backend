@@ -74,7 +74,7 @@ jobs:
         with:
           containerAppName: movie-catalog
           resourceGroup: movie-apps
-          imageToDeploy: ghcr.io/${ github.actor }}/catalog:${{ github.sha }}
+          imageToDeploy: ghcr.io/${{ github.actor }}/catalog:${{ github.sha }}
           registryServer: ghcr.io
           registryUsername: ${{ github.actor }}
           registryPassword: ${{ secrets.READ_PACKAGES }}
