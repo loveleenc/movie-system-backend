@@ -82,6 +82,8 @@ jobs:
       - name: Deploy image to Azure
         uses: azure/container-apps-deploy-action@v2
         with:
+          resourceGroup: movie-apps
+          containerAppName: movie-catalog
           imageToDeploy: ghcr.io/${{ github.actor }}/catalog:${{ github.sha }}
           registryUrl: ghcr.io
           registryUsername: ${{ github.actor }}
