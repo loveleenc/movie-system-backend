@@ -66,6 +66,9 @@ jobs:
           tags: ghcr.io/${{github.actor}}/catalog:${{ github.sha }}
 
   deploy:
+    permissions:
+      id-token: write
+      contents: read
     needs: [build]
     runs-on: ubuntu-22.04
     steps:
