@@ -1,12 +1,12 @@
-FROM maven:3.9.11-amazoncorretto-17-alpine@sha256:f6b7c9f1c635054a653a6a4eaec6d4a870532cd7cbaec6243772a5b64960a978
-RUN mkdir project
-RUN mkdir app
+FROM maven:4.0.0-rc-5-amazoncorretto-17-al2023@sha256:68ab2a64c3d1c1910c2878789ce8e940d3172ff8bc8bc3b65199218f959117ad as build
 EXPOSE 8080
+RUN mkdir project
 COPY . /project
 WORKDIR /project
 RUN mvn clean package -Dmaven.test.skip=true -Pstandalone
 
-COPY /target/catalog-1.0-SNAPSHOT.jar /app/main.jar
-RUN rm -rf /project
+FROM maven:4.0.0-rc-5-amazoncorretto-17-al2023@sha256:68ab2a64c3d1c1910c2878789ce8e940d3172ff8bc8bc3b65199218f959117ad
+RUN mkdir app
+COPY --from=build /project/target/*.jar /app/main.jar
 WORKDIR /app
 CMD ["java", "-jar", "main.jar"]
