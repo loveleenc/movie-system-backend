@@ -59,3 +59,4 @@ build/
 
 storage-dir/
 **/src/main/resources/static
+*.env
