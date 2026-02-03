@@ -18,13 +18,11 @@ public class MovieApiClient implements MovieClient {
     private RestClient restClient;
 
     public MovieApiClient(ClientConfigUrl clientConfigUrl) {
-        System.out.println(clientConfigUrl.getCatalog());
         this.restClient = RestClient.builder().baseUrl(clientConfigUrl.getCatalog()).build();
     }
 
     @Override
     public Movie getMovieById(Long movieId) throws ResourceNotFoundException {
-        System.out.println(this.catalogUrl);
         ParameterizedTypeReference<Movie> typeReference = new ParameterizedTypeReference<Movie>() {};
         return this.restClient.get().uri("/api/internal/movie/{movieId}", movieId).retrieve().body(typeReference);
     }
