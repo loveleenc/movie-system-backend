@@ -16,7 +16,6 @@ public class UserLocalClient implements UserClient {
 
   @Override
   public Long getCurrentUserId() {
-      System.out.println(this.userService.getClientUrl());
     return this.userService.getCurrentUserId();
   }
 
