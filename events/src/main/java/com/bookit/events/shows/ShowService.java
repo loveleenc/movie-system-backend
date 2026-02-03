@@ -8,6 +8,7 @@ import com.bookit.events.shows.entity.ShowTimeSlot;
 import com.bookit.events.shows.movie.MovieClient;
 import com.bookit.events.shows.user.UserClient;
 import com.bookit.events.shows.entity.types.TicketStatus;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ public class ShowService {
 
     public ShowService(IShowDao showDAO,
                        UserClient userClient,
-                      MovieClient movieClient,
+                       @Qualifier("showsMovieApiClient") MovieClient movieClient,
                        BookingClient bookingClient) {
         this.showDAO = showDAO;
         this.userClient = userClient;
