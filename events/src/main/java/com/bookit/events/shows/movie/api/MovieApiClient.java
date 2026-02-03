@@ -6,11 +6,13 @@ import com.bookit.events.shows.comms.Response;
 import com.bookit.events.shows.entity.Movie;
 import com.bookit.events.shows.movie.MovieClient;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component("showsMovieApiClient")
+@ConditionalOnProperty(value = "catalog.source", havingValue = "external", matchIfMissing = false)
 public class MovieApiClient implements MovieClient {
     private String catalogUrl;
     private RestClient restClient;

@@ -7,10 +7,12 @@ import com.bookit.events.shows.comms.Request;
 import com.bookit.events.shows.comms.Response;
 import com.bookit.events.shows.entity.Movie;
 import com.bookit.events.shows.movie.MovieClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 @Component("showsMovieLocalClient")
+@ConditionalOnProperty(value = "catalog.source", havingValue = "internal", matchIfMissing = true)
 @ComponentScan(basePackages = {"com.bookit.catalog.movie"})
 public class MovieLocalClient implements MovieClient {
   private MovieService movieService;
