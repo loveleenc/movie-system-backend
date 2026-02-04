@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component("showsMovieApiClient")
-@ConditionalOnProperty(value = "catalog.source", havingValue = "external", matchIfMissing = false)
 public class MovieApiClient implements MovieClient {
     private String catalogUrl;
     private RestClient restClient;

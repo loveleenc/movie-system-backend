@@ -25,7 +25,7 @@ public class ShowService {
 
     public ShowService(IShowDao showDAO,
                        UserClient userClient,
-                       MovieClient movieClient,
+                       @Qualifier("showsMovieApiClient") MovieClient movieClient,
                        BookingClient bookingClient) {
         this.showDAO = showDAO;
         this.userClient = userClient;
