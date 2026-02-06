@@ -2,6 +2,8 @@ package com.bookit.catalog.movie;
 
 
 import com.bookit.catalog.movie.db.IMovieDao;
+import com.bookit.catalog.movie.entity.MoviePage;
+import com.bookit.catalog.movie.inbound.service.MoviePageServiceDto;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDtoMapper;
 import com.bookit.catalog.movie.entity.Movie;
@@ -32,9 +34,9 @@ public class MovieService {
     return this.movieDtoMapper.toDTO(movie);
   }
 
-  public List<MovieServiceDto> getMovies() throws DataAccessException {
-    List<Movie> movies = this.movieDao.findAll();
-    return this.movieDtoMapper.toDTO(movies);
+  public MoviePageServiceDto getMovies(Integer page, Integer perPageCount) throws DataAccessException {
+    MoviePage moviePage = this.movieDao.findMovies(page, perPageCount);
+    return this.movieDtoMapper.toDTO(moviePage);
   }
 
   public List<MovieServiceDto> getOngoingMovies() throws DataAccessException {

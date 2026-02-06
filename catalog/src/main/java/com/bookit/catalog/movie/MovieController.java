@@ -3,6 +3,7 @@ package com.bookit.catalog.movie;
 
 import com.bookit.catalog.movie.inbound.api.MovieDto;
 import com.bookit.catalog.movie.inbound.api.MovieDtoMapper;
+import com.bookit.catalog.movie.inbound.service.MoviePageServiceDto;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,10 @@ public class MovieController {
         this.movieDTOMapper = movieDTOMapper;
     }
 
-    @GetMapping("/movies")
-    List<MovieDto> getAllMovies(){
-        List<MovieServiceDto> movies = this.movieService.getMovies();
-        return movieDTOMapper.toDTO(movies);
+    @GetMapping("/movies/{page}")
+    MoviePageServiceDto getAllMovies(@PathVariable Integer page,
+                                     @RequestParam(required = true) Integer perPageCount){
+        return this.movieService.getMovies(page, perPageCount);
     }
 
     @GetMapping("/movies/ongoing")

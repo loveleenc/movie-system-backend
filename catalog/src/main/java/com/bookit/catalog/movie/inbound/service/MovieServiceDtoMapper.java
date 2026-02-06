@@ -2,6 +2,7 @@ package com.bookit.catalog.movie.inbound.service;
 
 import com.bookit.catalog.movie.MovieException;
 import com.bookit.catalog.movie.entity.Movie;
+import com.bookit.catalog.movie.entity.MoviePage;
 import com.bookit.catalog.movie.storage.StorageException;
 import com.bookit.catalog.movie.storage.StorageService;
 import com.bookit.catalog.movie.storage.resource.PosterResource;
@@ -37,6 +38,10 @@ public class MovieServiceDtoMapper {
 
     public List<MovieServiceDto> toDTO(List<Movie> movies) throws MovieException {
         return movies.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public MoviePageServiceDto toDTO(MoviePage moviePage){
+        return new MoviePageServiceDto(moviePage.pages(), this.toDTO(moviePage.movies()));
     }
 
     public Movie toMovie(MovieServiceDto movieDTO) throws NullPointerException{

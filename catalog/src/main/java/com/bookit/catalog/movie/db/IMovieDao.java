@@ -2,11 +2,12 @@ package com.bookit.catalog.movie.db;
 
 import com.bookit.catalog.movie.ResourceNotFoundException;
 import com.bookit.catalog.movie.entity.Movie;
+import com.bookit.catalog.movie.entity.MoviePage;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface IMovieDao extends Crud<Movie, Long> {
+public interface IMovieDao {
 
     List<Movie> findOngoingMovies();
 
@@ -16,8 +17,11 @@ public interface IMovieDao extends Crud<Movie, Long> {
 
     void deleteMovie(Movie movie);
 
-    @Override
     Movie findById(Long id) throws ResourceNotFoundException;
+
+    MoviePage findMovies(Integer page, Integer perPageCount);
+
+    Long create(Movie movie);
 //    @Override
-//    List<Movie> findAll();
+////    List<Movie> findAll();
 }
