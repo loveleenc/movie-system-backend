@@ -66,7 +66,9 @@ public class MovieServiceDtoMapper {
             futures.add(CompletableFuture.supplyAsync(() -> this.storageService.getResource(movie.getPoster()))
                     .thenAccept(resource -> movieServiceDto.setPoster(resource.getContentOrUrlAsString()))
                     .handle(((result, exception) -> {
-                        logger.warn(exception.getMessage()); //TODO: handle this correctly later
+                        if(exception != null) {
+                            logger.warn(exception.getMessage()); //TODO: handle this correctly later
+                        }
                         return result;
                     })));
             futures.add(CompletableFuture.supplyAsync(() -> this.movieExternalInformationService.getMoviePlot(movie.getName()))
@@ -75,9 +77,11 @@ public class MovieServiceDtoMapper {
                         movieServiceDtos.add(movieServiceDto);
                     })
                     .handle((result, exception) -> {
-                        logger.warn("Unable to add a plot for movie {} with id {}",
-                                movieServiceDto.getName(), movieServiceDto.getId());//TODO: handle this correctly later
-                        movieServiceDtos.add(movieServiceDto);
+                        if(exception != null){
+                            logger.warn("Unable to add a plot for movie {} with id {}",
+                                    movieServiceDto.getName(), movieServiceDto.getId());//TODO: handle this correctly later
+                            movieServiceDtos.add(movieServiceDto);
+                        }
                         return result;
                     })
             );
