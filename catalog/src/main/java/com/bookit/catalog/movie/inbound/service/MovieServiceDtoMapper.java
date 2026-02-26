@@ -57,7 +57,7 @@ public class MovieServiceDtoMapper {
     }
 
 
-    public List<MovieServiceDto> toDTO(List<Movie> movies) throws MovieException, ExecutionException, InterruptedException {
+    public List<MovieServiceDto> toDTO(List<Movie> movies) throws MovieException {
 
         List<CompletableFuture<?>> futures = new ArrayList<>();
         List<MovieServiceDto> movieServiceDtos = new ArrayList<>();
@@ -113,7 +113,7 @@ public class MovieServiceDtoMapper {
         return movieServiceDtos;
     }
 
-    public MoviePageServiceDto toDTO(MoviePage moviePage) throws ExecutionException, InterruptedException {
+    public MoviePageServiceDto toDTO(MoviePage moviePage)  {
         return new MoviePageServiceDto(moviePage.pages(), this.toDTO(moviePage.movies()));
     }
 

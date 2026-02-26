@@ -34,13 +34,15 @@ public class MovieTest {
     private MovieServiceDtoMapper movieServiceDtoMapper;
     private List<Movie> movies;
     private PosterResource posterResource;
+    private MovieExternalInformationService movieExternalInformationService;
 
     @BeforeEach
     public void before() {
         this.posterResource = mock(PosterResource.class);
         this.movieDao = mock(IMovieDao.class);
         this.storageService = mock(StorageService.class);
-        this.movieServiceDtoMapper = new MovieServiceDtoMapper(this.storageService);
+        this.movieExternalInformationService = mock(MovieExternalInformationService.class);
+        this.movieServiceDtoMapper = new MovieServiceDtoMapper(this.storageService, this.movieExternalInformationService);
         this.movieService = new MovieService(this.movieDao, this.storageService, this.movieServiceDtoMapper);
         this.movies = new ArrayList<>();
         List<String> genre = Arrays.asList("Action", "Adventure");

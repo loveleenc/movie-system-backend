@@ -35,7 +35,7 @@ public class MovieService {
     return this.movieDtoMapper.toDTO(movie);
   }
 
-  public MoviePageServiceDto getMovies(Integer page, Integer perPageCount) throws DataAccessException, ExecutionException, InterruptedException {
+  public MoviePageServiceDto getMovies(Integer page, Integer perPageCount) throws DataAccessException {
     MoviePage moviePage = this.movieDao.findMovies(page, perPageCount);
     return this.movieDtoMapper.toDTO(moviePage);
   }
