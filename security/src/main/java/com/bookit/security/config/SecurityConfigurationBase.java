@@ -23,6 +23,8 @@ public class SecurityConfigurationBase {
                         authorizationManagerRequestMatcherRegistry
                                 //IMPORTANT: THE ORDER OF REQUEST MATCHERS HAS TO BE CORRECT
                                 //More specific patterns should be defined before more general ones to ensure proper matching
+                                .requestMatchers("/actuator/**").permitAll()
+
                                 .requestMatchers(HttpMethod.GET, "/api/loginstatus").authenticated()
 
                                 .requestMatchers(HttpMethod.GET, "/api/movies/ongoing", "/api/movies/upcoming", "/api/movies/filter").permitAll()

@@ -2,9 +2,12 @@ package com.bookit.catalog.movie.db;
 
 import com.bookit.catalog.movie.entity.Movie;
 import com.bookit.catalog.movie.ResourceNotFoundException;
+import com.bookit.catalog.movie.entity.MoviePage;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,6 +23,7 @@ import java.util.Objects;
 public class MovieDao implements IMovieDao {
     private JdbcTemplate jdbcTemplate;
     private MovieMapper movieMapper;
+
 
     public MovieDao(JdbcTemplate jdbcTemplate, MovieMapper movieMapper) {
         this.jdbcTemplate = jdbcTemplate;
@@ -36,9 +41,22 @@ public class MovieDao implements IMovieDao {
     }
 
     @Override
-    public List<Movie> findAll() throws DataAccessException {
-        String sql = "SELECT * FROM movies";
-        return this.jdbcTemplate.query(sql, this.movieMapper);
+    public MoviePage findMovies(Integer page, Integer perPageCount) throws DataAccessException {
+        MovieDao currentRef = this;
+        String sql = "SELECT COUNT(*) OVER() total, * FROM movies OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
+         return this.jdbcTemplate.query(sql, new ResultSetExtractor<MoviePage>() {
+             @Override
+             public MoviePage extractData(ResultSet rs) throws SQLException, DataAccessException {
+                 List<Movie> movies = new ArrayList<>();
+                 int total = 0;
+                 while(rs.next()){
+                     total = rs.getInt("total");
+                     Movie movie = currentRef.movieMapper.getMovie(rs, "id");
+                     movies.add(movie);
+                 }
+                 return new MoviePage((int)Math.ceil((double)total/perPageCount), movies);
+             }
+         }, (page - 1) * perPageCount, perPageCount);
     }
 
     @Override

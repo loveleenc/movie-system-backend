@@ -15,6 +15,7 @@ public class MovieDto {
     private List<String> languages;
     private LocalDate releaseDate;
     private Long id;
+    private String plot;
 
     public Long getId() {
         return id;

@@ -3,6 +3,7 @@ package com.bookit.catalog.movie;
 import com.bookit.catalog.movie.entity.Movie;
 import com.bookit.catalog.movie.entity.MovieBuilder;
 import com.bookit.catalog.movie.db.IMovieDao;
+import com.bookit.catalog.movie.entity.MoviePage;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDtoBuilder;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDtoMapper;
@@ -33,13 +34,15 @@ public class MovieTest {
     private MovieServiceDtoMapper movieServiceDtoMapper;
     private List<Movie> movies;
     private PosterResource posterResource;
+    private MovieExternalInformationService movieExternalInformationService;
 
     @BeforeEach
     public void before() {
         this.posterResource = mock(PosterResource.class);
         this.movieDao = mock(IMovieDao.class);
         this.storageService = mock(StorageService.class);
-        this.movieServiceDtoMapper = new MovieServiceDtoMapper(this.storageService);
+        this.movieExternalInformationService = mock(MovieExternalInformationService.class);
+        this.movieServiceDtoMapper = new MovieServiceDtoMapper(this.storageService, this.movieExternalInformationService);
         this.movieService = new MovieService(this.movieDao, this.storageService, this.movieServiceDtoMapper);
         this.movies = new ArrayList<>();
         List<String> genre = Arrays.asList("Action", "Adventure");
@@ -119,10 +122,11 @@ public class MovieTest {
     @Test
     public void doSomething(){
         String posterResourcePath = "path-aaa.png";
+        MoviePage moviePage = new MoviePage(1, this.movies.stream().limit(5).toList());
         when(this.storageService.getResource(any(String.class))).thenReturn(this.posterResource);
         when(this.posterResource.getContentOrUrlAsString()).thenReturn(posterResourcePath);
-        when(this.movieDao.findAll()).thenReturn(this.movies);
-        Assertions.assertEquals(movies.size(), this.movieService.getMovies().size());
+        when(this.movieDao.findMovies(1, 5)).thenReturn(moviePage);
+        Assertions.assertEquals(5, this.movieService.getMovies(1, 5).movies().size());
     }
 
     @Test

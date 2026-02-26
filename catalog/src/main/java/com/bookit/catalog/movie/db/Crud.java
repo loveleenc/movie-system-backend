@@ -7,7 +7,7 @@ import java.util.List;
 public interface Crud<T, idType> {
     T findById(idType id) throws DataAccessException;
 
-    List<T> findAll()  throws DataAccessException;
+    List<T> findAll(Integer page, Integer perPageCount)  throws DataAccessException;
 
     idType create(T object);
 
