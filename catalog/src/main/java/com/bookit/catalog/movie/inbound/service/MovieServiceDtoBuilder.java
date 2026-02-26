@@ -13,7 +13,6 @@ public class MovieServiceDtoBuilder {
     private LocalDate releaseDate;
     private Long id;
 
-
     public MovieServiceDtoBuilder setName(String name) {
         this.name = name;
         return this;
@@ -52,6 +51,12 @@ public class MovieServiceDtoBuilder {
     public MovieServiceDto build() {
         return new MovieServiceDto(
                 name, duration, poster, genreList, languages, releaseDate, id
+        );
+    }
+
+    public MovieServiceDto buildWithoutPosterAndPlot(){
+        return new MovieServiceDto(
+                name, duration, genreList, languages, releaseDate, id
         );
     }
 }

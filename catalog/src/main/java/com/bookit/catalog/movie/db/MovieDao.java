@@ -48,13 +48,13 @@ public class MovieDao implements IMovieDao {
              @Override
              public MoviePage extractData(ResultSet rs) throws SQLException, DataAccessException {
                  List<Movie> movies = new ArrayList<>();
-                 Integer total = null;
+                 int total = 0;
                  while(rs.next()){
                      total = rs.getInt("total");
                      Movie movie = currentRef.movieMapper.getMovie(rs, "id");
                      movies.add(movie);
                  }
-                 return new MoviePage(total, movies);
+                 return new MoviePage((int)Math.ceil((double)total/perPageCount), movies);
              }
          }, (page - 1) * perPageCount, perPageCount);
     }

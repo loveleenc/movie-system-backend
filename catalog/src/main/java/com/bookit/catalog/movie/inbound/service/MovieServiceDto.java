@@ -15,6 +15,7 @@ public class MovieServiceDto {
   private List<String> languages;
   private LocalDate releaseDate;
   private Long id;
+  private String plot;
 
   public Long getId() {
     return id;
@@ -44,7 +45,19 @@ public class MovieServiceDto {
     return this.languages;
   }
 
-  @JsonCreator
+  public void setPoster(String poster) {
+    this.poster = poster;
+  }
+
+  public void setPlot(String plot) {
+    this.plot = plot;
+  }
+
+  public String getPlot() {
+    return plot;
+  }
+
+//  @JsonCreator
   public MovieServiceDto(String name, Integer duration, String poster, List<String> genreList, List<String> languages, LocalDate releaseDate, Long id) {
     this.name = name;
     this.duration = duration;
@@ -54,4 +67,15 @@ public class MovieServiceDto {
     this.releaseDate = releaseDate;
     this.id = id;
   }
+
+  @JsonCreator
+  public MovieServiceDto(String name, Integer duration, List<String> genreList, List<String> languages, LocalDate releaseDate, Long id) {
+    this.name = name;
+    this.duration = duration;
+    this.genreList = genreList;
+    this.languages = languages;
+    this.releaseDate = releaseDate;
+    this.id = id;
+  }
+
 }

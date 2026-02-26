@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Component
 public class MovieService {
@@ -34,24 +35,24 @@ public class MovieService {
     return this.movieDtoMapper.toDTO(movie);
   }
 
-  public MoviePageServiceDto getMovies(Integer page, Integer perPageCount) throws DataAccessException {
+  public MoviePageServiceDto getMovies(Integer page, Integer perPageCount) throws DataAccessException, ExecutionException, InterruptedException {
     MoviePage moviePage = this.movieDao.findMovies(page, perPageCount);
     return this.movieDtoMapper.toDTO(moviePage);
   }
 
-  public List<MovieServiceDto> getOngoingMovies() throws DataAccessException {
+  public List<MovieServiceDto> getOngoingMovies() throws DataAccessException, ExecutionException, InterruptedException {
     List<Movie> movies = this.movieDao.findOngoingMovies();
     return this.movieDtoMapper.toDTO(movies);
   }
 
-  public List<MovieServiceDto> getUpcomingMovies() throws DataAccessException {
+  public List<MovieServiceDto> getUpcomingMovies() throws DataAccessException, ExecutionException, InterruptedException {
     List<Movie> movies = this.movieDao.findUpcomingMovies();
     return this.movieDtoMapper.toDTO(movies);
 
   }
 
 
-  public List<MovieServiceDto> filterMovies(List<String> genre, List<String> languages, String releasedOnOrAfter) throws DateTimeParseException {
+  public List<MovieServiceDto> filterMovies(List<String> genre, List<String> languages, String releasedOnOrAfter) throws DateTimeParseException, ExecutionException, InterruptedException {
     LocalDate date = LocalDate.parse(releasedOnOrAfter);
     List<Movie> movies = this.movieDao.filterMovies(genre, languages, date);
     return this.movieDtoMapper.toDTO(movies);

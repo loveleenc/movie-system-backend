@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/api")
@@ -29,26 +30,26 @@ public class MovieController {
 
     @GetMapping("/movies/{page}")
     MoviePageServiceDto getAllMovies(@PathVariable Integer page,
-                                     @RequestParam(required = true) Integer perPageCount){
+                                     @RequestParam(required = true) Integer perPageCount) throws ExecutionException, InterruptedException {
         return this.movieService.getMovies(page, perPageCount);
     }
 
     @GetMapping("/movies/ongoing")
-    ResponseEntity<List<MovieDto>> getOngoingMovies(){
+    ResponseEntity<List<MovieServiceDto>> getOngoingMovies() throws ExecutionException, InterruptedException {
         List<MovieServiceDto> movies = this.movieService.getOngoingMovies();
-        return new ResponseEntity<>(this.movieDTOMapper.toDTO(movies), HttpStatus.OK);
+        return new ResponseEntity<>(movies, HttpStatus.OK);
     }
 
     @GetMapping("/movies/upcoming")
-    ResponseEntity<List<MovieDto>> getUpcomingMovies(){
+    ResponseEntity<List<MovieServiceDto>> getUpcomingMovies() throws ExecutionException, InterruptedException {
       List<MovieServiceDto> movies = this.movieService.getUpcomingMovies();
-      return new ResponseEntity<>(this.movieDTOMapper.toDTO(movies), HttpStatus.OK);
+      return new ResponseEntity<>(movies, HttpStatus.OK);
     }
 
     @GetMapping("/movies/filter")
-    ResponseEntity<List<MovieDto>> filterMovies(@RequestParam(required = false) List<String> genre,
+    ResponseEntity<List<MovieServiceDto>> filterMovies(@RequestParam(required = false) List<String> genre,
                                                 @RequestParam(required = false) List<String> language,
-                                                @RequestParam(required = false) String releasedOnOrAfter){
+                                                @RequestParam(required = false) String releasedOnOrAfter) throws ExecutionException, InterruptedException {
         if(genre == null){
             genre = new ArrayList<>();
         }
@@ -59,7 +60,7 @@ public class MovieController {
             releasedOnOrAfter = START_DATE;
         }
         List<MovieServiceDto> movies = this.movieService.filterMovies(genre, language, releasedOnOrAfter);
-        return new ResponseEntity<>(this.movieDTOMapper.toDTO(movies), HttpStatus.OK);
+        return new ResponseEntity<>(movies, HttpStatus.OK);
     }
 
     @PostMapping("/com/bookit/movie")
