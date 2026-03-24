@@ -3,6 +3,7 @@ package com.bookit.booking.db;
 import com.bookit.booking.entity.Seat;
 import com.bookit.booking.entity.types.SeatCategory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import java.util.Map;
 @Component("bookingSeatDao")
 public class SeatDao implements ISeatDao {
     @Autowired
+    @Qualifier("mainJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
     @Override

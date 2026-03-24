@@ -3,6 +3,8 @@ package com.bookit.catalog.movie.db;
 import com.bookit.catalog.movie.entity.Movie;
 import com.bookit.catalog.movie.ResourceNotFoundException;
 import com.bookit.catalog.movie.entity.MoviePage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,7 +27,7 @@ public class MovieDao implements IMovieDao {
     private MovieMapper movieMapper;
 
 
-    public MovieDao(JdbcTemplate jdbcTemplate, MovieMapper movieMapper) {
+    public MovieDao(@Qualifier("mainJdbcTemplate") JdbcTemplate jdbcTemplate, MovieMapper movieMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.movieMapper = movieMapper;
     }
