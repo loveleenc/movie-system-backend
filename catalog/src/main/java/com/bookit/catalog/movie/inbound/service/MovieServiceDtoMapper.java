@@ -18,59 +18,33 @@ import java.util.concurrent.*;
 @Component
 public class MovieServiceDtoMapper {
     private final Logger logger;
-    private final StorageService storageService;
     private MovieExternalInformationService movieExternalInformationService;
 
-    public MovieServiceDtoMapper(StorageService storageService, MovieExternalInformationService movieExternalInformationService) {
-        this.storageService = storageService;
+    public MovieServiceDtoMapper( MovieExternalInformationService movieExternalInformationService) {
         this.logger = LoggerFactory.getLogger(MovieServiceDtoMapper.class);
         this.movieExternalInformationService = movieExternalInformationService;
     }
 
 
-    public MovieServiceDto toDTO(Movie movie) throws MovieException {
-        try {
-            PosterResource resource = this.storageService.getResource(movie.getPoster());
+    public MovieServiceDto toDTO(Movie movie) {
             return new MovieServiceDtoBuilder()
                     .setName(movie.getName())
                     .setDuration(movie.getDuration())
-                    .setPoster(resource.getContentOrUrlAsString())
-                    .setGenreList(movie.getGenreList())
-                    .setLanguages(movie.getLanguages())
-                    .setReleaseDate(movie.getReleaseDate())
-                    .setId(movie.getId())
-                    .build();
-        } catch (StorageException e) {
-            throw new MovieException("Unable to fetch the movie", e);
-        }
-    }
-
-    public MovieServiceDto toDTOWithoutPosterAndPlot(Movie movie)  {
-            return new MovieServiceDtoBuilder()
-                    .setName(movie.getName())
-                    .setDuration(movie.getDuration())
+                    .setPoster(movie.getPoster())
                     .setGenreList(movie.getGenreList())
                     .setLanguages(movie.getLanguages())
                     .setReleaseDate(movie.getReleaseDate())
                     .setId(movie.getId())
                     .build();
     }
-
 
     public List<MovieServiceDto> toDTO(List<Movie> movies) throws MovieException {
 
         List<CompletableFuture<?>> futures = new ArrayList<>();
         List<MovieServiceDto> movieServiceDtos = new ArrayList<>();
         for(Movie movie: movies){
-            MovieServiceDto movieServiceDto = this.toDTOWithoutPosterAndPlot(movie);
-            futures.add(CompletableFuture.supplyAsync(() -> this.storageService.getResource(movie.getPoster()))
-                    .thenAccept(resource -> movieServiceDto.setPoster(resource.getContentOrUrlAsString()))
-                    .handle(((result, exception) -> {
-                        if(exception != null) {
-                            logger.warn(exception.getMessage()); //TODO: handle this correctly later
-                        }
-                        return result;
-                    })));
+            MovieServiceDto movieServiceDto = this.toDTO(movie);
+
             futures.add(CompletableFuture.supplyAsync(() -> this.movieExternalInformationService.getMoviePlot(movie.getName()))
                     .thenAccept(plot -> {
                         movieServiceDto.setPlot(plot);

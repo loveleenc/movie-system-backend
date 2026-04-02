@@ -42,7 +42,7 @@ public class MovieTest {
         this.movieDao = mock(IMovieDao.class);
         this.storageService = mock(StorageService.class);
         this.movieExternalInformationService = mock(MovieExternalInformationService.class);
-        this.movieServiceDtoMapper = new MovieServiceDtoMapper(this.storageService, this.movieExternalInformationService);
+        this.movieServiceDtoMapper = new MovieServiceDtoMapper(this.movieExternalInformationService);
         this.movieService = new MovieService(this.movieDao, this.storageService, this.movieServiceDtoMapper);
         this.movies = new ArrayList<>();
         List<String> genre = Arrays.asList("Action", "Adventure");
@@ -169,11 +169,9 @@ public class MovieTest {
         String posterResourcePath = "path-" + posterName;
         when(this.movieDao.create(any(Movie.class))).thenReturn(2L);
         when(this.movieDao.findById(2L)).thenReturn(returnedMovie);
-        when(this.storageService.getResource(any(String.class))).thenReturn(this.posterResource);
-        when(this.posterResource.getContentOrUrlAsString()).thenReturn(posterResourcePath);
         MovieServiceDto createdMovie = this.movieService.addMovie(movieServiceDto, poster);
         Assertions.assertEquals(movie.getName(), createdMovie.getName());
-        Assertions.assertEquals(posterResourcePath, createdMovie.getPoster());
+        Assertions.assertEquals(posterName, createdMovie.getPoster());
         Assertions.assertEquals(2L, createdMovie.getId());
         Assertions.assertEquals(movie.getDuration(), createdMovie.getDuration());
         //Etc etc for the remaining props
