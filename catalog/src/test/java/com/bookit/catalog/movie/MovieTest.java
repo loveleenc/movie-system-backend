@@ -7,6 +7,7 @@ import com.bookit.catalog.movie.entity.MoviePage;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDtoBuilder;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDtoMapper;
+import com.bookit.catalog.movie.services.MovieAdditionalInformationService;
 import com.bookit.catalog.movie.storage.StorageService;
 import com.bookit.catalog.movie.storage.resource.PosterResource;
 import org.junit.jupiter.api.Assertions;
@@ -34,15 +35,15 @@ public class MovieTest {
     private MovieServiceDtoMapper movieServiceDtoMapper;
     private List<Movie> movies;
     private PosterResource posterResource;
-    private MovieExternalInformationService movieExternalInformationService;
+    private MovieAdditionalInformationService movieAdditionalInformationService;
 
     @BeforeEach
     public void before() {
         this.posterResource = mock(PosterResource.class);
         this.movieDao = mock(IMovieDao.class);
         this.storageService = mock(StorageService.class);
-        this.movieExternalInformationService = mock(MovieExternalInformationService.class);
-        this.movieServiceDtoMapper = new MovieServiceDtoMapper(this.movieExternalInformationService);
+        this.movieAdditionalInformationService = mock(MovieAdditionalInformationService.class);
+        this.movieServiceDtoMapper = new MovieServiceDtoMapper(this.movieAdditionalInformationService);
         this.movieService = new MovieService(this.movieDao, this.storageService, this.movieServiceDtoMapper);
         this.movies = new ArrayList<>();
         List<String> genre = Arrays.asList("Action", "Adventure");

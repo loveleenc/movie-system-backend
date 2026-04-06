@@ -1,21 +1,20 @@
 package com.bookit.catalog.movie.inbound.service;
 
 import com.bookit.catalog.movie.MovieException;
-import com.bookit.catalog.movie.MovieExternalInformationService;
 import com.bookit.catalog.movie.entity.Movie;
 import com.bookit.catalog.movie.entity.MoviePage;
+import com.bookit.catalog.movie.services.MovieAdditionalInformationService;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
 
 @Component
 public class MovieServiceDtoMapper {
-    private MovieExternalInformationService movieExternalInformationService;
+    private MovieAdditionalInformationService movieAdditionalInformationService;
 
-    public MovieServiceDtoMapper( MovieExternalInformationService movieExternalInformationService) {
-        this.movieExternalInformationService = movieExternalInformationService;
+    public MovieServiceDtoMapper( MovieAdditionalInformationService movieAdditionalInformationService) {
+        this.movieAdditionalInformationService = movieAdditionalInformationService;
     }
 
 
@@ -37,7 +36,7 @@ public class MovieServiceDtoMapper {
 
         for(Movie movie: movies) {
             MovieServiceDto movieServiceDto = this.toDTO(movie);
-            String plot = this.movieExternalInformationService.getMoviePlot(movie.getName());
+            String plot = this.movieAdditionalInformationService.getMoviePlot(movie.getName());
             movieServiceDto.setPlot(plot);
             movieServiceDtos.add(movieServiceDto);
         }

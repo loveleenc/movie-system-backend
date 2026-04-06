@@ -1,5 +1,6 @@
 package com.bookit.catalog.movie;
 
+import com.bookit.catalog.movie.services.MovieAdditionalInformationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +11,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
 @Component
-public class MovieExternalInformationService {
+class MovieExternalInformationService implements MovieAdditionalInformationService {
     private static final String DEFAULT_PLOT = "";
     private final RestClient restClient;
     private CircuitBreaker circuitBreaker;
@@ -29,6 +30,7 @@ public class MovieExternalInformationService {
         return new ReturnedMovie("", "", "");
     }
 
+    @Override
     public String getMoviePlot(String movieName){
         try {
             ReturnedMovie movie = this.circuitBreaker.run(() -> this.restClient.get().uri(uriBuilder ->
