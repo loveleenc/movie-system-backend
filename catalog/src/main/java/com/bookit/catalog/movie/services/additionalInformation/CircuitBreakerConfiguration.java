@@ -1,4 +1,4 @@
-package com.bookit.catalog.movie;
+package com.bookit.catalog.movie.services.additionalInformation;
 
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;

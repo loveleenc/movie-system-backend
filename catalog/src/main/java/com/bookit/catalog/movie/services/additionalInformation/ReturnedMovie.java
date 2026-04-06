@@ -1,4 +1,4 @@
-package com.bookit.catalog.movie.services;
+package com.bookit.catalog.movie.services.additionalInformation;
 
 class ReturnedMovie {
     private String Plot;

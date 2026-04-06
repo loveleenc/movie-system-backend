@@ -1,4 +1,4 @@
-package com.bookit.catalog.movie.services;
+package com.bookit.catalog.movie.services.additionalInformation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

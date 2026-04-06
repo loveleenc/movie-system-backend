@@ -7,7 +7,7 @@ import com.bookit.catalog.movie.entity.MoviePage;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDtoBuilder;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDtoMapper;
-import com.bookit.catalog.movie.services.MovieAdditionalInformationService;
+import com.bookit.catalog.movie.services.additionalInformation.MovieAdditionalInformationService;
 import com.bookit.catalog.movie.services.MovieService;
 import com.bookit.catalog.movie.services.storage.StorageService;
 import com.bookit.catalog.movie.services.storage.PosterResource;
