@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class MovieDao implements IMovieDao {
+class MovieDao implements IMovieDao {
     private JdbcTemplate jdbcTemplate;
     private MovieMapper movieMapper;
 
