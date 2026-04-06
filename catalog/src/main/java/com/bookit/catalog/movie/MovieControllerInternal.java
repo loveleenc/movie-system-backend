@@ -1,6 +1,7 @@
 package com.bookit.catalog.movie;
 
 import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
+import com.bookit.catalog.movie.services.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

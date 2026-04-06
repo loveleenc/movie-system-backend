@@ -1,4 +1,4 @@
-package com.bookit.catalog.movie.storage;
+package com.bookit.catalog.movie.services.storage;
 
 public class StorageException extends RuntimeException {
   public StorageException(String message) {

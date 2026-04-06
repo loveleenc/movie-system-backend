@@ -1,4 +1,4 @@
-package com.bookit.catalog.movie.storage;
+package com.bookit.catalog.movie.services.storage;
 
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
@@ -12,8 +12,8 @@ import com.azure.storage.blob.models.BlockBlobItem;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import com.azure.storage.blob.sas.BlobSasPermission;
 import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
-import com.bookit.catalog.movie.storage.resource.PosterResource;
-import com.bookit.catalog.movie.storage.resource.PosterUrlResource;
+import com.bookit.catalog.movie.services.storage.resource.PosterResource;
+import com.bookit.catalog.movie.services.storage.resource.PosterUrlResource;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

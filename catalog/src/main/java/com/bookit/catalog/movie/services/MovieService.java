@@ -1,16 +1,19 @@
-package com.bookit.catalog.movie;
+package com.bookit.catalog.movie.services;
 
 
+import com.bookit.catalog.movie.MovieException;
+import com.bookit.catalog.movie.ResourceCreationException;
+import com.bookit.catalog.movie.ResourceNotFoundException;
 import com.bookit.catalog.movie.db.IMovieDao;
 import com.bookit.catalog.movie.entity.MoviePage;
 import com.bookit.catalog.movie.inbound.service.MoviePageServiceDto;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDtoMapper;
 import com.bookit.catalog.movie.entity.Movie;
-import com.bookit.catalog.movie.storage.StorageException;
-import com.bookit.catalog.movie.storage.StorageService;
-import com.bookit.catalog.movie.storage.UploadException;
-import com.bookit.catalog.movie.storage.resource.PosterResource;
+import com.bookit.catalog.movie.services.storage.StorageException;
+import com.bookit.catalog.movie.services.storage.StorageService;
+import com.bookit.catalog.movie.services.storage.UploadException;
+import com.bookit.catalog.movie.services.storage.resource.PosterResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;

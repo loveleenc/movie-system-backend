@@ -1,6 +1,5 @@
-package com.bookit.catalog.movie;
+package com.bookit.catalog.movie.services;
 
-import com.bookit.catalog.movie.services.MovieAdditionalInformationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,7 +1,7 @@
 package com.bookit.events.shows.movie.local;
 
 import com.bookit.events.shows.ResourceNotFoundException;
-import com.bookit.catalog.movie.MovieService;
+import com.bookit.catalog.movie.services.MovieService;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
 import com.bookit.events.shows.comms.Request;
 import com.bookit.events.shows.comms.Response;

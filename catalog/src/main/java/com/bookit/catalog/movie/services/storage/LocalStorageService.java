@@ -1,7 +1,7 @@
-package com.bookit.catalog.movie.storage;
+package com.bookit.catalog.movie.services.storage;
 
-import com.bookit.catalog.movie.storage.resource.PosterByteArrayResource;
-import com.bookit.catalog.movie.storage.resource.PosterResource;
+import com.bookit.catalog.movie.services.storage.resource.PosterByteArrayResource;
+import com.bookit.catalog.movie.services.storage.resource.PosterResource;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

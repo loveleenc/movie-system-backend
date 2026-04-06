@@ -1,4 +1,4 @@
-package com.bookit.catalog.movie.storage;
+package com.bookit.catalog.movie.services.storage;
 
 public class StorageFileNotFoundException extends StorageException{
     public StorageFileNotFoundException(String message){
