@@ -10,7 +10,7 @@ import com.bookit.catalog.movie.inbound.service.MovieServiceDtoMapper;
 import com.bookit.catalog.movie.services.MovieAdditionalInformationService;
 import com.bookit.catalog.movie.services.MovieService;
 import com.bookit.catalog.movie.services.storage.StorageService;
-import com.bookit.catalog.movie.services.storage.resource.PosterResource;
+import com.bookit.catalog.movie.services.storage.PosterResource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

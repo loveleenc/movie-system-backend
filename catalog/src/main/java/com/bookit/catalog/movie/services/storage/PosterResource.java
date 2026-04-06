@@ -1,4 +1,4 @@
-package com.bookit.catalog.movie.services.storage.resource;
+package com.bookit.catalog.movie.services.storage;
 
 import org.springframework.core.io.Resource;
 

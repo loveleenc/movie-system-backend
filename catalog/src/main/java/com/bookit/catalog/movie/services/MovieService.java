@@ -13,7 +13,7 @@ import com.bookit.catalog.movie.entity.Movie;
 import com.bookit.catalog.movie.services.storage.StorageException;
 import com.bookit.catalog.movie.services.storage.StorageService;
 import com.bookit.catalog.movie.services.storage.UploadException;
-import com.bookit.catalog.movie.services.storage.resource.PosterResource;
+import com.bookit.catalog.movie.services.storage.PosterResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;

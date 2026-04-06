@@ -1,4 +1,4 @@
-package com.bookit.catalog.movie.services.storage;
+package com.bookit.catalog.movie.services.storage.cloud;
 
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
@@ -12,8 +12,10 @@ import com.azure.storage.blob.models.BlockBlobItem;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import com.azure.storage.blob.sas.BlobSasPermission;
 import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
-import com.bookit.catalog.movie.services.storage.resource.PosterResource;
-import com.bookit.catalog.movie.services.storage.resource.PosterUrlResource;
+import com.bookit.catalog.movie.services.storage.StorageException;
+import com.bookit.catalog.movie.services.storage.StorageProperties;
+import com.bookit.catalog.movie.services.storage.StorageService;
+import com.bookit.catalog.movie.services.storage.PosterResource;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +28,7 @@ import java.time.OffsetDateTime;
 
 @Service
 @Profile("production")
-public class PosterStorageService implements StorageService {
+class PosterStorageService implements StorageService {
 
     private final BlobContainerClient blobContainerClient;
 
@@ -49,7 +51,7 @@ public class PosterStorageService implements StorageService {
     }
 
     @Override
-    public void store(MultipartFile file, boolean overwrite) throws StorageException{
+    public void store(MultipartFile file, boolean overwrite) throws StorageException {
         try{
             if(file.isEmpty()){
                 throw new StorageException("File is empty");
