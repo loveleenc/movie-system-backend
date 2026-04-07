@@ -1,4 +1,4 @@
-package com.bookit.catalog.movie;
+package com.bookit.catalog.movie.services;
 
 public class ResourceCreationException extends RuntimeException {
     public ResourceCreationException(String message) {

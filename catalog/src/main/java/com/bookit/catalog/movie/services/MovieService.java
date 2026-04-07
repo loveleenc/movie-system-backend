@@ -1,8 +1,6 @@
 package com.bookit.catalog.movie.services;
 
 
-import com.bookit.catalog.movie.MovieException;
-import com.bookit.catalog.movie.ResourceCreationException;
 import com.bookit.catalog.movie.ResourceNotFoundException;
 import com.bookit.catalog.movie.db.IMovieDao;
 import com.bookit.catalog.movie.entity.MoviePage;

@@ -1,6 +1,6 @@
 package com.bookit.catalog.movie.inbound.service;
 
-import com.bookit.catalog.movie.MovieException;
+import com.bookit.catalog.movie.services.MovieException;
 import com.bookit.catalog.movie.entity.Movie;
 import com.bookit.catalog.movie.entity.MoviePage;
 import com.bookit.catalog.movie.services.additionalInformation.MovieAdditionalInformationService;

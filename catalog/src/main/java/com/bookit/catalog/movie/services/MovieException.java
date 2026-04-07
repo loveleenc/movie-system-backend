@@ -1,4 +1,4 @@
-package com.bookit.catalog.movie;
+package com.bookit.catalog.movie.services;
 
 public class MovieException extends RuntimeException {
     public MovieException(String message) {
