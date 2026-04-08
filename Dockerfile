@@ -9,7 +9,8 @@ RUN mkdir -p project
 RUN mkdir -p project/secrets
 
 COPY --from=build /project/application/target/*.jar /project/java-app.jar
-COPY --from=build /project/setup.sh /project/setup.sh
+# COPY --from=build /project/setup.sh /project/setup.sh
 WORKDIR /project
-RUN chmod +x ./setup.sh
-CMD ["./setup.sh"]
+CMD ["java", "-jar", "java-app.jar"]
+# RUN chmod +x ./setup.sh
+# CMD ["./setup.sh"]
