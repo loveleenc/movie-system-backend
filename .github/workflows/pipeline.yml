@@ -3,7 +3,7 @@ run-name: Test and deploy on cloud
 
 on:
   push:
-    branches: ["main"]
+    branches: ["multi_ds"]
   pull_request:
     branches: ["main"]
 
