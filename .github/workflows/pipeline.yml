@@ -3,7 +3,7 @@ run-name: Test and deploy on cloud
 
 on:
   push:
-    branches: ["multi_ds"]
+    branches: ["main"]
   pull_request:
     branches: ["main"]
 
@@ -83,7 +83,7 @@ jobs:
           tags: ghcr.io/${{github.actor}}/app:${{ github.sha }}
 
   deploy:
-    if: github.ref == 'refs/heads/multi_ds'
+    if: github.ref == 'refs/heads/main'
     permissions:
       id-token: write
       contents: read
