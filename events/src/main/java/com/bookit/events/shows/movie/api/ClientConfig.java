@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component;
 
 @ConfigurationProperties(prefix = "url")
 @Component
-public class ClientConfigUrl {
+public class ClientConfig {
     private String catalog;
 
-    public ClientConfigUrl() {
+    public ClientConfig() {
     }
 
     public String getCatalog() {
