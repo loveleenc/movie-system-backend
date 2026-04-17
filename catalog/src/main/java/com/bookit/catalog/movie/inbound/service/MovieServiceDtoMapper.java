@@ -1,94 +1,66 @@
 package com.bookit.catalog.movie.inbound.service;
 
-import com.bookit.catalog.movie.MovieException;
-import com.bookit.catalog.movie.MovieExternalInformationService;
+import com.bookit.catalog.movie.services.MovieException;
 import com.bookit.catalog.movie.entity.Movie;
 import com.bookit.catalog.movie.entity.MoviePage;
-import com.bookit.catalog.movie.storage.StorageException;
-import com.bookit.catalog.movie.storage.StorageService;
-import com.bookit.catalog.movie.storage.resource.PosterResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.bookit.catalog.movie.services.additionalInformation.MovieAdditionalInformationService;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
 
 @Component
 public class MovieServiceDtoMapper {
-    private final Logger logger;
-    private final StorageService storageService;
-    private MovieExternalInformationService movieExternalInformationService;
+    private MovieAdditionalInformationService movieAdditionalInformationService;
 
-    public MovieServiceDtoMapper(StorageService storageService, MovieExternalInformationService movieExternalInformationService) {
-        this.storageService = storageService;
-        this.logger = LoggerFactory.getLogger(MovieServiceDtoMapper.class);
-        this.movieExternalInformationService = movieExternalInformationService;
+    public MovieServiceDtoMapper( MovieAdditionalInformationService movieAdditionalInformationService) {
+        this.movieAdditionalInformationService = movieAdditionalInformationService;
     }
 
 
-    public MovieServiceDto toDTO(Movie movie) throws MovieException {
-        try {
-            PosterResource resource = this.storageService.getResource(movie.getPoster());
+    public MovieServiceDto toDTO(Movie movie) {
             return new MovieServiceDtoBuilder()
                     .setName(movie.getName())
                     .setDuration(movie.getDuration())
-                    .setPoster(resource.getContentOrUrlAsString())
-                    .setGenreList(movie.getGenreList())
-                    .setLanguages(movie.getLanguages())
-                    .setReleaseDate(movie.getReleaseDate())
-                    .setId(movie.getId())
-                    .build();
-        } catch (StorageException e) {
-            throw new MovieException("Unable to fetch the movie", e);
-        }
-    }
-
-    public MovieServiceDto toDTOWithoutPosterAndPlot(Movie movie)  {
-            return new MovieServiceDtoBuilder()
-                    .setName(movie.getName())
-                    .setDuration(movie.getDuration())
+                    .setPoster(movie.getPoster())
                     .setGenreList(movie.getGenreList())
                     .setLanguages(movie.getLanguages())
                     .setReleaseDate(movie.getReleaseDate())
                     .setId(movie.getId())
                     .build();
     }
-
 
     public List<MovieServiceDto> toDTO(List<Movie> movies) throws MovieException {
 
-        List<CompletableFuture<?>> futures = new ArrayList<>();
         List<MovieServiceDto> movieServiceDtos = new ArrayList<>();
-        for(Movie movie: movies){
-            MovieServiceDto movieServiceDto = this.toDTOWithoutPosterAndPlot(movie);
-            futures.add(CompletableFuture.supplyAsync(() -> this.storageService.getResource(movie.getPoster()))
-                    .thenAccept(resource -> movieServiceDto.setPoster(resource.getContentOrUrlAsString()))
-                    .handle(((result, exception) -> {
-                        if(exception != null) {
-                            logger.warn(exception.getMessage()); //TODO: handle this correctly later
-                        }
-                        return result;
-                    })));
-            futures.add(CompletableFuture.supplyAsync(() -> this.movieExternalInformationService.getMoviePlot(movie.getName()))
-                    .thenAccept(plot -> {
-                        movieServiceDto.setPlot(plot);
-                        movieServiceDtos.add(movieServiceDto);
-                    })
-                    .handle((result, exception) -> {
-                        if(exception != null){
-                            logger.warn("Unable to add a plot for movie {} with id {}",
-                                    movieServiceDto.getName(), movieServiceDto.getId());//TODO: handle this correctly later
-                            movieServiceDtos.add(movieServiceDto);
-                        }
-                        return result;
-                    })
-            );
-        }
 
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
-                .join();
+        for(Movie movie: movies) {
+            MovieServiceDto movieServiceDto = this.toDTO(movie);
+            String plot = this.movieAdditionalInformationService.getMoviePlot(movie.getName());
+            movieServiceDto.setPlot(plot);
+            movieServiceDtos.add(movieServiceDto);
+        }
+        return movieServiceDtos;
+
+//        List<CompletableFuture<?>> futures = new ArrayList<>();
+//        for(Movie movie: movies){
+//            futures.add(CompletableFuture.supplyAsync(() -> this.movieExternalInformationService.getMoviePlot(movie.getName()))
+//                    .thenAccept(plot -> {
+//                        movieServiceDto.setPlot(plot);
+//                        movieServiceDtos.add(movieServiceDto);
+//                    })
+//                    .handle((result, exception) -> {
+//                        if(exception != null){
+//                            logger.warn("Unable to add a plot for movie {} with id {}",
+//                                    movieServiceDto.getName(), movieServiceDto.getId());//TODO: handle this correctly later
+//                            movieServiceDtos.add(movieServiceDto);
+//                        }
+//                        return result;
+//                    })
+//            );
+//        }
+//        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+//                .join();
 
 
 //        MovieServiceDtoMapper currentRef = this;
@@ -110,7 +82,7 @@ public class MovieServiceDtoMapper {
 //                        movies.get(i).getName());
 //            }
 //        }
-        return movieServiceDtos;
+
     }
 
     public MoviePageServiceDto toDTO(MoviePage moviePage)  {

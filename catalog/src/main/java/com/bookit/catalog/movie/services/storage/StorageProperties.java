@@ -1,4 +1,4 @@
-package com.bookit.catalog.movie.storage;
+package com.bookit.catalog.movie.services.storage;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

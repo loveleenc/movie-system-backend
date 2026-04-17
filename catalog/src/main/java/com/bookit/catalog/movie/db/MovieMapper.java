@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class MovieMapper implements RowMapper<Movie> {
+class MovieMapper implements RowMapper<Movie> {
     @Override
     public Movie mapRow(ResultSet rs, int rowNum) throws SQLException {
         return this.getMovie(rs, "id");

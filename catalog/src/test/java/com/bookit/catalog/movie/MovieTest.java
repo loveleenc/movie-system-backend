@@ -7,8 +7,10 @@ import com.bookit.catalog.movie.entity.MoviePage;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDtoBuilder;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDtoMapper;
-import com.bookit.catalog.movie.storage.StorageService;
-import com.bookit.catalog.movie.storage.resource.PosterResource;
+import com.bookit.catalog.movie.services.additionalInformation.MovieAdditionalInformationService;
+import com.bookit.catalog.movie.services.MovieService;
+import com.bookit.catalog.movie.services.storage.StorageService;
+import com.bookit.catalog.movie.services.storage.PosterResource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,15 +36,15 @@ public class MovieTest {
     private MovieServiceDtoMapper movieServiceDtoMapper;
     private List<Movie> movies;
     private PosterResource posterResource;
-    private MovieExternalInformationService movieExternalInformationService;
+    private MovieAdditionalInformationService movieAdditionalInformationService;
 
     @BeforeEach
     public void before() {
         this.posterResource = mock(PosterResource.class);
         this.movieDao = mock(IMovieDao.class);
         this.storageService = mock(StorageService.class);
-        this.movieExternalInformationService = mock(MovieExternalInformationService.class);
-        this.movieServiceDtoMapper = new MovieServiceDtoMapper(this.storageService, this.movieExternalInformationService);
+        this.movieAdditionalInformationService = mock(MovieAdditionalInformationService.class);
+        this.movieServiceDtoMapper = new MovieServiceDtoMapper(this.movieAdditionalInformationService);
         this.movieService = new MovieService(this.movieDao, this.storageService, this.movieServiceDtoMapper);
         this.movies = new ArrayList<>();
         List<String> genre = Arrays.asList("Action", "Adventure");
@@ -169,11 +171,9 @@ public class MovieTest {
         String posterResourcePath = "path-" + posterName;
         when(this.movieDao.create(any(Movie.class))).thenReturn(2L);
         when(this.movieDao.findById(2L)).thenReturn(returnedMovie);
-        when(this.storageService.getResource(any(String.class))).thenReturn(this.posterResource);
-        when(this.posterResource.getContentOrUrlAsString()).thenReturn(posterResourcePath);
         MovieServiceDto createdMovie = this.movieService.addMovie(movieServiceDto, poster);
         Assertions.assertEquals(movie.getName(), createdMovie.getName());
-        Assertions.assertEquals(posterResourcePath, createdMovie.getPoster());
+        Assertions.assertEquals(posterName, createdMovie.getPoster());
         Assertions.assertEquals(2L, createdMovie.getId());
         Assertions.assertEquals(movie.getDuration(), createdMovie.getDuration());
         //Etc etc for the remaining props

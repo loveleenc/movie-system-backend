@@ -2,6 +2,7 @@ package com.bookit.booking.db;
 
 import com.bookit.booking.entity.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import java.util.List;
 @Component
 public class TicketDao implements ITicketDao {
     @Autowired
+    @Qualifier("mainJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
     private TicketSeatMapper ticketSeatMapper;
     private TicketMapper ticketMapper;

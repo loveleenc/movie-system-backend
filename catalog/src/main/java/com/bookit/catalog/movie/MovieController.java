@@ -5,6 +5,7 @@ import com.bookit.catalog.movie.inbound.api.MovieDto;
 import com.bookit.catalog.movie.inbound.api.MovieDtoMapper;
 import com.bookit.catalog.movie.inbound.service.MoviePageServiceDto;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
+import com.bookit.catalog.movie.services.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

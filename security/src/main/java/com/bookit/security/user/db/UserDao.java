@@ -3,6 +3,7 @@ package com.bookit.security.user.db;
 import com.bookit.security.entity.User;
 import com.bookit.security.entity.types.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,6 +19,7 @@ import java.util.Objects;
 @Component
 public class UserDao implements IUserDao {
     @Autowired
+    @Qualifier("mainJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
     private UserMapper userMapper;
 

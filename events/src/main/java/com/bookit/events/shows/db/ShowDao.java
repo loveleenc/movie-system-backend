@@ -3,6 +3,7 @@ package com.bookit.events.shows.db;
 import com.bookit.events.shows.entity.Show;
 import com.bookit.events.shows.entity.ShowTimeSlot;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,6 +19,7 @@ import java.util.Objects;
 public class ShowDao implements IShowDao {
 
     @Autowired
+    @Qualifier("mainJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
     private ShowMapper showMapper;
     private ShowTheatreMapper showTheatreMapper;

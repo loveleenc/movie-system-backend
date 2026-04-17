@@ -1,6 +1,6 @@
 package com.bookit.catalog.movie.inbound.api;
 
-import com.bookit.catalog.movie.MovieException;
+import com.bookit.catalog.movie.services.MovieException;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDto;
 import com.bookit.catalog.movie.inbound.service.MovieServiceDtoBuilder;
 import org.springframework.stereotype.Component;

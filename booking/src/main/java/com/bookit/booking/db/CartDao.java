@@ -4,6 +4,7 @@ import com.bookit.booking.entity.Cart;
 import com.bookit.booking.entity.Item;
 import com.bookit.booking.entity.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -18,6 +19,7 @@ import java.util.Objects;
 @Component
 public class CartDao implements ICartDao {
     @Autowired
+    @Qualifier("mainJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
     private ITicketDao ticketDao;
 

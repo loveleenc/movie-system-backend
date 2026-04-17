@@ -1,7 +1,9 @@
-package com.bookit.catalog.movie.storage;
+package com.bookit.catalog.movie.services.storage.local;
 
-import com.bookit.catalog.movie.storage.resource.PosterByteArrayResource;
-import com.bookit.catalog.movie.storage.resource.PosterResource;
+import com.bookit.catalog.movie.services.storage.StorageException;
+import com.bookit.catalog.movie.services.storage.StorageService;
+import com.bookit.catalog.movie.services.storage.UploadException;
+import com.bookit.catalog.movie.services.storage.PosterResource;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +17,7 @@ import java.nio.file.StandardCopyOption;
 
 @Service
 @Profile("development")
-public class LocalStorageService implements StorageService {
+class LocalStorageService implements StorageService {
     private final Path storageDirectory = Paths.get("storage-dir");
 
     public LocalStorageService(){

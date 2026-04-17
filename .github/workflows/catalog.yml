@@ -66,6 +66,7 @@ jobs:
           tags: ghcr.io/${{github.actor}}/catalog:${{ github.sha }}
 
   deploy:
+    if: github.ref == 'refs/heads/catalog'
     permissions:
       id-token: write
       contents: read

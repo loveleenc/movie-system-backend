@@ -4,6 +4,7 @@ package com.bookit.venue.theatre.db;
 import com.bookit.venue.theatre.entity.Theatre;
 import com.bookit.venue.theatre.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +20,7 @@ import java.util.Objects;
 public class TheatreDao implements ITheatreDao {
 
     @Autowired
+    @Qualifier("mainJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
     private TheatreMapper theatreMapper;
 

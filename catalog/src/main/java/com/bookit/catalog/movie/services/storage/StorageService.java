@@ -1,6 +1,5 @@
-package com.bookit.catalog.movie.storage;
+package com.bookit.catalog.movie.services.storage;
 
-import com.bookit.catalog.movie.storage.resource.PosterResource;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface StorageService {

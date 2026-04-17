@@ -1,6 +1,6 @@
-package com.bookit.catalog.movie;
+package com.bookit.catalog.movie.services.additionalInformation;
 
-public class ReturnedMovie {
+class ReturnedMovie {
     private String Plot;
     private String imdbRating;
     private String Title;
