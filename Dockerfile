@@ -1,4 +1,5 @@
 FROM maven:3.9.11-amazoncorretto-17-alpine@sha256:f6b7c9f1c635054a653a6a4eaec6d4a870532cd7cbaec6243772a5b64960a978 AS build
+EXPOSE 8080
 RUN mkdir /project
 COPY . /project
 WORKDIR /project
