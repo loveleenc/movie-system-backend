@@ -2,29 +2,29 @@ package com.bookit.booking;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(assignableTypes = {CartController.class})
 public class CartExceptionsAdvice {
 
     @ExceptionHandler(DataAccessException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    String dataAccessExceptionHandler(DataAccessException e){
-        return "Unable to fetch details at the moment. Please try later";
+    ResponseEntity<String> dataAccessExceptionHandler(DataAccessException e){
+        return new ResponseEntity<>("Unable to fetch details at the moment. Please try later",
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(TicketBookingException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String ticketBookingExceptionHandler(TicketBookingException e){
-        return "Data appears to be incorrect in the request. Please check the request details and try again";
+    ResponseEntity<String> ticketBookingExceptionHandler(TicketBookingException e){
+        return new ResponseEntity<>("Data appears to be incorrect in the request. Please check the request details and try again",
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    String resourceNotFoundHandler(ResourceNotFoundException e){
-        return "The requested resource was not found";
+    ResponseEntity<String> resourceNotFoundHandler(ResourceNotFoundException e){
+        return new ResponseEntity<>("The requested resource was not found",
+                HttpStatus.NOT_FOUND);
     }
 
 

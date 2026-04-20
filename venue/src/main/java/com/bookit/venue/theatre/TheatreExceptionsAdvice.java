@@ -10,7 +10,6 @@ public class TheatreExceptionsAdvice {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String resourceNotFoundHandler(ResourceNotFoundException e){
-        return "Resource not found";
+    void resourceNotFoundHandler(ResourceNotFoundException e){
     }
 }
