@@ -86,7 +86,8 @@ public class UserService {
     }
 
     public void activateUserAccount(String token) throws JwtException, UsernameNotFoundException {
-        String username = this.tokenService.getUsernameFromActivationToken(token);
+
+        String username = this.tokenService.verifyToken(token).getSubject();
         Boolean accountActivated = this.customUserDetailsService.activateUserAccount(username);
         if (!accountActivated) {
             throw new AccountActivationException("Unable to activate account after fetching user details");
@@ -105,7 +106,7 @@ public class UserService {
     }
 
     private UrlResource createAccountActivationLink(User user) throws MalformedURLException {
-        String token = this.tokenService.createActivationToken(user.getUsername());
+        String token = this.tokenService.generateToken(user.getUsername());
         String accountActivationUrl = UriComponentsBuilder.fromUriString(this.clientUrl)
                 .pathSegment("#", "user", "activate", token)
                 .build().toString();

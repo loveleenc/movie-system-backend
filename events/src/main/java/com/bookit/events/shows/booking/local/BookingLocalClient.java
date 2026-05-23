@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 
 class ShowMapper {
     public static com.bookit.booking.entity.Show toBookingShow(Show createdShow) {
-        com.bookit.booking.entity.ShowTimeSlot showTimeSlot = new ShowTimeSlot(createdShow.getStartTime(), createdShow.getEndTime());
-        com.bookit.booking.entity.Theatre showTheatre = new Theatre(createdShow.getTheatre().getName(),
+        ShowTimeSlot showTimeSlot = new ShowTimeSlot(createdShow.getStartTime(), createdShow.getEndTime());
+        Theatre showTheatre = new Theatre(createdShow.getTheatre().getName(),
                 createdShow.getTheatre().getLocation(),
                 createdShow.getTheatre().getId());
 
         com.bookit.events.shows.entity.Movie selectedMovie = createdShow.getMovie();
-        com.bookit.booking.entity.Movie movie = new Movie(
+        Movie movie = new Movie(
                 selectedMovie.getName(),
                 selectedMovie.getDuration(),
                 selectedMovie.getPoster(),

@@ -49,7 +49,7 @@ public class ShowsController {
       return new ResponseEntity<>(shows, HttpStatus.OK);
     }
 
-    @GetMapping("/theatre/{id}/shows")
+    @GetMapping("/com/bookit/theatre/{id}/shows")
     ResponseEntity<List<ShowMovieNameDto>> getShowsByTheatre(@PathVariable Integer id) {
       List<Show> shows = this.showService.getShowsByTheatre(id);
       return new ResponseEntity<>(this.showDTOMapper.toShowMovieNameDto(shows), HttpStatus.OK);

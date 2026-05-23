@@ -1,9 +1,11 @@
 package com.bookit.security.config;
 
 
+import com.bookit.security.AuthorizationTokenCreationFilter;
 import com.bookit.security.CustomUserDetailsService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -29,7 +31,9 @@ import java.util.List;
 public class SecurityConfigurationTest extends SecurityConfigurationBase {
 
     private final String allowedOrigin;
-    public SecurityConfigurationTest(SecurityConfigProperties securityConfigProperties){
+    public SecurityConfigurationTest(SecurityConfigProperties securityConfigProperties,
+                                     FilterRegistrationBean<AuthorizationTokenCreationFilter> registrationBean){
+        super(registrationBean.getFilter());
         this.allowedOrigin = securityConfigProperties.getAllowedOrigin();
     }
 

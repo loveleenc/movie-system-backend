@@ -1,6 +1,5 @@
 package com.bookit.events.shows.booking;
 
-import com.bookit.booking.entity.types.TicketStatus;
 import com.bookit.events.shows.comms.Client;
 import com.bookit.events.shows.entity.Show;
 

@@ -1,35 +1,40 @@
 package com.bookit.security.config;
 
 
-import com.bookit.security.CustomUserDetailsService;
+import com.bookit.security.AuthorizationTokenCreationFilter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-
 
 
 @Configuration
 @EnableWebSecurity
 @Profile("production")
 public class SecurityConfiguration extends SecurityConfigurationBase {
+    private SecurityContextRepository securityContextRepository;
+
+    public SecurityConfiguration(FilterRegistrationBean<AuthorizationTokenCreationFilter> registrationBean,
+                                 SecurityContextRepository securityContextRepository) {
+        super(registrationBean.getFilter());
+        this.securityContextRepository = securityContextRepository;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         HttpSecurity httpSecurity = super.createFilters(http);
         httpSecurity
                 .securityContext(securityContext -> {
-                    securityContext.securityContextRepository(securityContextRepository());
+                    securityContext.securityContextRepository(securityContextRepository);
                 })
                 .csrf(csrf -> {
                     CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
@@ -68,13 +73,4 @@ public class SecurityConfiguration extends SecurityConfigurationBase {
     }
 
 
-    @Bean
-    PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public CustomUserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        return new CustomUserDetailsService(passwordEncoder);
-    }
 }

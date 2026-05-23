@@ -1,23 +1,22 @@
 package com.bookit.security.config;
 
 
-import com.bookit.security.CustomUserDetailsService;
+import com.bookit.security.AuthorizationTokenCreationFilter;
 import com.bookit.security.entity.types.Role;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 
 public class SecurityConfigurationBase {
+    private AuthorizationTokenCreationFilter authorizationTokenCreationFilter;
 
+    public SecurityConfigurationBase(AuthorizationTokenCreationFilter authorizationTokenCreationFilter) {
+        this.authorizationTokenCreationFilter = authorizationTokenCreationFilter;
+    }
 
     public HttpSecurity createFilters(HttpSecurity http) throws Exception {
+
         http
                 .authorizeHttpRequests((authorizationManagerRequestMatcherRegistry) ->
                         authorizationManagerRequestMatcherRegistry
@@ -49,26 +48,15 @@ public class SecurityConfigurationBase {
 
                                 .requestMatchers("/api/cart/**", "/api/cart").hasAuthority(Role.REGULAR_USER.code())
 
-                                .requestMatchers(HttpMethod.GET,   "/**", "/assets/**", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/**", "/assets/**", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
 
                                 .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
                                 .requestMatchers("/api/login").permitAll()
                                 .requestMatchers("/api/logout").permitAll()
                                 .requestMatchers(HttpMethod.PATCH, "/api/user/activate/*").permitAll()
 
-                );
+                )
+                .addFilterAfter(this.authorizationTokenCreationFilter, BasicAuthenticationFilter.class);
         return http;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(CustomUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
-        return new ProviderManager(authenticationProvider);
-    }
-
-    @Bean
-    public SecurityContextRepository securityContextRepository() {
-        return new HttpSessionSecurityContextRepository();
     }
 }
